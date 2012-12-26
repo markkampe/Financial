@@ -1,0 +1,19 @@
+Prototyping Approach
+
+(1) initially, don't worry about input format
+    do modeling from hand crafted objects.
+    
+(2) order: expense, income, portfolio, taxes
+
+(3) work on composable models
+    (a) flat, two-step, three-step
+    (b) load proportional (and load can be zero)
+    (c) random factors
+    
+(4) compare results with the spreadsheet
+
+(5) harvest modeling
+
+(6) medical expense modeling
+
+(7) then work on discrete events

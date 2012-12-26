@@ -1,0 +1,53 @@
+Goals
+	(1) more realistic simulations than my flat rate assumptions
+		which can best be obtained by monte-carlo based on historical ranges
+
+This problem can be broken down into several distinct pieces:
+  (1) an engine that plays out a portfolio scenario
+  (2) a set of rate-generation plug-ins to permit randomness
+  (3) a monte-carlo driver to run sets of scenarii
+  (4) ability to compare predictions w/actual results
+  (5) results browser(s)
+  (6) input editor(s)
+  
+Input files:
+  (1) portfolio
+  		name, year, class, value, basis, growth functions
+  (2) budgets
+  		name, year, class, amount, growth function
+  (3) tax models
+  		name, year, class, named parameters
+  (4) discrete events
+  		I don't yet understand these
+  
+The main engine:
+  for duration or until failure
+	expense model
+	income model
+	portfolio model
+	tax model
+	harvest/investment model
+	determine success
+	
+Growth models:
+	interface: delta_pctg = growth(year)
+    linear_growth_model(rate, end year)
+    piecewise_growth_model(rate1, year2, rate2, year3, rate3, endyear)
+    load_model(loadfunc, rate)
+    random_growth_model(mean, min, max);
+    ? perhaps I want to compose models, imposing growth, on load, with a window
+    
+Life expectancy modeling also has to be factored in to this
+
+Discrete Event models:
+    predictable expense, income, investment events
+    
+Reports
+
+   EISI naviplan
+      input assumptions
+   		retirement ages
+   		life expectancies
+   		current asset allocation -> expected return (mean, sigma)
+   	  discrete events
+   	  

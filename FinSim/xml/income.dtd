@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE INCOME [
+	<!ELEMENT income+ (EMPTY)>
+	
+	<!ATTLIST income	source		CDATA	#REQUIRED>
+	<!ATTLIST income	class		CDATA	"W2">
+	<!ATTLIST income	start		CDATA	#REQUIRED>
+	<!ATTLIST income	end			CDATA	"12/31">
+	<!ATTLIST income	total		CDATA	#REQUIRED>
+	<!ATTLIST income	taxable		CDATA	#REQUIRED>
+	<!ATTLIST income	ded_fit		CDATA	"0">
+	<!ATTLIST income	ded_fica	CDATA	"0">
+	<!ATTLIST income	ded_med		CDATA	"0">
+	<!ATTLIST income	ded_sit		CDATA	"0">
+	<!ATTLIST income	ded_sdi		CDATA	"0">
+]>
