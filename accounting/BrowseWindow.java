@@ -18,7 +18,7 @@ public class BrowseWindow implements WindowListener {
 	private static final double HEIGHT_FUDGE = 1.3; // I hate this, but lineMetrics lies
 	
 	// font for rendering columnar numbers (less arbitrary than you might think)
-	private final static String DISPLAY_FONT = "Lucida Sans Typewriter Regular";
+	private final static String DISPLAY_FONT = "Monospaced";
 	private final static int DISPLAY_SIZE = 12;
 	
 	// icon for financial detail windows

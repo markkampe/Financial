@@ -22,7 +22,7 @@ public class MainScreen extends JFrame
 	private static final long serialVersionUID = 0xdeadbeef;	// this is stupid
 	
 	// font for rendering columnar numbers (less arbitrary than you might think)
-	private final static String DISPLAY_FONT = "Lucida Sans Typewriter Regular";
+	private final static String DISPLAY_FONT = "Monospaced";
 	private final static int DISPLAY_SIZE = 12;
 	
 	// desired window sizes (calling pack renders these obsolete)
