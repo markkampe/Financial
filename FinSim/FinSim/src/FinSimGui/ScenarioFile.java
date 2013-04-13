@@ -1,4 +1,4 @@
-package FinSim;
+package FinSimGui;
 import java.io.*;
 import java.text.ParseException;
 

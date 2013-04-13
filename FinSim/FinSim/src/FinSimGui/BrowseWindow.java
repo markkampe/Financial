@@ -1,4 +1,4 @@
-package FinSim;
+package FinSimGui;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,7 +7,7 @@ import java.awt.geom.*;
 
 
 public class BrowseWindow implements WindowListener {
-	private static final long serialVersionUID = 0xdeadbeef;
+	// private static final long serialVersionUID = 0xdeadbeef;
 	
 	private static final int X_OFFSET = 100;	// x position relative to parent
 	private static final int Y_OFFSET = 100;	// y position relative to parent

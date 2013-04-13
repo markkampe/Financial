@@ -1,4 +1,4 @@
-package FinSim;
+package FinSimGui;
 
 /**
  * singleton class for (global) run-time options

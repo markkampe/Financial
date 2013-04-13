@@ -1,4 +1,4 @@
-package FinSim;
+package FinSimGui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;

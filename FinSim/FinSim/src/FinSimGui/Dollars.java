@@ -1,4 +1,4 @@
-package FinSim;
+package FinSimGui;
 
 /**
  * input/output methods for converting between ints
