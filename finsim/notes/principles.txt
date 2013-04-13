@@ -1,0 +1,124 @@
+From prospercurity.com ... indigtment of traditional planning s/w
+
+	[my comments in square braces]
+	
+PREMISE: traditional models consistently over-estimate investment rewards
+
+(1) in the very long term, the value of an equity is the present worth
+	of the dividend stream it is expected to produce 
+	
+	in the short-to-medium term, they may retain and reinvest earnings
+	reducing the dividend yield, but this increases their long term value
+	and what doesn't show up as yield shows up as appreciation.
+	 
+	 	as of 6/30/09 dividend yields were in the 2-4% range
+	
+(2) that income stream is limited by the growth of the economy as a whole
+
+	[to the extent that the economy is a zero sum game, but 
+	 new markets are opened, and winners create new goods and 
+	 services that take income away from losers]
+	 
+	 Over the past 200 years
+	 	US GDP 	3.65% (1.8% per capita)
+	 	UK GDP	1.97% (1.4% per capita)
+	
+(3) in the long run, dividend growth lags economic growth
+
+	[because companies don't just pay out income as dividends]
+	
+	typical lag is on the order of 1% (half of dividends are retained)
+
+(4) reinvestment today often means less lag tomorrow
+
+	[because companies may make investments that improve growth]
+	
+(5) The Formula
+	
+		EquityReturn = DividendYield + DividendGrowth
+						- Lag - Fees
+						
+				low  = 2.4% + 2% - 1% - .1% = 3.3%
+				high = 3.5% + 3.5% - 1% - .1% = 5.9%
+				
+		TIPS are yielding a little over 2.3% (less .1% fees)
+		
+			free rate of return = 2.2%
+			
+		Equity Risk Premium is in the 1.1%-3.7% range
+		
+This does not justify the 9-12% average returns assumed by many tools.
+
+STATIONARY DISTRIBUTION
+
+	Most models assume the Markov property (ignoring regression
+	to the mean).  The possibility of low-probability events, 
+	allows long multi-year simulations to wind up with ludicrously 
+	wide ranges of possible outcomes.  Averaging over this range
+	is unreasonable, because high-side estimates over-power low-side
+	estimates.
+	
+	The Markov property is a bad assumption.  Over the short term,
+	yields are positively correlated, and over the medium term they
+	are negatively correlated (reversion to the mean).
+	
+	Another problem is the assumption of a bell-curve ... because
+	the out-lying events are not as unlikely as a standard bell-curve
+	would suggest.
+	
+RETIREMENT BUDGETS
+
+	He also says that retirement budgets are not reasonably modeled,
+	but is less clear on how they should be fixed.
+	
+Comments from Allan Roth (CBS MoneyWatch) ... WHY MOST SIMS SUCK
+
+	Unreasonably optimistic return assumptions.
+	
+	Unreasonable random rate generation.
+	
+Comments from William Sharpe
+
+	Tixed life-span assumption is unreasonable, and
+	this too should be factored in to the simulations
+	
+	The lessons of portfolio theory seem to be ignored by
+	most simulations.  Harry Markowitz has defined an
+	"Efficient Frontier" on the risk/return curve, which
+	when compared with a client's risk tolerance (risk/return
+	indifference curves) yields optimal portofolios.  No matter
+	what your risk/return is, the optimal portfolio lies along
+	the efficient frontier.
+	
+	The frontier is positively curved (you can do better than
+	linear risk/reward) because of diversification.  If asset
+	variations were perfectly correlated, you could do no better
+	than linear risk/reward, but poorly correlated assets will
+	actually reduce the sigma of your overall portfolio.
+	
+	Tools and advisors seem poorly able to assess a clients
+	risk/reward tolerance (and thus the right indifference
+	curve and the optimal portfolio) ... and so wind up suggesting
+	inappropriate portfolios.
+	
+Comments from William Bernstein
+
+	There is a risk in using averages, because of the short-term
+	positive correlation of returns.   You might be statistically
+	OK, but if you happen to start your retirement during a 4-8 year
+	bear market, you are toast.
+	
+	[I would think that a more dynamic expense model, where discretionary
+	 harvests varied with returns would help here]
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	

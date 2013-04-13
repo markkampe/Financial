@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE PORTFOLIO [
+	<!ELEMENT asset+ (changes)>
+	<!ELEMENT changes>
+	
+	<!ATTLIST asset		name		CDATA	#REQUIRED>
+	<!ATTLIST asset		class		(cash|fund|stock|bond|zero)>
+	<!ATTLIST asset		value		CDATA	#REQUIRED>
+	<!ATTLIST asset		as_of		CDATA	#REQUIRED>
+	<!ATTLIST asset		face_value	CDATA>
+	<!ATTLIST asset		due_date	CDATA>
+	<!ATTLIST changes	start		CDATA	"1/1">
+	<!ATTLIST changes	end			CDATA	"12/31">
+	<!ATTLIST changes	additions	CDATA	"0">
+	<!ATTLIST changes	harvests	CDATA	"0">
+	<!ATTLIST changes	interest	CDATA	"0">
+	<!ATTLIST changes	dividends	CDATA	"0">
+	<!ATTLIST changes	short_term	CDATA	"0">
+]>
