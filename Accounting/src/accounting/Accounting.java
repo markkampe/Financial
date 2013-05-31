@@ -22,7 +22,7 @@ public class Accounting {
 		
 		// process the arguments
 		String fileName = System.getenv(LEDGER_ENV);
-		for( int i = 1; i < args.length; i++ ) {
+		for( int i = 0; i < args.length; i++ ) {
 			if (args[i].startsWith(SWITCH_CHAR)) {	
 				opts.parseSwitch( args[i].substring(1));
 			} else {
