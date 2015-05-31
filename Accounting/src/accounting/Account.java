@@ -305,7 +305,10 @@ public class Account {
 	 * @return (int) the fraction expressed as a percentage
 	 */
 	private static int percentage( int numerator, int denominator ) {
-		// start by rounding (up in magnitude)
+		if (denominator == 0)	// watch out for zero divide
+			return( -1 );
+		
+		// rounding (up in magnitude)
 		if (numerator > 0)
 			numerator += denominator/200;
 		else
