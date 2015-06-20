@@ -64,6 +64,7 @@ public class MainScreen extends JFrame
 	private JMenuItem fileExit;
 	private JMenuItem editBudget;
 	private JMenuItem editJournal;
+	private JMenuItem editTransact;
 	private JMenuItem editSoil;	// for testing
 	private JMenuItem viewRefresh;
 	private JMenuItem viewAnalysis;
@@ -189,6 +190,35 @@ public class MainScreen extends JFrame
 	}
 	
 	/**
+	 * load a previously prepared transaction journal
+	 */
+	private boolean loadTransactions() {
+		JFileChooser fc = new JFileChooser();
+		if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			String chosen = "";
+			try {
+				chosen = fc.getSelectedFile().getAbsolutePath();
+				File file = new File(chosen);
+				if (!file.exists())
+					throw new FileNotFoundException("file does not exist");
+				// FIXME - load the chosen transaction file
+				return true;
+			} catch (FileNotFoundException err) {
+				JOptionPane.showMessageDialog( mainPane, 
+						err.getMessage() 
+						+ "\nFile: " + chosen,
+						"UNABLE TO OPEN TRANSACTION FILE", JOptionPane.ERROR_MESSAGE );
+			} catch (IOException err ) {
+				JOptionPane.showMessageDialog( mainPane, 
+						err.getMessage() 
+						+ "\nFile: " + chosen,
+						"ERROR LOADING TRANSACTION FILE", JOptionPane.ERROR_MESSAGE );
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * open a specified file as our set of books
 	 */
 	private void newFile( String filename ) {
@@ -287,6 +317,7 @@ public class MainScreen extends JFrame
 		fileClose.setEnabled(false);
 		editBudget.setEnabled(false);
 		editJournal.setEnabled(false);
+		editTransact.setEnabled(false);
 		editSoil.setEnabled(false);
 		viewAnalysis.setEnabled(false);
 		
@@ -325,11 +356,14 @@ public class MainScreen extends JFrame
 		editBudget.addActionListener(this);
 		editJournal = new JMenuItem("Journal");
 		editJournal.addActionListener(this);
+		editTransact = new JMenuItem("load transactions");
+		editTransact.addActionListener(this);
 		editSoil = new JMenuItem("null change");
 		editSoil.addActionListener(this);
 		JMenu editMenu = new JMenu("Edit");
 		editMenu.add(editBudget);
 		editMenu.add(editJournal);
+		editMenu.add(editTransact);
 		editMenu.add( new JSeparator() );
 		editMenu.add(editSoil);
 		
@@ -429,6 +463,13 @@ public class MainScreen extends JFrame
 		if (o == editJournal && opts.writeable && books != null) {
 			JournalWindow j = new JournalWindow(books, refDate );
 			j.addAccountChangeListener( this );
+			return;
+		}
+		
+		if (o == editTransact && opts.writeable && books != null) {
+			if (loadTransactions()) {
+				update( false );
+			}
 			return;
 		}
 		
