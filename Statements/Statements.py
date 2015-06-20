@@ -28,6 +28,7 @@
 #
 import sys
 from decimal import Decimal
+import csv
 from Rules import Rules
 
 
@@ -286,10 +287,6 @@ class Statement:
             self.tagged += 1
             return
 
-        # unquote the description
-        if desc[0] == "'" or desc[0] == '"':
-            desc = desc[1:-1]
-
         # apply the rules to try to tag this line
         (acct, aggregate, newdesc) = self.rules.match(desc)
 
@@ -326,8 +323,11 @@ class Statement:
     def processFile(self, filename):
         """
             process a file
+
+            Note: we use the csv reader rather than split because
+                the csv reader knows how to deal with leading/trailing
+                white space and delimiters in quoted strings.
         """
-        input = open(filename)
 
         # reinitialize the per-file parameters/statistics
         self.date = -1
@@ -338,6 +338,7 @@ class Statement:
         self.file_debit = 0
 
         # use the first line to figure out the data format
+        input = open(filename, 'rb')
         line = input.readline()
         cols = line.split(',')
         if not self.analyze_headers(cols):
@@ -349,14 +350,9 @@ class Statement:
             else:
                 input.seek(0)       # rewind so we can process it
 
-        # FIX - this botches commas in embedded strings, use csv class
         # then process the data lines in the file
-        for line in input:
-            # split out the comma separated fields
-            cols = line.split(',')
-            # strip off the leading and trailing whitespace
-            for i in range(len(cols)):
-                cols[i] = cols[i].strip(" \t\r\n")
+        reader = csv.reader(input, skipinitialspace=True)
+        for cols in reader:
             if len(cols) >= 3:          # ignore blank/short lines
                 self.process_line(cols)
         input.close()
