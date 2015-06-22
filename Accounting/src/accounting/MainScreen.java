@@ -41,6 +41,8 @@ public class MainScreen extends JFrame
 		"11", "12", "13", "14", "15", "16", "17", "18", "19","20",
 		"21", "22", "23", "24", "25", "26", "27", "28", "29","30",
 		"31" };
+
+	private static final String Null = null;
 	
 	// internal state on which we operate
 	private String fileName;		// name of the file we are processing
@@ -193,27 +195,106 @@ public class MainScreen extends JFrame
 	 * load a previously prepared transaction journal
 	 */
 	private boolean loadTransactions() {
+		// get a transaction file
 		JFileChooser fc = new JFileChooser();
-		if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			String chosen = "";
-			try {
-				chosen = fc.getSelectedFile().getAbsolutePath();
-				File file = new File(chosen);
-				if (!file.exists())
-					throw new FileNotFoundException("file does not exist");
-				// FIXME - load the chosen transaction file
-				return true;
-			} catch (FileNotFoundException err) {
-				JOptionPane.showMessageDialog( mainPane, 
-						err.getMessage() 
-						+ "\nFile: " + chosen,
-						"UNABLE TO OPEN TRANSACTION FILE", JOptionPane.ERROR_MESSAGE );
-			} catch (IOException err ) {
-				JOptionPane.showMessageDialog( mainPane, 
-						err.getMessage() 
-						+ "\nFile: " + chosen,
-						"ERROR LOADING TRANSACTION FILE", JOptionPane.ERROR_MESSAGE );
-			}
+		if (fc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) 
+			return false;
+		String chosen = "";
+		BufferedReader reader = null;
+		try {
+			chosen = fc.getSelectedFile().getAbsolutePath();
+			File file = new File(chosen);
+			if (!file.exists())
+				throw new FileNotFoundException("file does not exist");
+			reader = new BufferedReader( new FileReader( chosen ));
+		} catch (FileNotFoundException err) {
+			JOptionPane.showMessageDialog( mainPane, 
+					err.getMessage() 
+					+ "\nFile: " + chosen,
+					"UNABLE TO OPEN TRANSACTION FILE", JOptionPane.ERROR_MESSAGE );
+			return false;
+		} 
+		
+		// Process every line in that file
+		int lines = 0;		
+		try {
+			int entries = 0;
+			int noAcct = 0;
+			for(String line = reader.readLine(); line != null; line = reader.readLine()) {
+				lines++;
+				// ignore empty lines
+				line = line.trim();
+				if (line.length() == 0)
+					continue;
+				
+				// try a simple comma-split (and pray that it works)
+				String[] fields = line.split(",");
+				if (fields.length < 4) {
+					reader.close();
+					throw new ParseException("TOO FEW FIELDS", lines);
+				} else if (fields.length > 4) {
+					reader.close();
+					throw new ParseException("TOO MANY FIELDS", lines);
+				} else if (lines == 1 && ("Date".equals(fields[0]) || "date".equals(fields[0])))
+					continue;
+				
+				// see if we recognize the account name
+				String acctName = fields[2].trim();
+				if (acctName == Null || acctName.equals("")) {
+					noAcct++;
+					continue;
+				}
+				int account = books.accountNumber(acctName);
+				if (account < 0) {
+					JOptionPane.showMessageDialog(mainPane,
+							"File: " + chosen + ". line " + lines +
+							"\nUNRECOGNIZED ACCOUNT: " + acctName);
+					continue;
+				}
+		
+				// parse the date, amount, and description
+				SimpleDate date = new SimpleDate(fields[0], refDate.year);
+				int amount = Dollars.Parse(fields[1]);
+				String descr = "";
+				if (fields.length == 4) {
+					descr = fields[3].trim();
+					if ((descr.startsWith("\"") && descr.endsWith("\"")) ||
+						(descr.startsWith("'") && descr.endsWith("'")))
+							descr = descr.substring(1, descr.length() - 1);
+				}
+				
+				// and add it to our books
+				Ledger entry = new Ledger(amount, date, descr);	
+				if (books.post(account, entry))
+					entries++;
+				else
+					throw new ParseException("UNABLE TO POST", lines);
+			} 
+			reader.close();
+			
+			// display a processing confirmation dialog
+			String message = "File: " + chosen + 
+					"\nLines: " + lines +
+					"\nEntries: " + entries;
+			if (noAcct > 0)
+				message += "\nNo Account: " + noAcct;
+			JOptionPane.showMessageDialog(mainPane, message);
+			return true;
+		} catch (ParseException err) {
+			JOptionPane.showMessageDialog( mainPane,
+						err.getMessage()
+						+ "\nFile: " + chosen + ", line: " + err.getErrorOffset(),
+						"ERROR PROCESSING TRANSACTION FILE", JOptionPane.ERROR_MESSAGE );
+		} catch (NumberFormatException err) {
+			JOptionPane.showMessageDialog( mainPane,
+						err.getMessage()
+						+ "\nFile: " + chosen + ", line: " + lines,
+						"ERROR PROCESSING TRANSACTION FILE", JOptionPane.ERROR_MESSAGE );
+		} catch (IOException err ) {
+			JOptionPane.showMessageDialog( mainPane, 
+					err.getMessage() 
+					+ "\nFile: " + chosen,
+					"ERROR LOADING TRANSACTION FILE", JOptionPane.ERROR_MESSAGE );
 		}
 		return false;
 	}
