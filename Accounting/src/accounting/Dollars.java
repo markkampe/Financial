@@ -18,6 +18,8 @@ public class Dollars {
 	 * @param String to be parsed
 	 */
 	public static int Parse( String str ) throws NumberFormatException {
+		str = str.trim();	// lose any white space
+		
 		// we start with our original length
 		int start = 0;
 		int end = str.length();
