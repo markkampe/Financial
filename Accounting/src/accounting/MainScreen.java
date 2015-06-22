@@ -265,10 +265,13 @@ public class MainScreen extends JFrame
 				
 				// and add it to our books
 				Ledger entry = new Ledger(amount, date, descr);	
-				if (books.post(account, entry))
+				if (books.post(account, entry)) {
 					entries++;
-				else
+					continue;
+				} else {
+					reader.close();
 					throw new ParseException("UNABLE TO POST", lines);
+				}	
 			} 
 			reader.close();
 			
