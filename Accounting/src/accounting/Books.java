@@ -41,6 +41,21 @@ public class Books {
 	}
 	
 	/**
+	 * find the number of a named account
+	 * 
+	 * @param	acctName	name of desired account
+	 * 
+	 * @return	int			index of desired account (or -1)
+	 */
+	public int accountNumber(String accountName) {
+		for( int i = 0; i < num_accounts; i++ ) {
+			if (accountName.equals(accounts[i].name))
+				return( i );
+		}
+		return( -1 );
+	}
+	
+	/**
 	 * return the name of the n'th account
 	 * 
 	 * @param acctNumber	selection index of desired account
