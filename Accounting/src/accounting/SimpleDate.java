@@ -58,6 +58,8 @@ public class SimpleDate {
 		} catch (NumberFormatException e) {
 			throw new NumberFormatException( "invalid month " + e.getMessage() );
 		}
+		if (month < 0 || month > 12)
+			throw new NumberFormatException("illegal month number");
 		
 		// see if there is any more
 		str = str.substring(slash+1);
@@ -74,6 +76,8 @@ public class SimpleDate {
 		} catch (NumberFormatException e) {
 			throw new NumberFormatException( "invalid day " + e.getMessage() );
 		}
+		if (day < 1 || day > 31)
+			throw new NumberFormatException("illegal day number");
 		
 		// see if there is a year
 		if (slash > 0) {
@@ -88,6 +92,8 @@ public class SimpleDate {
 				else
 					year += 2000;
 			}
+			if (year < 1900 || year > 2100)
+				throw new NumberFormatException("illegal year number");
 		}	
 	}
 	
