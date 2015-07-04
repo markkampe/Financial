@@ -55,6 +55,8 @@ class Statement:
         self.output = sys.stdout    # default output file
 
         self.rules = rules          # tranaction clasification rules
+        self.process = True         # apply matching rules
+        self.sort = False           # sort output by date
 
 
         self.tagged = 0             # lines that had acct tags
@@ -282,7 +284,10 @@ class Statement:
             return
 
         # apply the rules to try to tag this line
-        (acct, aggregate, newdesc) = self.rules.match(desc)
+        if self.rules is not None:
+            (acct, aggregate, newdesc) = self.rules.match(desc)
+        else:
+            acct = None
 
         if acct is None:
             self.unmatched += 1
@@ -408,10 +413,13 @@ if __name__ == '__main__':
     parser.add_option("-o", "--outfile", type="string", dest="out_file",
                       metavar="FILE", default=None,
                       help="output file")
+    parser.add_option("-n", "--nomatch", action="store_true",
+                      dest="nomatch",
+                      help="suppress rule/account matching")
     (opts, files) = parser.parse_args()
 
     # digest the categorizing rules
-    r = Rules(opts.rule_file)
+    r = None if opts.nomatch else Rules(opts.rule_file)
 
     # instantiate a statement object
     s = Statement(r)
