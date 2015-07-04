@@ -28,18 +28,21 @@
 "WWW.RSABG.ORG*", Household, "nursery", AGGREGATE
 "J&P*PARKSEED*", Household, "nursery", AGGREGATE
 
-"PEPES TIRE SHOP*", Transportation, "tires", REPLACE
+"gas", Transportation, "gas", AGGREGATE
 "SHELL OIL*",    Transportation, "gas", AGGREGATE
 "CHEVRON CC*",   Transportation, "gas", AGGREGATE
 "COSTCO GAS*",   Transportation, "gas", AGGREGATE
 "USA *",Transportation, "gas", AGGREGATE
 "76 *", Transportation, "gas", AGGREGATE
 "ARCO PAYPOINT**", Transportation, "gas", AGGREGATE
+"PEPES TIRE SHOP*", Transportation, "tires", REPLACE
 "*GEICO*", Transportation, "m/c insurance", REPLACE
 "ST OF CA DMV*", Transportation, "registration", COMBINE
 "MERCURY CASUALTY*", Transportation, "car insurance", REPLACE
 "Online Payment * To Auto Club*", Transportation, "AAA membership", REPLACE
 "Online Payment * To Mercury Insurance*", Transportation, "car insurance", REPLACE
+
+"parking", Transportation, "parking", AGGREGATE
 "LAX AIRPORT LOT*", Transportation, "parking", AGGREGATE
 "BOB HOPE AIRPORT*", Transportation, "parking", AGGREGATE
 "AMPCO PARKING*", Transportation, "parking", AGGREGATE
@@ -51,9 +54,12 @@
 "BELLA VISTA INN*", "Commuting", "lodging", AGGREGATE
 "SOUTHWES*", "Commuting", "air fare", COMBINE
 
+"concert", Food-and-Fun, "concert", AGGREGATE
+"lunch", Food-and-Fun, "movies", AGGREGATE
 "AMC MERCADO*", Food-and-Fun, "movies", AGGREGATE
 "PACIFIC THEATRES*", Food-and-Fun, "movies", AGGREGATE
 
+"lunch, Food-and-Fun, "dinner", AGGREGATE
 "COMMONWEALTH*", Food-and-Fun, "dinner", AGGREGATE
 "TONYS ON THE PIER*", Food-and-Fun, "dinner", AGGREGATE
 "REAL FOOD DAILY*", Food-and-Fun, "dinner", AGGREGATE
@@ -68,6 +74,7 @@
 "TERRANEA RESORT", Food-and-Fun, "dinner", AGGREGATE
 "SONNYS HIDEAWAY*", Food-and-Fun, "dinner", AGGREGATE
 
+"lunch, Food-and-Fun, "lunch", AGGREGATE
 "PEDRO'S RESTAURANT*", Food-and-Fun, "lunch", AGGREGATE
 "TOMATINA*", Food-and-Fun, "lunch", AGGREGATE
 "SUBWAY *", Food-and-Fun, "lunch", AGGREGATE
@@ -94,6 +101,7 @@
 "THE GREYHOUND*", Food-and-Fun, "lunch", AGGREGATE
 "Zankou Chicken*", Food-and-Fun, "lunch", AGGREGATE
 
+"groceries", Groceries, Groceries, AGGREGATE
 "*SUPERIOR*GROCER*", Groceries, Groceries, AGGREGATE
 "FOOD4LESS*", Groceries, Groceries, AGGREGATE
 "LUCKY *", Groceries, Groceries, AGGREGATE
@@ -134,6 +142,7 @@
 "Onine Payment * To Divers Alert Network*", Hobbies, "DAN mshp/ins", REPLACE
 "VICENCIA AND BUCKLEY*", Hobbies, "liability ins", REPLACE
 
+"LK clothing", Clothing, "LK clothing", AGGREGATE
 "SUPERCUTS*", Clothing, "MK h/c", REPLACE
 "CALIFORNIA CUTE CUTS*", Clothing, "LK h/c", REPLACE
 "*DOCKERS STORE ONLINE*", Clothing, "MK Dockers", REPLACE
@@ -152,6 +161,7 @@
 "AQUA LUNG*", Hobbies, None, PRESERVE
 "CYCLE GEAR *", Hobbies, None, PRESERVE
 
+"cash", Cash, "", AGGREGATE
 "WITHDRAW*", Cash, "withdrawal", AGGREGATE
 "ATM WITHDRAWAL*", Cash, "ATM", AGGREGATE
 "NON-CHASE ATM WITHDRAW*", Cash, "ATM", AGGREGATE
