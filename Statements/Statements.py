@@ -60,7 +60,7 @@ class Entry:
         """
         sep = ", "
         s = self.date + sep + str(self.amount) + sep + self.account + \
-            sep + self.description
+            sep + '"' + self.description + '"'
         return s
 
 
@@ -311,7 +311,7 @@ class Statement:
         # figure out what to do with this entry
         if acct is None:
             self.unmatched += 1
-            entry = Entry(date, amount, acct, '"' + desc + '"')
+            entry = Entry(date, amount, acct, desc)
         else:
             # NOTE: newdesc has already been quoted
             self.matched += 1
@@ -356,12 +356,12 @@ class Statement:
         """
 
         # reinitialize the per-file parameters/statistics
-        self.date = -1
-        self.amt = -1
-        self.acct = -1
-        self.desc = -1
-        self.file_credit = 0
-        self.file_debit = 0
+        self.date = -1          # haven't figured out the columns yet
+        self.amt = -1           # haven't figured out the columns yet
+        self.acct = -1          # haven't figured out the columns yet
+        self.desc = -1          # haven't figured out the columns yet
+        self.file_credit = 0    # haven't accumulated any data
+        self.file_debit = 0     # haven't accumulated any data
 
         # use the first line to figure out the data format
         input = open(filename, 'rb')
@@ -388,7 +388,9 @@ class Statement:
         input.close()
 
     def filestats(self, filename):
-        # output the per file totals
+        """
+            output the per file statistics
+        """
         statsmsg = "FILE: " + filename
         statsmsg += ",\tcredits=" + str(self.file_credit)
         statsmsg += ",\tdebits=" + str(self.file_debit)
@@ -400,7 +402,9 @@ class Statement:
         self.tot_debit += self.file_debit
 
     def totstats(self):
-        # output the per file totals
+        """
+            output the grand total statistics
+        """
         statsmsg = "TOTALS:"
         statsmsg += ",\tcredits=" + str(self.tot_credit)
         statsmsg += ",\tdebits=" + str(self.tot_debit)
