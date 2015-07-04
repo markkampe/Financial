@@ -326,14 +326,22 @@ class Statement:
                 return
             else:
                 entry = Entry(date, amount, acct, newdesc)
-        self.output.write(entry.str() + "\n")
+
+        # see if we need to accumulate output for sorting
+        if (self.sort):
+            self.buffered.append(entry)
+        else:
+            self.output.write(entry.str() + "\n")
 
     def postscript(self):
         """
             print out the aggregated results and statistics
         """
-        # output aggregated sums
-        sep = ", "
+        # output any items buffered for sorting
+        for entry in sorted(self.buffered, key=lambda e: e.date):
+            self.output.write(entry.str() + "\n")
+
+        # output aggregated sums (date sorting is meaningless)
         for key in self.aggregations:
             entry = self.aggregations[key]
             self.output.write(entry.str() + "\n")
@@ -431,6 +439,9 @@ if __name__ == '__main__':
     parser.add_option("-o", "--outfile", type="string", dest="out_file",
                       metavar="FILE", default=None,
                       help="output file")
+    parser.add_option("-s", "--sort", action="store_true",
+                      dest="sort",
+                      help="sort output by date")
     parser.add_option("-n", "--nomatch", action="store_true",
                       dest="nomatch",
                       help="suppress rule/account matching")
@@ -444,7 +455,11 @@ if __name__ == '__main__':
 
     # set the output file
     if opts.out_file is not None:
-        s.output = open(opts.out_file,"w")
+        s.output = open(opts.out_file, "w")
+
+    # see if we are supposet to sort our output
+    if opts.sort:
+        s.sort = True
 
     # process the input files
     if len(files) >= 1:
