@@ -288,6 +288,8 @@ class Statement:
         date = cols[self.date]
         amount = Decimal(cols[self.amt])
         desc = cols[self.desc]      # NOTE: this has been unquoted
+        entry = None
+        aggregate = False
 
         # talley credits and debits
         if amount > 0:
@@ -295,16 +297,17 @@ class Statement:
         else:
             self.file_debit += amount
 
-        # now figure out the account
-        entry = None
-
         # maybe we already have a tag for this line
         if self.acct > 0 and cols[self.acct] != "":
             self.tagged += 1
             acct = cols[self.acct]
+            newdesc = desc
+            # FIX ... we might should aggregate this one
         elif self.rules is not None:
             # may be we can use the rules to infer the account
             (acct, aggregate, newdesc) = self.rules.match(desc)
+            if acct is not None:
+                self.matched += 1
         else:
             acct = None
 
@@ -313,8 +316,6 @@ class Statement:
             self.unmatched += 1
             entry = Entry(date, amount, acct, desc)
         else:
-            # NOTE: newdesc has already been quoted
-            self.matched += 1
             if aggregate:
                 key = acct + "." + newdesc
                 if key in self.aggregations:
