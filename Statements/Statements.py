@@ -266,10 +266,10 @@ class Statement:
             accumulate a subtotal to be printed at the end of the
             report
         """
-        sep = ",\t"
+        sep = ", "
         date = cols[self.date]
         amt = cols[self.amt]
-        desc = cols[self.desc]
+        desc = cols[self.desc]      # NOTE: this has been unquoted
         output = date + sep + amt + sep
 
         # talley credits and debits
@@ -280,11 +280,9 @@ class Statement:
             self.file_debit += amount
 
         # maybe we already have a tag for this line
-        if self.acct > 0 and cols[self.act] != "":
-            acct = cols[self.act]
-            output += acct + sep + desc
-            print output
+        if self.acct > 0 and cols[self.acct] != "":
             self.tagged += 1
+            acct = cols[self.acct]
             return
 
         # apply the rules to try to tag this line
@@ -294,6 +292,7 @@ class Statement:
             self.unmatched += 1
             output += sep + '"' + desc + '"'
         else:
+            # NOTE: newdesc has already been quoted
             self.matched += 1
             if aggregate:
                 key = acct + "." + newdesc
@@ -312,7 +311,7 @@ class Statement:
             print out the aggregated results and statistics
         """
         # output aggregated sums
-        sep = ",\t"
+        sep = ", "
         for key in self.aggregations:
             (date, acct, amt, desc) = self.aggregations[key]
             output = date + sep
@@ -353,8 +352,12 @@ class Statement:
         # then process the data lines in the file
         reader = csv.reader(input, skipinitialspace=True)
         for cols in reader:
-            if len(cols) >= 3:          # ignore blank/short lines
-                self.process_line(cols)
+            if len(cols) < 3:       # ignore blank/short lines
+                continue;
+            # make sure we strip all leading/trailing white space
+            for c in range(len(cols)):
+                cols[c] = cols[c].strip();
+            self.process_line(cols)
         input.close()
 
     def filestats(self, filename):
