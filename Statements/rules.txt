@@ -28,6 +28,7 @@
 "WWW.RSABG.ORG*", Household, "nursery", AGGREGATE
 "J&P*PARKSEED*", Household, "nursery", AGGREGATE
 
+"PEPES TIRE SHOP*", Transportation, "tires", REPLACE
 "SHELL OIL*",    Transportation, "gas", AGGREGATE
 "CHEVRON CC*",   Transportation, "gas", AGGREGATE
 "COSTCO GAS*",   Transportation, "gas", AGGREGATE
@@ -43,8 +44,9 @@
 "BOB HOPE AIRPORT*", Transportation, "parking", AGGREGATE
 "AMPCO PARKING*", Transportation, "parking", AGGREGATE
 "ABM PARKING*", Transportation, "parking", AGGREGATE
+"LA CITY PARKING METER*", Transportation, "parking", AGGREGATE
 
-"UNIONSTATIONFLYAWAY*", Vacation, "shuttle", AGGREGATE
+"UNIONSTATIONFLYAWAY*", Vacations, "shuttle", AGGREGATE
 
 "BELLA VISTA INN*", "Commuting", "lodging", AGGREGATE
 "SOUTHWES*", "Commuting", "air fare", COMBINE
@@ -52,6 +54,7 @@
 "AMC MERCADO*", Food-and-Fun, "movies", AGGREGATE
 "PACIFIC THEATRES*", Food-and-Fun, "movies", AGGREGATE
 
+"COMMONWEALTH*", Food-and-Fun, "dinner", AGGREGATE
 "TONYS ON THE PIER*", Food-and-Fun, "dinner", AGGREGATE
 "REAL FOOD DAILY*", Food-and-Fun, "dinner", AGGREGATE
 "MIMIS CAFE*", Food-and-Fun, "dinner", AGGREGATE
@@ -62,6 +65,8 @@
 "THE BRIT*", Food-and-Fun, "dinner", AGGREGATE
 "ELEPHANT BAR *", Food-and-Fun, "dinner", AGGREGATE
 "OOMASA INC*", Food-and-Fun, "dinner", AGGREGATE
+"TERRANEA RESORT", Food-and-Fun, "dinner", AGGREGATE
+"SONNYS HIDEAWAY*", Food-and-Fun, "dinner", AGGREGATE
 
 "PEDRO'S RESTAURANT*", Food-and-Fun, "lunch", AGGREGATE
 "TOMATINA*", Food-and-Fun, "lunch", AGGREGATE
@@ -104,30 +109,34 @@
 "PETCO*", Groceries, "dog food", AGGREGATE
 "BEVERAGES & MORE*", Groceries, "alcohol", AGGREGATE
 
-"Online Payment * To Genworth Life*", MD, "LTC insurance", REPLACE
-"CONEXIS*", MD, "FSA reimb", REPLACE
+"Online Payment * To Genworth Life*", Medical, "LTC insurance", REPLACE
+"CONEXIS*", Medical, "FSA reimb", REPLACE
+"RICHARD E. HEYES DDS*", Medical, "DD - Heyes", REPLACE
 
-"NCSU STUDENT HEALTH", MD, "CK ov", REPLACE
-"SQ *ASPIRE COUNSELING GRO*", MD, "CK ov", REPLACE
-"JOHN LAWRENCE GARWOOD *", MD, "MK OD", REPLACE
-"KP RX*", MD, "Prescriptions", COMBINE
+"NCSU STUDENT HEALTH", Medical, "CK ov", REPLACE
+"SQ *ASPIRE COUNSELING GRO*", Medical, "CK ov", REPLACE
+"JOHN LAWRENCE GARWOOD *", Medical, "MK OD", REPLACE
+"KP RX*", Medical, "Prescriptions", COMBINE
 
-"BLUE SHIELD OF CA*", MD, "JK ins", REPLACE
-"FSI*HCSC PREMIUM PMT*", MD, "JK ins", REPLACE
-"USC CARE MEDICAL GROUP*", MD, "JK ov USC", REPLACE
-"HUNTINGTON DERMATOLOGY*", MD, "JK ov Huntington", REPLACE
-"*JACKLIN POLADIAN MD*", MD, "JK ov Poladian", REPLACE
-"*ELEANOR LEUNG MD*", MD, "JK ov Leung", REPLACE
-"LENS.COM*", MD, "JK contacts", REPLACE
+"BLUE SHIELD OF CA*", Medical, "JK ins", REPLACE
+"FSI*HCSC PREMIUM PMT*", Medical, "JK ins", REPLACE
+"USC CARE MEDICAL GROUP*", Medical, "JK ov USC", REPLACE
+"HUNTINGTON DERMATOLOGY*", Medical, "JK ov Huntington", REPLACE
+"B S MAIN OFFICE*", Medical, "JK billed", REPLACE
+"*JACKLIN POLADIAN MD*", Medical, "JK ov Poladian", REPLACE
+"*ELEANOR LEUNG MD*", Medical, "JK ov Leung", REPLACE
+"LENS.COM*", Medical, "JK contacts", REPLACE
 
-"ANIMAL SPECIALTY GROUP*", MD, "vet (animal specialty)", REPLACE
-"LA VILLAGE VET*", MD, "vet (village)", REPLACE
+"ANIMAL SPECIALTY GROUP*", Medical, "vet (animal specialty)", REPLACE
+"LA VILLAGE VET*", Medical, "vet (village)", REPLACE
 
-"SPORT CHALET* DIRECT DEP*", Hobby, "MK SCUBA pay", REPLACE
-"Onine Payment * To Divers Alert Network*", Hobby, "DAN mshp/ins", REPLACE
-"VICENCIA AND BUCKLEY*", Hobby, "liability ins", REPLACE
+"SPORT CHALET* DIRECT DEP*", Hobbies, "MK SCUBA pay", REPLACE
+"Onine Payment * To Divers Alert Network*", Hobbies, "DAN mshp/ins", REPLACE
+"VICENCIA AND BUCKLEY*", Hobbies, "liability ins", REPLACE
 
 "SUPERCUTS*", Clothing, "MK h/c", REPLACE
+"CALIFORNIA CUTE CUTS*", Clothing, "LK h/c", REPLACE
+"*DOCKERS STORE ONLINE*", Clothing, "MK Dockers", REPLACE
 
 "ACM", Misc, "MK ACM dues", REPLACE
 "INTL SOC ARBORICULTURE", Misc, "LK ISA dues", REPLACE
@@ -139,7 +148,9 @@
 "THINKGEEK*", "Toys", ThinkGeek, REPLACE
 "SPARKFUN ELECTRONICS*", Toys, "SparkFun", REPLACE
 
-"AQUA LUNG*", Hobby, None, PRESERVE
+"DAN SERVICES*", Hobbies, "DAN mshp/ins", REPLACE
+"AQUA LUNG*", Hobbies, None, PRESERVE
+"CYCLE GEAR *", Hobbies, None, PRESERVE
 
 "WITHDRAW*", Cash, "withdrawal", AGGREGATE
 "ATM WITHDRAWAL*", Cash, "ATM", AGGREGATE
@@ -183,12 +194,12 @@
 "THEODORE PAYNE FOUNDAT*", Household, "nursery", REPLACE
 
 # These are clearly medical, but I am not sure what they actually are
-"KAISER *", MD, None, PRESERVE
-"Online Payment * To Kaiser *", MD, None, PRESERVE
-"QDI*QUEST DIAGNOSTICS*", MD, None, PRESERVE
-"CVS/PHARMACY*", MD, None, PRESERVE
-"RITE AID *", MD, None, PRESERVE
-"WALGREENS *", MD, None, PRESERVE
+"KAISER *", Medical, None, PRESERVE
+"Online Payment * To Kaiser *", Medical, None, PRESERVE
+"QDI*QUEST DIAGNOSTICS*", Medical, None, PRESERVE
+"CVS/PHARMACY*", Medical, None, PRESERVE
+"RITE AID *", Medical, None, PRESERVE
+"WALGREENS *", Medical, None, PRESERVE
 
 # These are initial guesses based on what we usually buy from these vendors
 "SPORT CHALE*", "Hobby", None, PRESERVE
@@ -198,5 +209,6 @@
 "TARGET *", Clothing, None, PRESERVE
 "SUR LA TABLE *", Household, None, PRESERVE
 "POTTERY BARN*", Household, None, PRESERVE
+"MICHAELS*", Toys, None, PRESERVE
 "DELTA AIR*", "Vacations", None, PRESERVE
 
