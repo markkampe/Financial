@@ -66,13 +66,13 @@ class Rules:
             if fnmatch.fnmatch(desc, r.pat):
                 p = r.process
                 if p == "AGGREGATE":
-                    return (r.acct, True, '"' + r.descr + '"')
+                    return (r.acct, True, r.descr)
                 elif p == "REPLACE":
-                    return (r.acct, False, '"' + r.descr + '"')
+                    return (r.acct, False, r.descr)
                 elif p == "COMBINE":
-                    newdesc = '"' + r.descr + ': ' + desc + '"'
+                    newdesc = r.descr + ': ' + desc
                     return (r.acct, False, newdesc)
                 else:   # preserve
-                    return (r.acct, False, '"' + desc + '"')
+                    return (r.acct, False, desc)
 
-        return (None, False, '"' + desc + '"')
+        return (None, False, desc)
