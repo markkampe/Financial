@@ -43,6 +43,27 @@ def findCol(string, array):
     return -1
 
 
+class Entry:
+    """
+        A single ledger entry
+    """
+
+    def __init__(self, date, amount, account, description):
+        self.date = date
+        self.account = "" if account is None else account
+        self.amount = amount
+        self.description = description
+
+    def str(self):
+        """
+            return the canonical string representation
+        """
+        sep = ", "
+        s = self.date + sep + str(self.amount) + sep + self.account + \
+            sep + self.description
+        return s
+
+
 class Statement:
     """
         Bank statement parser
@@ -53,11 +74,9 @@ class Statement:
             constructor for a Statement parser
         """
         self.output = sys.stdout    # default output file
-
         self.rules = rules          # tranaction clasification rules
         self.process = True         # apply matching rules
         self.sort = False           # sort output by date
-
 
         self.tagged = 0             # lines that had acct tags
         self.matched = 0            # lines for which we found acct tags
@@ -68,6 +87,7 @@ class Statement:
         self.tot_debit = 0          # grand total debits
 
         self.aggregations = {}      # accumlating aggregations
+        self.buffered = []          # buffered output (for sorting)
 
     def analyze_headers(self, cols):
         """
@@ -266,46 +286,47 @@ class Statement:
         """
         sep = ", "
         date = cols[self.date]
-        amt = cols[self.amt]
+        amount = Decimal(cols[self.amt])
         desc = cols[self.desc]      # NOTE: this has been unquoted
-        output = date + sep + amt + sep
 
         # talley credits and debits
-        amount = Decimal(amt)
         if amount > 0:
             self.file_credit += amount
         else:
             self.file_debit += amount
 
+        # now figure out the account
+        entry = None
+
         # maybe we already have a tag for this line
         if self.acct > 0 and cols[self.acct] != "":
             self.tagged += 1
             acct = cols[self.acct]
-            return
-
-        # apply the rules to try to tag this line
-        if self.rules is not None:
+        elif self.rules is not None:
+            # may be we can use the rules to infer the account
             (acct, aggregate, newdesc) = self.rules.match(desc)
         else:
             acct = None
 
+        # figure out what to do with this entry
         if acct is None:
             self.unmatched += 1
-            output += sep + '"' + desc + '"'
+            entry = Entry(date, amount, acct, '"' + desc + '"')
         else:
             # NOTE: newdesc has already been quoted
             self.matched += 1
             if aggregate:
                 key = acct + "." + newdesc
                 if key in self.aggregations:
-                    (date, acct, cur_total, newdesc) = self.aggregations[key]
-                    amount += cur_total
-                value = (date, acct, amount, newdesc)
-                self.aggregations[key] = value
+                    entry = self.aggregations[key]
+                    entry.amount += amount
+                else:
+                    entry = Entry(date, amount, acct, newdesc)
+                self.aggregations[key] = entry
                 return
             else:
-                output += acct + sep + newdesc
-        self.output.write(output + "\n")
+                entry = Entry(date, amount, acct, newdesc)
+        self.output.write(entry.str() + "\n")
 
     def postscript(self):
         """
@@ -314,11 +335,8 @@ class Statement:
         # output aggregated sums
         sep = ", "
         for key in self.aggregations:
-            (date, acct, amt, desc) = self.aggregations[key]
-            output = date + sep
-            output += str(amt)
-            output += sep + acct + sep + desc
-            self.output.write(output + "\n")
+            entry = self.aggregations[key]
+            self.output.write(entry.str() + "\n")
 
     def processFile(self, filename):
         """
@@ -354,10 +372,10 @@ class Statement:
         reader = csv.reader(input, skipinitialspace=True)
         for cols in reader:
             if len(cols) < 3:       # ignore blank/short lines
-                continue;
+                continue
             # make sure we strip all leading/trailing white space
             for c in range(len(cols)):
-                cols[c] = cols[c].strip();
+                cols[c] = cols[c].strip()
             self.process_line(cols)
         input.close()
 
@@ -430,10 +448,15 @@ if __name__ == '__main__':
 
     # process the input files
     if len(files) >= 1:
+        # write out a standard file header
         s.preamble()
+
+        # process each input file
         for f in files:
             s.processFile(f)
             s.filestats(f)
+
+        # write out the postscript stuff
         s.postscript()
         s.totstats()
     else:
