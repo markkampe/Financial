@@ -46,30 +46,26 @@ def findCol(string, array):
 class Statement:
     """
         Bank statement parser
-
-        Basic Attributes:
-            .date ...   column for date field
-            .amt ...    column for amount field
-            .acct ...   column for account field
-            .desc ...   column for description field
     """
 
     def __init__(self, rules):
         """
             constructor for a Statement parser
         """
-        self.rules = rules
+        self.output = sys.stdout    # default output file
 
-        # initialize the processing statistics
-        self.tagged = 0
-        self.matched = 0
-        self.unmatched = 0
-        self.file_credit = 0
-        self.file_debit = 0
-        self.tot_credit = 0
-        self.tot_debit = 0
+        self.rules = rules          # tranaction clasification rules
 
-        self.aggregations = {}
+
+        self.tagged = 0             # lines that had acct tags
+        self.matched = 0            # lines for which we found acct tags
+        self.unmatched = 0          # lines we could not match
+        self.file_credit = 0        # per file sum of credits
+        self.file_debit = 0         # per file sum of debits
+        self.tot_credit = 0         # grand total credits
+        self.tot_debit = 0          # grand total debits
+
+        self.aggregations = {}      # accumlating aggregations
 
     def analyze_headers(self, cols):
         """
@@ -258,7 +254,7 @@ class Statement:
         """
             print out the file preamble (column headings)
         """
-        print "Date, Amount, Account, Description"
+        self.output.write("Date, Amount, Account, Description" + "\n")
 
     def process_line(self, cols):
         """
@@ -304,7 +300,7 @@ class Statement:
                 return
             else:
                 output += acct + sep + newdesc
-        print output
+        self.output.write(output + "\n")
 
     def postscript(self):
         """
@@ -317,7 +313,7 @@ class Statement:
             output = date + sep
             output += str(amt)
             output += sep + acct + sep + desc
-            print output
+            self.output.write(output + "\n")
 
     def processFile(self, filename):
         """
@@ -409,6 +405,9 @@ if __name__ == '__main__':
     parser.add_option("-r", "--rules", type="string", dest="rule_file",
                       metavar="FILE",
                       help="categorizing rules")
+    parser.add_option("-o", "--outfile", type="string", dest="out_file",
+                      metavar="FILE", default=None,
+                      help="output file")
     (opts, files) = parser.parse_args()
 
     # digest the categorizing rules
@@ -416,6 +415,10 @@ if __name__ == '__main__':
 
     # instantiate a statement object
     s = Statement(r)
+
+    # set the output file
+    if opts.out_file is not None:
+        s.output = open(opts.out_file,"w")
 
     # process the input files
     if len(files) >= 1:
@@ -427,3 +430,6 @@ if __name__ == '__main__':
         s.totstats()
     else:
         sys.stderr.write("ERROR: no input file(s) specified\n")
+
+    if opts.out_file is not None:
+        s.output.close()
