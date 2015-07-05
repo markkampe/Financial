@@ -58,22 +58,21 @@ class Rules:
                 description (unquoted string)
 
             Returns:
-                account name (or None)
-                (boolean) should this line be aggregated
-                quoted replacement description string
+                Entry (with potentially updated account, description)
+                should this be confirmed if possible
         """
         # look for a matching rule
         for r in self.rules:
             if fnmatch.fnmatch(desc, r.pat):
                 p = r.process
                 if p == "AGGREGATE":
-                    return Entry("", 0, r.acct, r.descr)
+                    return (Entry("", 0, r.acct, r.descr), False)
                 elif p == "REPLACE":
-                    return Entry("", 0, r.acct, r.descr)
+                    return (Entry("", 0, r.acct, r.descr), False)
                 elif p == "COMBINE":
                     newdesc = r.descr + ': ' + desc
-                    return Entry("", 0, r.acct, newdesc)
+                    return (Entry("", 0, r.acct, newdesc), True)
                 else:   # preserve
-                    return Entry("", 0, r.acct, desc)
+                    return (Entry("", 0, r.acct, desc), False)
 
-        return None
+        return (None, False)
