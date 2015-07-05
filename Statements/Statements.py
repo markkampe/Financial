@@ -74,8 +74,10 @@ class Statement:
 
         # initialize the aggregations/accounts lists
         self.aggregations = {}      # accumulated values
+        self.agg_list = set()       # aggregation menu
         self.acc_list = set()       # account menu
         for r in rules.rules:
+            self.acc_list.add(r.acct)
             if r.process == "AGGREGATE":
                 key = r.acct
                 if r.descr != "":

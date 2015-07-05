@@ -64,8 +64,11 @@ class Gui(object):
         f = Frame(t)
         b = Button(f, text="Accept", command=self.accept)
         b.pack(side=LEFT, padx=self.PADDING)
-        b = Button(f, text="ACCOUUNT")
-        b.pack(side=LEFT, padx=self.PADDING)
+
+        self.account = StringVar(f)
+        self.account.set(entry.account)
+        m = OptionMenu(f, self.account, *sorted(statement.acc_list))
+        m.pack(side=LEFT, padx=self.PADDING)
         b = Button(f, text="AGGREGATE")
         b.pack(side=LEFT, padx=self.PADDING)
         b = Button(f, text="Delete",command=self.delete)
@@ -76,7 +79,10 @@ class Gui(object):
         t.pack(side=TOP)
 
     def accept(self):
-        self.entry = Entry.Entry(self.date, self.amount, self.account, \
+        acct = self.account.get()
+        if acct == "None":
+            acct = None
+        self.entry = Entry.Entry(self.date, self.amount, acct,
             self.description)
         self.root.quit()
 
