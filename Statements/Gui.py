@@ -1,6 +1,6 @@
 from Tkinter import Tk, OptionMenu, Label, LabelFrame, Text, Button, Frame
 from Tkinter import StringVar, Entry
-from Tkinter import RIDGE, END, TOP, LEFT, BOTH
+from Tkinter import END, TOP, LEFT
 
 import Entry
 
@@ -62,13 +62,20 @@ class Gui(object):
         b = Button(f, text="Accept", command=self.accept)
         b.pack(side=LEFT, padx=self.PADDING)
 
+        # account selection menu
         self.account = StringVar(f)
         self.account.set(entry.account)
         m = OptionMenu(f, self.account, *sorted(statement.acc_list),
                        command=self.chooseAcct)
         m.pack(side=LEFT, padx=self.PADDING)
-        b = Button(f, text="DESCRIPTIONS")
-        b.pack(side=LEFT, padx=self.PADDING)
+
+        # aggregate description selection menu
+        self.description = StringVar(f)
+        self.menu = OptionMenu(f, self.description,
+                               *sorted(statement.agg_list),
+                               command=self.chooseDesc)
+        self.menu.pack(side=LEFT, padx=self.PADDING)
+
         b = Button(f, text="Delete", command=self.delete)
         b.pack(side=LEFT, padx=self.PADDING)
         f.pack(padx=self.PADDING, pady=self.PADDING)
@@ -78,6 +85,9 @@ class Gui(object):
         self.entry = entry  # default: return what we got
 
     def accept(self):
+        """
+            Accept button action - create Entry w/current description
+        """
         date = self.date.cget("text")
         amount = self.amount.cget("text")
         acct = self.account.get()
@@ -88,14 +98,29 @@ class Gui(object):
         self.root.quit()
 
     def delete(self):
+        """
+            Delete button action - return a null Entry
+        """
         self.entry = None
         self.root.quit()
 
     def chooseAcct(self, selection):
+        """
+            Account menu action - select account
+                may have side-effect of enabling standard
+                description menu
+        """
         self.acct.delete(1.0, END)
         self.acct.insert(1.0, selection)
+        return
 
-    # FIX: on account selection, initialize the aggregate description list
+    def chooseDesc(self, selection):
+        """
+            Description menu action - select a standard description
+        """
+        self.desc.delete(1.0, END)
+        self.desc.insert(1.0, selection)
+        return
 
     def mainloop(self):
         """

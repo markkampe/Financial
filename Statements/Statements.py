@@ -74,8 +74,8 @@ class Statement:
 
         # initialize the aggregations/accounts lists
         self.aggregations = {}      # accumulated values
-        self.agg_list = set()       # aggregation menu
         self.acc_list = set()       # account menu
+        self.agg_list = set()       # aggregation description menu
         for r in rules.rules:
             self.acc_list.add(r.acct)
             if r.process == "AGGREGATE":
@@ -85,6 +85,7 @@ class Statement:
                 date = "99/99/9999"     # will be superceded
                 zero = Decimal(0.00)
                 self.aggregations[key] = Entry(date, zero, r.acct, r.descr)
+                self.agg_list.add(r.descr)
 
     def analyze_headers(self, cols):
         """
