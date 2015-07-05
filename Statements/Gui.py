@@ -4,6 +4,7 @@ from Tkinter import RIDGE, END, TOP, LEFT, BOTH
 
 import Entry
 
+
 class Gui(object):
     """
         This is a single-transaction dialog box for characterizing
@@ -19,18 +20,13 @@ class Gui(object):
         """
             instantiate a transaction window
         """
-        self.date = entry.date
-        self.amount = entry.amount
-        self.account = entry.account
-        self.description = entry.description
-
         self.root = Tk()
         self.root.title('Manual Annotation')
         t = Frame(self.root, bd=2 * self.BORDER)
 
         # top stack: input file name
         f = Frame(t)
-        caption = "File: " + statement.filename + ", line: "+ \
+        caption = "File: " + statement.filename + ", line: " + \
             str(statement.file_line)
         Label(f, text=caption).pack()
         f.pack(pady=self.PADDING)
@@ -38,27 +34,28 @@ class Gui(object):
         # middle stack: entry details
         f = Frame(t)
         f1 = LabelFrame(f, text="Date")
-        Label(f1, text=self.date).pack(padx=self.PADDING, pady=self.PADDING)
+        self.date = Label(f1, text=entry.date)
+        self.date.pack(padx=self.PADDING, pady=self.PADDING)
         f1.pack(side=LEFT, padx=self.PADDING)
 
         f1 = LabelFrame(f, text="Amount")
-        Label(f1, text=self.amount).pack(padx=self.PADDING, pady=self.PADDING)
+        self.amount = Label(f1, text=entry.amount)
+        self.amount.pack(padx=self.PADDING, pady=self.PADDING)
         f1.pack(side=LEFT, padx=self.PADDING)
 
         f1 = LabelFrame(f, text="Account")
-        acct = Text(f1, height=1, width=self.ACCT_WID)
+        self.acct = Text(f1, height=1, width=self.ACCT_WID)
         if entry.account is not None:
-            acct.insert(END, self.account)
-        acct.pack(padx=self.PADDING, pady=self.PADDING)
+            self.acct.insert(END, entry.account)
+        self.acct.pack(padx=self.PADDING, pady=self.PADDING)
         f1.pack(side=LEFT, padx=self.PADDING)
 
         f1 = LabelFrame(f, text="Description")
-        desc = Text(f1, height=1, width=self.DESC_WID)
-        desc.insert(END, self.description)
-        desc.pack(padx=self.PADDING, pady=self.PADDING)
+        self.desc = Text(f1, height=1, width=self.DESC_WID)
+        self.desc.insert(END, entry.description)
+        self.desc.pack(padx=self.PADDING, pady=self.PADDING)
         f1.pack(side=LEFT, padx=self.PADDING)
         f.pack(pady=self.PADDING)
-
 
         # bottom stack: action buttons
         f = Frame(t)
@@ -67,28 +64,38 @@ class Gui(object):
 
         self.account = StringVar(f)
         self.account.set(entry.account)
-        m = OptionMenu(f, self.account, *sorted(statement.acc_list))
+        m = OptionMenu(f, self.account, *sorted(statement.acc_list),
+                       command=self.chooseAcct)
         m.pack(side=LEFT, padx=self.PADDING)
-        b = Button(f, text="AGGREGATE")
+        b = Button(f, text="DESCRIPTIONS")
         b.pack(side=LEFT, padx=self.PADDING)
-        b = Button(f, text="Delete",command=self.delete)
+        b = Button(f, text="Delete", command=self.delete)
         b.pack(side=LEFT, padx=self.PADDING)
         f.pack(padx=self.PADDING, pady=self.PADDING)
 
         # finalize
         t.pack(side=TOP)
+        self.entry = entry  # default: return what we got
 
     def accept(self):
+        date = self.date.cget("text")
+        amount = self.amount.cget("text")
         acct = self.account.get()
         if acct == "None":
             acct = None
-        self.entry = Entry.Entry(self.date, self.amount, acct,
-            self.description)
+        descr = self.desc.get(1.0, END).replace('\n', '')
+        self.entry = Entry.Entry(date, amount, acct, descr)
         self.root.quit()
 
     def delete(self):
         self.entry = None
         self.root.quit()
+
+    def chooseAcct(self, selection):
+        self.acct.delete(1.0, END)
+        self.acct.insert(1.0, selection)
+
+    # FIX: on account selection, initialize the aggregate description list
 
     def mainloop(self):
         """
