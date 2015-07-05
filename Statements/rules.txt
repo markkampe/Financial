@@ -161,11 +161,13 @@
 "AQUA LUNG*", Hobbies, None, PRESERVE
 "CYCLE GEAR *", Hobbies, None, PRESERVE
 
+"gift", Gifts, "", AGGREGATE
+
 "cash", Cash, "", AGGREGATE
-"WITHDRAW*", Cash, "withdrawal", AGGREGATE
-"ATM WITHDRAWAL*", Cash, "ATM", AGGREGATE
-"NON-CHASE ATM WITHDRAW*", Cash, "ATM", AGGREGATE
-"NON-CHASE ATM FEE-WITH*", Cash, "ATM fee", AGGREGATE
+"WITHDRAW*", Cash, "", AGGREGATE
+"ATM WITHDRAWAL*", Cash, "", AGGREGATE
+"NON-CHASE ATM WITHDRAW*", Cash, "", AGGREGATE
+"NON-CHASE ATM FEE-WITH*", Misc, "ATM fee", AGGREGATE
 "THEODORE PAYNE F PAYROLL*", Deposit, "LK pay", AGGREGATE
 "FUTUREWEI TECHNO PAYROLL*", Deposit, "MK pay", AGGREGATE
 "FUTUREWEI TECHNO PAYMENT*", Deposit, "expense reimb", AGGREGATE
@@ -212,7 +214,7 @@
 "WALGREENS *", Medical, None, PRESERVE
 
 # These are initial guesses based on what we usually buy from these vendors
-"SPORT CHALE*", "Hobby", None, PRESERVE
+"SPORT CHALE*", "Hobbies", None, PRESERVE
 "BIG 5 SPORTING GOODS*", Clothing, None, PRESERVE
 "REI *", Clothing, None, PRESERVE
 "TARGET.COM*", Clothing, None, PRESERVE
@@ -222,3 +224,6 @@
 "MICHAELS*", Toys, None, PRESERVE
 "DELTA AIR*", "Vacations", None, PRESERVE
 
+# These are not really matching rules.  Just add accounts to menu
+"IT WILL NEVER HAPPEN", Large-Expenses, "", PRESERVE
+"IT WILL NEVER HAPPEN", Project, "", PRESERVE
