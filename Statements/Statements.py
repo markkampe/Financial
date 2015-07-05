@@ -83,11 +83,20 @@ class Statement:
         self.unmatched = 0          # lines we could not match
         self.file_credit = 0        # per file sum of credits
         self.file_debit = 0         # per file sum of debits
+        self.tot_files = 0          # total files processed
         self.tot_credit = 0         # grand total credits
         self.tot_debit = 0          # grand total debits
 
-        self.aggregations = {}      # accumlating aggregations
         self.buffered = []          # buffered output (for sorting)
+
+        # initialize the aggregations
+        self.aggregations = {}      # accumlating aggregations
+        for r in rules.rules:
+            if r.process == "AGGREGATE":
+                key = r.acct + "." + r.descr
+                date = "00/00/0000" # will fix later
+                zero = Decimal(0.00)
+                self.aggregations[key] = Entry(date, zero, r.acct, r.descr)
 
     def analyze_headers(self, cols):
         """
@@ -302,7 +311,9 @@ class Statement:
             self.tagged += 1
             acct = cols[self.acct]
             newdesc = desc
-            # FIX ... we might should aggregate this one
+            key = acct + "." + desc
+            if key in self.aggregations:
+                aggregate = True
         elif self.rules is not None:
             # may be we can use the rules to infer the account
             (acct, aggregate, newdesc) = self.rules.match(desc)
@@ -321,6 +332,8 @@ class Statement:
                 if key in self.aggregations:
                     entry = self.aggregations[key]
                     entry.amount += amount
+                    if entry.date == "00/00/0000":        # FIX: this is arbitrary
+                        entry.date = date;
                 else:
                     entry = Entry(date, amount, acct, newdesc)
                 self.aggregations[key] = entry
@@ -343,9 +356,10 @@ class Statement:
             self.output.write(entry.str() + "\n")
 
         # output aggregated sums (date sorting is meaningless)
-        for key in self.aggregations:
+        for key in sorted(self.aggregations):
             entry = self.aggregations[key]
-            self.output.write(entry.str() + "\n")
+            if entry.amount != 0:
+                self.output.write(entry.str() + "\n")
 
     def processFile(self, filename):
         """
@@ -387,6 +401,7 @@ class Statement:
                 cols[c] = cols[c].strip()
             self.process_line(cols)
         input.close()
+        self.tot_files += 1
 
     def filestats(self, filename):
         """
@@ -406,8 +421,10 @@ class Statement:
         """
             output the grand total statistics
         """
-        statsmsg = "TOTALS:"
-        statsmsg += ",\tcredits=" + str(self.tot_credit)
+        statsmsg = "all "
+        statsmsg += str(self.tot_files)
+        statsmsg += " files:\t"
+        statsmsg += "\tcredits=" + str(self.tot_credit)
         statsmsg += ",\tdebits=" + str(self.tot_debit)
         statsmsg += ",\tnet=" + str(self.tot_credit + s.tot_debit)
         statsmsg += '\n'
