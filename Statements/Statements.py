@@ -481,7 +481,7 @@ if __name__ == '__main__':
     umsg = "usage: %prog [options] input_file ..."
     parser = OptionParser(usage=umsg)
     parser.add_option("-r", "--rules", type="string", dest="rule_file",
-                      metavar="FILE",
+                      metavar="FILE", default=None,
                       help="categorizing rules")
     parser.add_option("-o", "--outfile", type="string", dest="out_file",
                       metavar="FILE", default=None,
@@ -489,16 +489,13 @@ if __name__ == '__main__':
     parser.add_option("-s", "--sort", action="store_true",
                       dest="sort",
                       help="sort output by date")
-    parser.add_option("-n", "--nomatch", action="store_true",
-                      dest="nomatch",
-                      help="suppress rule/account matching")
     parser.add_option("-i", "--interactive", action="store_true",
                       dest="interactive",
                       help="interactive review/correction")
     (opts, files) = parser.parse_args()
 
     # digest the categorizing rules
-    r = None if opts.nomatch else Rules(opts.rule_file)
+    r = None if opts.rule_file is None else Rules(opts.rule_file)
 
     # instantiate a statement object
     s = Statement(r)
