@@ -29,6 +29,7 @@
 import sys
 from decimal import Decimal
 import csv
+from Entry import Entry
 from Rules import Rules
 from Gui import Gui
 
@@ -42,27 +43,6 @@ def findCol(string, array):
             return i
 
     return -1
-
-
-class Entry:
-    """
-        A single ledger entry
-    """
-
-    def __init__(self, date, amount, account, description):
-        self.date = date
-        self.account = "" if account is None else account
-        self.amount = amount
-        self.description = description
-
-    def str(self):
-        """
-            return the canonical string representation
-        """
-        sep = ", "
-        s = self.date + sep + str(self.amount) + sep + self.account + \
-            sep + '"' + self.description + '"'
-        return s
 
 
 class Statement:
@@ -298,66 +278,56 @@ class Statement:
             accumulate a subtotal to be printed at the end of the
             report
         """
-        sep = ", "
-        date = cols[self.date]
-        amount = Decimal(cols[self.amt])
-        desc = cols[self.desc]      # NOTE: this has been unquoted
-        entry = None
-        aggregate = False
 
         # talley credits and debits
+        amount = Decimal(cols[self.amt])
         if amount > 0:
             self.file_credit += amount
         else:
             self.file_debit += amount
 
-        # maybe we already have a tag for this line
+        # pull out the date, description and (optional) account
+        date = cols[self.date]
+        desc = cols[self.desc]
         if self.acct > 0 and cols[self.acct] != "":
             self.tagged += 1
             acct = cols[self.acct]
-            newdesc = desc
-            # see if this should be aggregated
-            key = acct
-            if desc != "":
-                key += "-" + desc
-            if key in self.aggregations:
-                aggregate = True
-        elif self.rules is not None:
-            # may be we can use the rules to infer the account
-            (acct, aggregate, newdesc) = self.rules.match(desc)
-            if acct is not None:
-                self.matched += 1
-                # FIX: add support for rechecking tentative assignments
         else:
             acct = None
+        entry = Entry(date, amount, acct, desc)
+
+        # see if we use rules to produce account/description
+        confirm = False
+        if acct is None and self.rules is not None:
+            new_entry = self.rules.match(desc)
+            if new_entry is not None:
+                self.matched += 1
+                entry.account = new_entry.account
+                entry.description = new_entry.description
+                # FIX: add tentative return value
 
         #  maybe we can throw up a GUI and ask the user
-        if acct is None and self.interactive:
-            gui = Gui(self, Entry(date, amount, acct, desc))
-            gui.mainloop()
-            acct = gui.account
-            newdesc = gui.description
-            aggregate = gui.aggregate
+        if self.interactive and (confirm or entry.account is None):
+            gui = Gui(self, entry)
+            new_entry = gui.mainloop()
+            if new_entry is None:   # delete this entry
+                return
+            entry.account = new_entry.account
+            entry.description = new_entry.description
 
-        if acct is None:
+        if entry.account is None:
             self.unmatched += 1
-            entry = Entry(date, amount, acct, desc)
-        else:
-            if aggregate:
-                key = acct
-                if newdesc != "":
-                    key += "-" + newdesc
-                if key in self.aggregations:
-                    entry = self.aggregations[key]
-                    entry.amount += amount
-                    if date < entry.date:
-                        entry.date = date   # use earliest date
-                else:
-                    entry = Entry(date, amount, acct, newdesc)
+        else:   # see if this result should be aggregated
+            key = entry.account
+            if entry.description != "":
+                    key += "-" + entry.description
+            if key in self.aggregations:
+                new_entry = self.aggregations[key]
+                entry.amount += new_entry.amount
+                if new_entry.date < entry.date:
+                        entry.date = new_entry.date
                 self.aggregations[key] = entry
                 return
-            else:
-                entry = Entry(date, amount, acct, newdesc)
 
         # see if we need to accumulate output for sorting
         if (self.sort):

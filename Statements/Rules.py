@@ -5,6 +5,11 @@
 #
 
 
+import csv      # this is much smarter than split(',')
+import fnmatch  # use shell wild cards rather than true REs
+from Entry import Entry
+
+
 class Rule:
     """
         a rule is:
@@ -22,10 +27,6 @@ class Rule:
         self.acct = account
         self.descr = descr
         self.process = process
-
-
-import csv      # this is much smarter than split(',')
-import fnmatch  # use shell wild cards rather than true REs
 
 
 class Rules:
@@ -66,13 +67,13 @@ class Rules:
             if fnmatch.fnmatch(desc, r.pat):
                 p = r.process
                 if p == "AGGREGATE":
-                    return (r.acct, True, r.descr)
+                    return Entry("", 0, r.acct, r.descr)
                 elif p == "REPLACE":
-                    return (r.acct, False, r.descr)
+                    return Entry("", 0, r.acct, r.descr)
                 elif p == "COMBINE":
                     newdesc = r.descr + ': ' + desc
-                    return (r.acct, False, newdesc)
+                    return Entry("", 0, r.acct, newdesc)
                 else:   # preserve
-                    return (r.acct, False, desc)
+                    return Entry("", 0, r.acct, desc)
 
-        return (None, False, desc)
+        return None
