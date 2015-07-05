@@ -86,6 +86,7 @@ class Statement:
         self.file_credit = 0        # per file sum of credits
         self.file_debit = 0         # per file sum of debits
         self.tot_files = 0          # total files processed
+        self.tot_lines = 0          # total lines processed
         self.tot_credit = 0         # grand total credits
         self.tot_debit = 0          # grand total debits
 
@@ -414,6 +415,7 @@ class Statement:
         reader = csv.reader(input, skipinitialspace=True)
         for cols in reader:
             self.file_line += 1
+            self.tot_lines += 1
             if len(cols) < 3:       # ignore blank/short lines
                 continue
             # make sure we strip all leading/trailing white space
@@ -444,7 +446,9 @@ class Statement:
         """
         statsmsg = "all "
         statsmsg += str(self.tot_files)
-        statsmsg += " files:\t"
+        statsmsg += " files, "
+        statsmsg += str(self.tot_lines)
+        statsmsg += " lines:\t"
         statsmsg += "\tcredits=" + str(self.tot_credit)
         statsmsg += ",\tdebits=" + str(self.tot_debit)
         statsmsg += ",\tnet=" + str(self.tot_credit + s.tot_debit)
