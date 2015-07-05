@@ -96,9 +96,9 @@ class Statement:
         for r in rules.rules:
             if r.process == "AGGREGATE":
                 key = r.acct
-                date = "00/00/0000" # will fix later
                 if r.descr != "":
                     key += "-" + r.descr
+                date = "99/99/9999"     # will be superceded
                 zero = Decimal(0.00)
                 self.aggregations[key] = Entry(date, zero, r.acct, r.descr)
 
@@ -349,8 +349,8 @@ class Statement:
                 if key in self.aggregations:
                     entry = self.aggregations[key]
                     entry.amount += amount
-                    if entry.date == "00/00/0000":        # FIX: this is arbitrary
-                        entry.date = date;
+                    if date < entry.date:
+                        entry.date = date   # use earliest date
                 else:
                     entry = Entry(date, amount, acct, newdesc)
                 self.aggregations[key] = entry
