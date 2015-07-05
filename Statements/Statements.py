@@ -30,6 +30,7 @@ import sys
 from decimal import Decimal
 import csv
 from Rules import Rules
+from Gui import Gui
 
 
 def findCol(string, array):
@@ -77,6 +78,7 @@ class Statement:
         self.rules = rules          # tranaction clasification rules
         self.process = True         # apply matching rules
         self.sort = False           # sort output by date
+        self.interactive = False    # no interactive resolutions
 
         self.tagged = 0             # lines that had acct tags
         self.matched = 0            # lines for which we found acct tags
@@ -89,12 +91,14 @@ class Statement:
 
         self.buffered = []          # buffered output (for sorting)
 
-        # initialize the aggregations
-        self.aggregations = {}      # accumlating aggregations
+        # initialize the aggregations/accounts lists
+        self.aggregations = {}      # accumulated values
         for r in rules.rules:
             if r.process == "AGGREGATE":
-                key = r.acct + "." + r.descr
+                key = r.acct
                 date = "00/00/0000" # will fix later
+                if r.descr != "":
+                    key += "-" + r.descr
                 zero = Decimal(0.00)
                 self.aggregations[key] = Entry(date, zero, r.acct, r.descr)
 
@@ -311,7 +315,10 @@ class Statement:
             self.tagged += 1
             acct = cols[self.acct]
             newdesc = desc
-            key = acct + "." + desc
+            # see if this should be aggregated
+            key = acct
+            if desc != "":
+                key += "-" + desc
             if key in self.aggregations:
                 aggregate = True
         elif self.rules is not None:
@@ -319,16 +326,26 @@ class Statement:
             (acct, aggregate, newdesc) = self.rules.match(desc)
             if acct is not None:
                 self.matched += 1
+                # FIX: add support for rechecking tentative assignments
         else:
             acct = None
 
-        # figure out what to do with this entry
+        #  maybe we can throw up a GUI and ask the user
+        if acct is None and self.interactive:
+            gui = Gui(self, Entry(date, amount, acct, desc))
+            gui.mainloop()
+            acct = gui.account
+            newdesc = gui.description
+            aggregate = gui.aggregate
+
         if acct is None:
             self.unmatched += 1
             entry = Entry(date, amount, acct, desc)
         else:
             if aggregate:
-                key = acct + "." + newdesc
+                key = acct
+                if newdesc != "":
+                    key += "-" + newdesc
                 if key in self.aggregations:
                     entry = self.aggregations[key]
                     entry.amount += amount
@@ -371,12 +388,14 @@ class Statement:
         """
 
         # reinitialize the per-file parameters/statistics
+        self.filename = filename
         self.date = -1          # haven't figured out the columns yet
         self.amt = -1           # haven't figured out the columns yet
         self.acct = -1          # haven't figured out the columns yet
         self.desc = -1          # haven't figured out the columns yet
         self.file_credit = 0    # haven't accumulated any data
         self.file_debit = 0     # haven't accumulated any data
+        self.file_line = 0
 
         # use the first line to figure out the data format
         input = open(filename, 'rb')
@@ -394,6 +413,7 @@ class Statement:
         # then process the data lines in the file
         reader = csv.reader(input, skipinitialspace=True)
         for cols in reader:
+            self.file_line += 1
             if len(cols) < 3:       # ignore blank/short lines
                 continue
             # make sure we strip all leading/trailing white space
@@ -401,6 +421,7 @@ class Statement:
                 cols[c] = cols[c].strip()
             self.process_line(cols)
         input.close()
+        self.filename = None
         self.tot_files += 1
 
     def filestats(self, filename):
@@ -467,6 +488,9 @@ if __name__ == '__main__':
     parser.add_option("-n", "--nomatch", action="store_true",
                       dest="nomatch",
                       help="suppress rule/account matching")
+    parser.add_option("-i", "--interactive", action="store_true",
+                      dest="interactive",
+                      help="interactive review/correction")
     (opts, files) = parser.parse_args()
 
     # digest the categorizing rules
@@ -479,11 +503,13 @@ if __name__ == '__main__':
     if opts.out_file is not None:
         s.output = open(opts.out_file, "w")
 
-    # see if we are supposet to sort our output
+    # check the boolean options
     if opts.sort:
         s.sort = True
+    if opts.interactive:
+        s.interactive = True
 
-    # process the input files
+    # process the input
     if len(files) >= 1:
         # write out a standard file header
         s.preamble()
