@@ -20,6 +20,8 @@ class Gui(object):
         """
             instantiate a transaction window
         """
+        self.rules = statement.rules
+
         self.root = Tk()
         self.root.title('Manual Annotation')
         t = Frame(self.root, bd=2 * self.BORDER)
@@ -118,8 +120,11 @@ class Gui(object):
         """
             Description menu action - select a standard description
         """
-        self.desc.delete(1.0, END)
-        self.desc.insert(1.0, selection)
+        # make sure description goes with the account
+        acct = self.account.get()
+        if acct is not None and self.rules.validFor(selection, acct):
+            self.desc.delete(1.0, END)
+            self.desc.insert(1.0, selection)
         return
 
     def mainloop(self):

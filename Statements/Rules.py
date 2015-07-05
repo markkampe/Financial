@@ -76,3 +76,21 @@ class Rules:
                     return (Entry("", 0, r.acct, desc), False)
 
         return (None, False)
+
+    def validFor(self, desc, acct):
+        """
+            is a description part of an account aggregation
+        """
+        if acct is None:
+            return False
+
+        for r in self.rules:
+            if r.process != "AGGREGATE":
+                continue;
+            if r.acct != acct:
+                continue;
+            if r.descr != desc:
+                continue
+            return True
+
+        return False
