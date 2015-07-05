@@ -148,6 +148,7 @@
 "*DOCKERS STORE ONLINE*", Clothing, "MK Dockers", REPLACE
 
 "ACM", Misc, "MK ACM dues", REPLACE
+"*ANGIES LIST*", Misc, "subscription: Angie", REPLACE
 "INTL SOC ARBORICULTURE", Misc, "LK ISA dues", REPLACE
 "NATURAL HISTORY MUSEUM*", Misc, "Nat Hist mship", REPLACE
 "HUNTINGTON *", Misc, "Huntington mship", REPLACE
@@ -195,23 +196,52 @@
 "* MARKETS", Groceries, None, PRESERVE
 "* GROCERY *", Groceries, None, PRESERVE
 
+"TACOS *", Food-and-Fun, "lunch", COMBINE
+"CASA *", Food-and-Fun, "lunch", COMBINE
+"* TACO *", Food-and-Fun, "lunch", COMBINE
+"* TACO", Food-and-Fun, "lunch", COMBINE
+"* TACOS *", Food-and-Fun, "lunch", COMBINE
+"* TACOS", Food-and-Fun, "lunch", COMBINE
+"* BURRITO *", Food-and-Fun, "lunch", COMBINE
+"* BURRITO", Food-and-Fun, "lunch", COMBINE
+"* BURRITOS *", Food-and-Fun, "lunch", COMBINE
+"* BURRITOS", Food-and-Fun, "lunch", COMBINE
+"*BURGER *", Food-and-Fun, "lunch", COMBINE
+"*BURGER", Food-and-Fun, "lunch", COMBINE
+
 "* RESTAURANT *", Food-and-Fun, "dinner", COMBINE
 "* RESTAURANT", Food-and-Fun, "dinner", COMBINE
 "* RISTORANTE", Food-and-Fun, "dinner", COMBINE
 "* BAR *", Food-and-Fun, "dinner", COMBINE
 "* BAR", Food-and-Fun, "dinner", COMBINE
+"* BBQ *", Food-and-Fun, "dinner", COMBINE
+"* BBQ", Food-and-Fun, "dinner", COMBINE
 "* GRILL *", Food-and-Fun, "dinner", COMBINE
 "* GRILL", Food-and-Fun, "dinner", COMBINE
+"* LOUNGE *", Food-and-Fun, "dinner", COMBINE
+"* LOUNGE", Food-and-Fun, "dinner", COMBINE
+"* TAVERN *", Food-and-Fun, "dinner", COMBINE
+"* TAVERN", Food-and-Fun, "dinner", COMBINE
+"* DINING *", Food-and-Fun, "dinner", COMBINE
+"* DINING", Food-and-Fun, "dinner", COMBINE
+"* DINER *", Food-and-Fun, "dinner", COMBINE
+"* DINER", Food-and-Fun, "dinner", COMBINE
+"* ROADHOUSE *", Food-and-Fun, "dinner", COMBINE
+"* ROADHOUSE", Food-and-Fun, "dinner", COMBINE
 
-"THEODORE PAYNE FOUNDAT*", Household, "nursery", REPLACE
+"* RESORT", Vacations, "resort:", COMBINE
+"* RESORT *", Vacations, "resort:", COMBINE
 
 # These are clearly medical, but I am not sure what they actually are
-"KAISER *", Medical, None, PRESERVE
-"Online Payment * To Kaiser *", Medical, None, PRESERVE
-"QDI*QUEST DIAGNOSTICS*", Medical, None, PRESERVE
-"CVS/PHARMACY*", Medical, None, PRESERVE
-"RITE AID *", Medical, None, PRESERVE
-"WALGREENS *", Medical, None, PRESERVE
+"KAISER *", Medical, "Kaiser:", COMBINE
+"Online Payment * To Kaiser *", Medical, "Kaiser:", COMBINE
+"QDI*QUEST DIAGNOSTICS*", Medical, "Lab:", COMBINE
+"CVS/PHARMACY*", Medical, "CVS:", COMBINE
+"RITE AID *", Medical, "Rite-Aid:", COMBINE
+"WALGREENS *", Medical, "Walgreens::", COMBINE
+"* MD", Medical, "???", Combine
+"* MD *", Medical, "???", Combine
+"* MD, *", Medical, "???", Combine
 
 # These are initial guesses based on what we usually buy from these vendors
 "SPORT CHALE*", "Hobbies", None, PRESERVE
@@ -221,6 +251,7 @@
 "TARGET *", Clothing, None, PRESERVE
 "SUR LA TABLE *", Household, None, PRESERVE
 "POTTERY BARN*", Household, None, PRESERVE
+"THEODORE PAYNE FOUNDAT*", Household, "nursery", REPLACE
 "MICHAELS*", Toys, None, PRESERVE
 "DELTA AIR*", "Vacations", None, PRESERVE
 
