@@ -76,16 +76,21 @@ class Statement:
         self.aggregations = {}      # accumulated values
         self.acc_list = set()       # account menu
         self.agg_list = set()       # aggregation description menu
-        for r in rules.rules:
+        date = "99/99/9999"         # will be superceded
+        zero = Decimal(0.00)
+
+        # if we have a rule set, us it to populate aggregations/menus
+        ruleset = [] if rules is None else rules.rules
+        for r in ruleset:
             self.acc_list.add(r.acct)
             if r.process == "AGGREGATE":
                 key = r.acct
                 if r.descr != "":
                     key += "-" + r.descr
-                date = "99/99/9999"     # will be superceded
-                zero = Decimal(0.00)
                 self.aggregations[key] = Entry(date, zero, r.acct, r.descr)
                 self.agg_list.add(r.descr)
+            elif not r.acct in self.aggregations:
+                self.aggregations[r.acct] = Entry(date, zero, r.acct, "")
 
     def analyze_headers(self, cols):
         """
