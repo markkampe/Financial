@@ -86,10 +86,10 @@ class Rules:
 
         for r in self.rules:
             if r.process != "AGGREGATE":
-                continue;
+                continue
             if r.acct != acct:
-                continue;
-            if r.descr != desc:
+                continue
+            if desc != "" and r.descr != desc:
                 continue
             return True
 
