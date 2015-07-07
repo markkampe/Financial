@@ -108,13 +108,13 @@
 "LUCKY *", Groceries, "", AGGREGATE
 "VONS *", Groceries, "", AGGREGATE
 "RALPHS *", Groceries, "", AGGREGATE
-"SUPER KING MARKET *", "", Groceries, AGGREGATE
+"SUPER KING MARKET *", Groceries, "", AGGREGATE
 "WHOLEFDS*", Groceries, "", AGGREGATE
 "SMARTNFINAL*", Groceries, "", AGGREGATE
 "TRADER JOE'S*", Groceries, "", AGGREGATE
 "COSTCO WHSE*", Groceries, "", AGGREGATE
 "FRESH & EASY*", Groceries, "", AGGREGATE
-"SPROUTS FARMERS MAR*", "", Groceries, AGGREGATE
+"SPROUTS FARMERS MAR*", Groceries, "", AGGREGATE
 "PETCO*", Groceries, "dog food", AGGREGATE
 "BEVERAGES & MORE*", Groceries, "alcohol", AGGREGATE
 
