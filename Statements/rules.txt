@@ -11,6 +11,7 @@
 #       PRESERVE    retain the original description
 #       REPLACE     replace statement description with this description
 #       COMBINE     use this description followed by the original description
+*		    (and return tentative)
 #
 "SAN*BER*TAX*",         Basic, "SBDO Prop Taxes", REPLACE
 "LA Co TTC Paymnt*", Basic, "LA Prop Taxes", REPLACE
@@ -21,12 +22,12 @@
 "ATT*",             Utilities, "phone", REPLACE
 "TIME WARNER*",  Utilities, "cable", REPLACE
 
-"*ORCHARD SUPPLY*", Household, "OSH", AGGREGATE
-"*HOME DEPOT*",     Household, "home depot", AGGREGATE
-"LOWES *",       Household, "Lowes", AGGREGATE
-"ARMSTRONG*",    Household, "nursery", AGGREGATE
-"WWW.RSABG.ORG*", Household, "nursery", AGGREGATE
-"J&P*PARKSEED*", Household, "nursery", AGGREGATE
+"*ORCHARD SUPPLY*", Household, "misc AGGREGATE
+"*HOME DEPOT*",     Household, "misc", AGGREGATE
+"LOWES *",       Household, "misc", AGGREGATE
+"ARMSTRONG*",    Household, "plants", AGGREGATE
+"WWW.RSABG.ORG*", Household, "plants", AGGREGATE
+"J&P*PARKSEED*", Household, "plants", AGGREGATE
 
 "gas", Transportation, "gas", AGGREGATE
 "SHELL OIL*",    Transportation, "gas", AGGREGATE
@@ -55,7 +56,7 @@
 "SOUTHWES*", "Commuting", "air fare", COMBINE
 
 "concert", Food-and-Fun, "concert", AGGREGATE
-"lunch", Food-and-Fun, "movies", AGGREGATE
+"movies", Food-and-Fun, "movies", AGGREGATE
 "AMC MERCADO*", Food-and-Fun, "movies", AGGREGATE
 "PACIFIC THEATRES*", Food-and-Fun, "movies", AGGREGATE
 
@@ -74,7 +75,7 @@
 "TERRANEA RESORT", Food-and-Fun, "dinner", AGGREGATE
 "SONNYS HIDEAWAY*", Food-and-Fun, "dinner", AGGREGATE
 
-"lunch, Food-and-Fun, "lunch", AGGREGATE
+"lunch", Food-and-Fun, "lunch", AGGREGATE
 "PEDRO'S RESTAURANT*", Food-and-Fun, "lunch", AGGREGATE
 "TOMATINA*", Food-and-Fun, "lunch", AGGREGATE
 "SUBWAY *", Food-and-Fun, "lunch", AGGREGATE
@@ -101,19 +102,19 @@
 "THE GREYHOUND*", Food-and-Fun, "lunch", AGGREGATE
 "Zankou Chicken*", Food-and-Fun, "lunch", AGGREGATE
 
-"groceries", Groceries, Groceries, AGGREGATE
-"*SUPERIOR*GROCER*", Groceries, Groceries, AGGREGATE
-"FOOD4LESS*", Groceries, Groceries, AGGREGATE
-"LUCKY *", Groceries, Groceries, AGGREGATE
-"VONS *", Groceries, Groceries, AGGREGATE
-"RALPHS *", Groceries, Groceries, AGGREGATE
-"SUPER KING MARKET *", Groceries, Groceries, AGGREGATE
-"WHOLEFDS*", Groceries, Groceries, AGGREGATE
-"SMARTNFINAL*", Groceries, Groceries, AGGREGATE
-"TRADER JOE'S*", Groceries, Groceries, AGGREGATE
-"COSTCO WHSE*", Groceries, Groceries, AGGREGATE
-"FRESH & EASY*", Groceries, Groceries, AGGREGATE
-"SPROUTS FARMERS MAR*", Groceries, Groceries, AGGREGATE
+"groceries", Groceries, "", AGGREGATE
+"*SUPERIOR*GROCER*", Groceries, "", AGGREGATE
+"FOOD4LESS*", Groceries, "", AGGREGATE
+"LUCKY *", Groceries, "", AGGREGATE
+"VONS *", Groceries, "", AGGREGATE
+"RALPHS *", Groceries, "", AGGREGATE
+"SUPER KING MARKET *", "", Groceries, AGGREGATE
+"WHOLEFDS*", Groceries, "", AGGREGATE
+"SMARTNFINAL*", Groceries, "", AGGREGATE
+"TRADER JOE'S*", Groceries, "", AGGREGATE
+"COSTCO WHSE*", Groceries, "", AGGREGATE
+"FRESH & EASY*", Groceries, "", AGGREGATE
+"SPROUTS FARMERS MAR*", "", Groceries, AGGREGATE
 "PETCO*", Groceries, "dog food", AGGREGATE
 "BEVERAGES & MORE*", Groceries, "alcohol", AGGREGATE
 
@@ -145,7 +146,7 @@
 "LK clothing", Clothing, "LK clothing", AGGREGATE
 "SUPERCUTS*", Clothing, "MK h/c", REPLACE
 "CALIFORNIA CUTE CUTS*", Clothing, "LK h/c", REPLACE
-"*DOCKERS STORE ONLINE*", Clothing, "MK Dockers", REPLACE
+"*DOCKERS STORE ONLINE*", Clothing, "MK clothing", AGGREGATE
 
 "ACM", Misc, "MK ACM dues", REPLACE
 "*ANGIES LIST*", Misc, "subscription: Angie", REPLACE
@@ -164,23 +165,25 @@
 
 "gift", Gifts, "", AGGREGATE
 
+"donation", Donations, "", PRESERVE
+
 "cash", Cash, "", AGGREGATE
 "WITHDRAW*", Cash, "", AGGREGATE
 "ATM WITHDRAWAL*", Cash, "", AGGREGATE
 "NON-CHASE ATM WITHDRAW*", Cash, "", AGGREGATE
-"NON-CHASE ATM FEE-WITH*", Misc, "ATM fee", AGGREGATE
-"THEODORE PAYNE F PAYROLL*", Deposit, "LK pay", AGGREGATE
-"FUTUREWEI TECHNO PAYROLL*", Deposit, "MK pay", AGGREGATE
-"FUTUREWEI TECHNO PAYMENT*", Deposit, "expense reimb", AGGREGATE
-"HUAWEI TECH. INV PAYMENT*", Deposit, "purchase reim", AGGREGATE
-"AMERICAN EXPRESS ACH PMT*", CreditCard, "AMEX autopay", AGGREGATE
-"*PPD ID: CITICARDAP*", CreditCard, "CitiCard autopay", AGGREGATE
-"AUTOMATIC PAYMENT - THANK*", CreditCard, "autopay", AGGREGATE
-"AUTOPAY PAYMENT - THANK YOU*", CreditCard, "autopay", AGGREGATE
-"CHASE*AUTOPAY *", CreditCard, "Chase autopay", AGGREGATE
-"FID BKG SVC LLC*", "Transfer", "(FIDO)", AGGREGATE
-"LENDING CLUB*", "Transfer", "(Lending Club)", AGGREGATE
-"BANK OF AMERICA*FndTrnsfr*", "Transfer", "(BofA)", AGGREGATE
+"NON-CHASE ATM FEE-WITH*", Misc, "fee", AGGREGATE
+"THEODORE PAYNE F PAYROLL*", Deposit, "LK pay", REPLACE
+"FUTUREWEI TECHNO PAYROLL*", Deposit, "MK pay", REPLACE
+"FUTUREWEI TECHNO PAYMENT*", Deposit, "Huawei reimb", REPLACE
+"HUAWEI TECH. INV PAYMENT*", Deposit, "Huawei reimb", REPLACE
+"AMERICAN EXPRESS ACH PMT*", CreditCard, "Amex autopay", REPLACE
+"*PPD ID: CITICARDAP*", CreditCard, "Citi autopay", REPLACE
+"AUTOMATIC PAYMENT - THANK*", CreditCard, "autopay", REPLACE
+"AUTOPAY PAYMENT - THANK YOU*", CreditCard, "autopay", REPLACE
+"CHASE*AUTOPAY *", CreditCard, "Chase autopay", REPLACE
+"FID BKG SVC LLC*", "Transfer", "(FIDO)", REPLACE
+"LENDING CLUB*", "Transfer", "(Lending Club)", REPLACE
+"BANK OF AMERICA*FndTrnsfr*", "Transfer", "(BofA)", REPLACE
 
 "IRS*USATAXPYMT*", "Taxes", "IRS", REPLACE
 "FRANCHISE TAX BO PAYMENTS*", "Taxes", "CA", REPLACE
