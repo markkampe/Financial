@@ -97,6 +97,7 @@ class Gui(object):
             acct = None
         descr = self.desc.get(1.0, END).replace('\n', '')
         self.entry = Entry.Entry(date, amount, acct, descr)
+        self.root.destroy()
         self.root.quit()
 
     def delete(self):
@@ -104,6 +105,7 @@ class Gui(object):
             Delete button action - return a null Entry
         """
         self.entry = None
+        self.root.destroy()
         self.root.quit()
 
     def chooseAcct(self, selection):
