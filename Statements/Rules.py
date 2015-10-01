@@ -34,21 +34,25 @@ class Rules:
     """
     def __init__(self, filename):
         """
-            construct a rule set by reading rules from a specified file
+            construct a rule set by reading rules from specified files
+
+            Parameters:
+                filename(s) ... string one or more comma separated names
 
         """
         self.rules = []
 
-        rulefile = open(filename, 'rb')
-        reader = csv.reader(rulefile, skipinitialspace=True)
-        for line in reader:
-            # ignore blank and comment lines
-            if len(line) != 4 or line[0].startswith('#'):
-                continue
-
-            # anything else, we add to the rules list
-            self.rules.append(Rule(line[0], line[1], line[2], line[3]))
-        rulefile.close()
+        files = filename.split(',')
+        for file in files:
+            rulefile = open(file, 'rb')
+            reader = csv.reader(rulefile, skipinitialspace=True)
+            for line in reader:
+                # ignore blank and comment lines
+                if len(line) != 4 or line[0].startswith('#'):
+                    continue
+                # anything else, we add to the rules list
+                self.rules.append(Rule(line[0], line[1], line[2], line[3]))
+            rulefile.close()
 
     def match(self, desc):
         """

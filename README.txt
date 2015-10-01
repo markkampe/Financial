@@ -13,6 +13,19 @@ Accounting
 	basically just a program to enter credits and debits against a bunch
 	of accounts.
 
+Statements
+
+	I played with Mint for a little while, and realized how convenient
+	automatic categorization of entries in downloaded statements was.
+	So I built a python program to, given csv files, figure out which
+	columns are which and then use classification rules to classify
+	as many expenses as possible, including some aggregation and
+	rewriting.
+
+	Its input is downloaded csv statement records.  Its output is
+	(better anotated) csv statements.  It can reprocess its own
+	output arbitrarily many times.
+
 FinSim
 	
 	I created a ludicrously elaborate financial planning spreadsheet.  I
