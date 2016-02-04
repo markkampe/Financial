@@ -219,6 +219,7 @@ public class MainScreen extends JFrame
 		int lines = 0;		
 		try {
 			int entries = 0;
+			int ignored = 0;
 			int noAcct = 0;
 			for(String line = reader.readLine(); line != null; line = reader.readLine()) {
 				lines++;
@@ -251,6 +252,11 @@ public class MainScreen extends JFrame
 							"\nUNRECOGNIZED ACCOUNT: " + acctName);
 					continue;
 				}
+				
+				if (books.isIgnored(account)) {
+					ignored++;
+					continue;
+				}
 		
 				// parse the date, amount, and description
 				SimpleDate date = new SimpleDate(fields[0], refDate.year);
@@ -279,6 +285,8 @@ public class MainScreen extends JFrame
 			String message = "File: " + chosen + 
 					"\nLines: " + lines +
 					"\nEntries: " + entries;
+			if (ignored > 0)
+				message = message + "\nIgnored: " + ignored;
 			if (noAcct > 0)
 				message += "\nNo Account: " + noAcct;
 			JOptionPane.showMessageDialog(mainPane, message);
