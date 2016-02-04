@@ -28,6 +28,7 @@ public class Account {
 	public int totBudget;	// portion of totCredits from budget
 	public int totDebits;	// debits since asOf
 	public int finalBal;	// final balance
+	public boolean ignored;	// is this just a place holder
 	
 	private boolean upToDate;	// is the summary up to date
 	
@@ -49,6 +50,11 @@ public class Account {
 		}
 	}
 	
+	/**
+	 * constructor for a normal account
+	 * @param accountName
+	 * @param monthlyBudget
+	 */
 	public Account( String accountName, int monthlyBudget ) {
 		name = accountName;
 		budget = monthlyBudget;
@@ -61,6 +67,27 @@ public class Account {
 		
 		firstElement = null;
 		upToDate = false;
+		ignored = false;
+	}
+	
+	/**
+	 * constructor for a place-holder account
+	 * 
+	 * @param accountName
+	 */
+	public Account( String accountName ) {
+		name = accountName;
+		
+		budget = 0;
+		initBal = 0;
+		totBudget = 0;
+		totCredits = 0;
+		totDebits = 0;
+		finalBal = 0;
+		
+		firstElement = null;
+		upToDate = false;
+		ignored = true;
 	}
 	
 	/**

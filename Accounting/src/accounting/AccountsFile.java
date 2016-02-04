@@ -17,6 +17,7 @@ public class AccountsFile {
 	private static final String BUDGET_TAG = "Budget: ";
 	private static final String BALANCE_TAG = "Balance: ";
 	private static final String END_TAG = "END";
+	private static final String IGNORE_TAG = "IGNORE: ";
 	private static final String ANALYSIS_HEADER = "Performance vs Budget for entire year";
 	
 	// characters that introduce a comment line
@@ -85,8 +86,12 @@ public class AccountsFile {
 			if (line.startsWith(END_TAG))
 				break;
 			
-			// is this a new account
-			if (line.startsWith(ACCT_TAG)) {
+			if (line.startsWith(IGNORE_TAG)) {	// is this an account to be ignored
+				// lex off the account name
+				int nameStart = IGNORE_TAG.length();
+				String name = line.substring(nameStart);
+				books.addIgnored(name);
+			} else if (line.startsWith(ACCT_TAG)) {	// is this a new account
 				// lex off the account name
 				int nameStart = ACCT_TAG.length();
 				int nameEnd = line.indexOf(' ', nameStart );
@@ -176,6 +181,9 @@ public class AccountsFile {
 		
 		// for each account
 		for( int i = 0; i < books.numAccounts(); i++ ) {
+			if (books.isIgnored(i))
+				continue;
+			
 			output.write( ACCT_TAG + books.accountName(i) + "    "
 					+ BUDGET_TAG + Dollars.toString(books.accountBudget(i)) + "/mo     " 
 					+ BALANCE_TAG + Dollars.toString(books.finalBalance(i)) + "\n" );
@@ -189,6 +197,13 @@ public class AccountsFile {
 			output.write("\n");
 		}
 		
+		// for each ignored account
+		for( int i = 0; i < books.numAccounts(); i++ ) {
+			if (books.isIgnored(i)) {
+				output.write( IGNORE_TAG + books.accountName(i) + "\n");
+			}
+		}
+		
 		// see if we should also output an analysis
 		if (WRITE_ANALYSIS) {	
 			output.write("\n" + END_TAG + "\n");
@@ -200,7 +215,8 @@ public class AccountsFile {
 			
 			String dump[] = books.analysis();
 			for( int i = 0; i < dump.length; i++ ) {
-				output.write( dump[i] + "\n" );
+				if (dump[i] != null)
+					output.write( dump[i] + "\n" );
 			}
 		}
 		
@@ -242,6 +258,10 @@ public class AccountsFile {
 		if (!chosen.exists())
 			return;
 			
+		// FIXME - does not always create .bak
+		//	I was editing rem12.act and the write blew up in a zero-divide
+		//	and no .bak was created
+		
 		// figure out what to call the backup;
 		String currentName = chosen.getName();
 		String backupName;
@@ -283,3 +303,4 @@ public class AccountsFile {
 		}
 	}
 }
+

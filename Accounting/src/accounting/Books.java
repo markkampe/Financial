@@ -70,6 +70,19 @@ public class Books {
 	}
 	
 	/**
+	 * is this account ignored
+	 * 
+	 * @param acctNumber
+	 * @return	whether or not this account is ignored
+	 */
+	public boolean isIgnored( int acctNumber ) {
+		if (acctNumber >= 0 && acctNumber < num_accounts) {
+			return accounts[acctNumber].ignored;
+		} else
+			return true;
+	}
+	
+	/**
 	 * return an array of account names (e.g. for combox)
 	 * 
 	 * @return 	String[]
@@ -77,6 +90,8 @@ public class Books {
 	public String[] accountNames() {
 		String[] names = new String[num_accounts];
 		for( int i = 0; i < num_accounts; i++ ) {
+			if (accounts[i].ignored)
+				continue;
 			names[i] = accounts[i].name;
 		}
 		return names;
@@ -104,7 +119,7 @@ public class Books {
 	 * @return	Dollars		final balance
 	 */
 	public int finalBalance( int acctNumber ) {
-		if (acctNumber >= 0 && acctNumber < num_accounts)
+		if (acctNumber >= 0 && acctNumber < num_accounts && !accounts[acctNumber].ignored)
 			return( accounts[acctNumber].finalBal );
 		else
 			return 0;
@@ -132,17 +147,31 @@ public class Books {
 	}
 	
 	/**
+	 * add a new place-holder account to the current set of books
+	 * 
+	 * @param name	name of the account
+	 * @return			account index number
+	 */
+	public int addIgnored( String name ) {
+		accounts[num_accounts] = new Account( name );
+		return( num_accounts++ );
+	}
+	
+	/**
 	 * post a ledger entry to an account
 	 * 
 	 * @param account	index of account to which it should be posted
 	 * @param entry		ledger entry to be posted
+	 * @return			success/failure
 	 */
 	public boolean post( int account, Ledger entry ) {
-		if (account < num_accounts) {
-			dirty = true;
-			return accounts[account].record(entry);
-		} else
+		if (account < 0 || account >= num_accounts)
 			return false;
+		if (accounts[account].ignored)
+			return true;
+			
+		dirty = true;
+		return accounts[account].record(entry);
 	}
 	
 	/**
@@ -167,6 +196,8 @@ public class Books {
 	public boolean addBudget( SimpleDate when ) {
 		int changes = 0;
 		for( int i = 0; i < num_accounts; i++ ) {
+			if (accounts[i].ignored)
+				continue;
 			if (accounts[i].addBudget( when ))
 				changes++;
 		}
@@ -194,6 +225,9 @@ public class Books {
 		
 		// then recompute balances for each account
 		for( int i = 0; i < num_accounts; i++ ) {
+			if (accounts[i].ignored)
+				continue;
+			
 			accounts[i].getBalances(when, force);
 			
 			// accumulate the balances from this account
@@ -228,15 +262,17 @@ public class Books {
 		summaries[0] = Account.summaryLine("*", 0, 0, 0, 0, 0, perfVsBudget );
 		
 		// generate the summary for each account
+		int j = 1;
 		for( int i = 0; i < num_accounts; i++ ) {
-			summaries[i+1] = accounts[i].summaryLine( perfVsBudget );
+			if (!accounts[i].ignored)
+				summaries[j++] = accounts[i].summaryLine( perfVsBudget );
 		}
 		
 		//	summaries[num_accounts] is left blank
-		summaries[num_accounts+1] = Account.summaryLine("-", 0, 0, 0, 0, 0, perfVsBudget );
+		summaries[j++] = Account.summaryLine("-", 0, 0, 0, 0, 0, perfVsBudget );
 		
 		// grand total summary
-		summaries[num_accounts+2] = Account.summaryLine("Total", initBal, totBudget, totCredits, totDebits, finalBal, perfVsBudget );
+		summaries[j++] = Account.summaryLine("Total", initBal, totBudget, totCredits, totDebits, finalBal, perfVsBudget );
 		
 		return( summaries );
 	}
@@ -266,7 +302,7 @@ public class Books {
 	 * @param index
 	 */
 	public String[] ledgerDump( int index ) {
-		if (index < 0 || index >= num_accounts)
+		if (index < 0 || index >= num_accounts || accounts[index].ignored)
 			return null;
 		return accounts[index].ledgerDump();
 	}
