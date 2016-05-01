@@ -445,6 +445,16 @@ class Statement:
         sys.stderr.write(statsmsg)
 
 
+# read a list of known accounts
+def readAccounts(file):
+    accounts = []
+    afile = open(file, 'rb')
+    for l in afile:
+        accounts.append(l.strip())
+    afile.close()
+    return accounts
+
+
 if __name__ == '__main__':
     """
         CLI entry point
@@ -461,6 +471,9 @@ if __name__ == '__main__':
     parser.add_option("-r", "--rules", type="string", dest="rule_file",
                       metavar="FILE", default=None,
                       help="categorizing rules")
+    parser.add_option("-a", "--accounts", type="string", dest="acct_file",
+                      metavar="FILE", default=None,
+                      help="known accounts")
     parser.add_option("-o", "--outfile", type="string", dest="out_file",
                       metavar="FILE", default=None,
                       help="output file")
@@ -472,8 +485,11 @@ if __name__ == '__main__':
                       help="interactive review/correction")
     (opts, files) = parser.parse_args()
 
+    # digest the list of known accounts
+    a = None if opts.acct_file is None else readAccounts(opts.acct_file)
+
     # digest the categorizing rules
-    r = None if opts.rule_file is None else Rules(opts.rule_file)
+    r = None if opts.rule_file is None else Rules(opts.rule_file, a)
 
     # instantiate a statement object
     s = Statement(r)

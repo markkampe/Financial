@@ -7,6 +7,7 @@
 
 import csv      # this is much smarter than split(',')
 import fnmatch  # use shell wild cards rather than true REs
+from sys import stderr
 from Entry import Entry
 
 
@@ -32,7 +33,7 @@ class Rule:
 class Rules:
     """
     """
-    def __init__(self, filename):
+    def __init__(self, filename, accounts=None):
         """
             construct a rule set by reading rules from specified files
 
@@ -50,6 +51,12 @@ class Rules:
                 # ignore blank and comment lines
                 if len(line) != 4 or line[0].startswith('#'):
                     continue
+
+                # sanity check all accounts if we have a list
+                if accounts and line[1] not in accounts:
+                    stderr.write("WARING: unknown account (%s) in rule: %s\n" %
+                                 (line[1], line[0]))
+
                 # anything else, we add to the rules list
                 self.rules.append(Rule(line[0], line[1], line[2], line[3]))
             rulefile.close()
