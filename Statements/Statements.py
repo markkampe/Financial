@@ -308,7 +308,7 @@ class Statement:
         # see if we use rules to produce account/description
         confirm = False
         if acct is None and self.rules is not None:
-            (new_entry, confirm) = self.rules.match(desc)
+            (new_entry, confirm) = self.rules.match(date, desc)
             if new_entry is not None:
                 self.matched += 1
                 entry.account = new_entry.account

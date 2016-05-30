@@ -23,7 +23,8 @@ class Rule:
                 preserve ... keep it separate with original description
                 combine ... keep it separate combining new and original
     """
-    def __init__(self, pattern, account, descr, process):
+    def __init__(self, date, pattern, account, descr, process):
+        self.date = date
         self.pat = pattern
         self.acct = account
         self.descr = descr
@@ -49,19 +50,32 @@ class Rules:
             reader = csv.reader(rulefile, skipinitialspace=True)
             for line in reader:
                 # ignore blank and comment lines
-                if len(line) != 4 or line[0].startswith('#'):
+                if len(line) < 4 or line[0].startswith('#'):
                     continue
 
+                if (len(line) == 4):
+                    date = None
+                    pat = line[0]
+                    acct = line[1]
+                    descr = line[2]
+                    proc = line[3]
+                else:
+                    date = line[0]
+                    pat = line[1]
+                    acct = line[2]
+                    descr = line[3]
+                    proc = line[4]
+
                 # sanity check all accounts if we have a list
-                if accounts and line[1] not in accounts:
+                if accounts and acct not in accounts:
                     stderr.write("WARING: unknown account (%s) in rule: %s\n" %
-                                 (line[1], line[0]))
+                                 (acct, pat))
 
                 # anything else, we add to the rules list
-                self.rules.append(Rule(line[0], line[1], line[2], line[3]))
+                self.rules.append(Rule(date, pat, acct, descr, proc))
             rulefile.close()
 
-    def match(self, desc):
+    def match(self, date, desc):
         """
             try to find a rule for this description
 
@@ -74,6 +88,8 @@ class Rules:
         """
         # look for a matching rule
         for r in self.rules:
+            if r.date is not None and date != r.date:
+                continue
             if fnmatch.fnmatch(desc, r.pat):
                 p = r.process
                 if p == "AGGREGATE":
