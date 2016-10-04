@@ -337,6 +337,10 @@ class Statement:
                 self.aggregations[key] = entry
                 return
 
+        # check for commas in the description (scare some parsers)
+        if ',' in entry.description:
+            sys.stderr.write("WARNING: comma in description (%s: %s)\n" % (entry.date, entry.description))
+
         # see if we need to accumulate output for sorting
         if (self.sort):
             self.buffered.append(entry)

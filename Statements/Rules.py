@@ -68,7 +68,7 @@ class Rules:
 
                 # sanity check all accounts if we have a list
                 if accounts and acct not in accounts:
-                    stderr.write("WARING: unknown account (%s) in rule: %s\n" %
+                    stderr.write("WARNING: unknown account (%s) in rule: %s\n" %
                                  (acct, pat))
 
                 # anything else, we add to the rules list
