@@ -75,7 +75,7 @@ class Rules:
                 self.rules.append(Rule(date, pat, acct, descr, proc))
             rulefile.close()
 
-    def match(self, date, desc):
+    def match(self, date, desc, amt):
         """
             try to find a rule for this description
 
@@ -86,11 +86,12 @@ class Rules:
                 Entry (with potentially updated account, description)
                 should this be confirmed if possible
         """
-        # look for a matching rule
+        # look for a rule that matches the (date and) description/amount
+        s_amt = "%.2f" % (amt)
         for r in self.rules:
             if r.date is not None and date != r.date:
                 continue
-            if fnmatch.fnmatch(desc, r.pat):
+            if fnmatch.fnmatch(desc, r.pat) or s_amt==r.pat:
                 p = r.process
                 if p == "AGGREGATE":
                     return (Entry("", 0, r.acct, r.descr), False)
