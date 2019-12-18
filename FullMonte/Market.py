@@ -100,7 +100,7 @@ class Market:
                     prev = price
 
                     # and accumulate statistics
-                    ret_sum += appreciation
+                    ret_sum += 12 * appreciation if monthly else appreciation
                     div_sum += div/price
                     rate_sum += rate/100
                     points += 1
