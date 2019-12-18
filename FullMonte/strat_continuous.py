@@ -71,7 +71,7 @@ def main(random):
         # summarize the results
         mean = sum(results) / len(results)
         sigma = statistics.stdev(results)
-        report = "{} over {} years, {} years value: mean={:.2f}, sigma={:.2f}"
+        report = "{} over {} years, {} years: mean={:.2f}, sigma={:.2f}"
         print(report.format(my_name, years, num_years, mean, sigma))
 
         # bucketize and display the results

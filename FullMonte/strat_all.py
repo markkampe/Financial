@@ -63,7 +63,7 @@ def main(random):
         # summarize the results
         mean = sum(results) / len(results)
         sigma = statistics.stdev(results)
-        report = "{} {}, {} years value: mean={:.2f}, sigma={:.2f}"
+        report = "{} {}, {} years: mean={:.2f}, sigma={:.2f}"
         print(report.format(my_name, "CDs" if in_cds else "market", num_years, mean, sigma))
 
         # bucketize and display the results
