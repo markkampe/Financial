@@ -43,6 +43,7 @@ def strat_continuous(sequence, period, monthly=False):
 num_runs = 50       # number of runs per model
 num_years = 20      # number of years to track results
 my_name = "Continuous Purchases"
+output = "Continuous.png"
 
 def main(random):
     """
@@ -87,7 +88,12 @@ def main(random):
     plt.xlabel(str(num_years) + "-year return")
     plt.ylabel("probability")
     plt.legend(legends)
-    plt.show()
+    if output is None:
+        plt.show()
+    else:
+        print("saving distribution plot as " + output)
+        plt.savefig(output)
+        plt.close()
 
 
 if __name__ == "__main__":
