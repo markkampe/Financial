@@ -83,6 +83,19 @@ public class Books {
 	}
 	
 	/**
+	 * should operatios on this account generate warnings
+	 * 
+	 * @param acctNumber
+	 * @return	whether or not this account is warned
+	 */
+	public boolean isWarned( int acctNumber ) {
+		if (acctNumber >= 0 && acctNumber < num_accounts) {
+			return accounts[acctNumber].warn;
+		} else
+			return false;
+	}
+	
+	/**
 	 * return an array of account names (e.g. for combox)
 	 * 
 	 * @return 	String[]
@@ -150,10 +163,12 @@ public class Books {
 	 * add a new place-holder account to the current set of books
 	 * 
 	 * @param name	name of the account
+	 * @param warn	generate a warning if this account is used
 	 * @return			account index number
 	 */
-	public int addIgnored( String name ) {
+	public int addIgnored( String name, Boolean warn ) {
 		accounts[num_accounts] = new Account( name );
+		accounts[num_accounts].warn = warn;
 		return( num_accounts++ );
 	}
 	

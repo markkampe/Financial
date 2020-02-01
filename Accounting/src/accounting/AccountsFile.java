@@ -18,6 +18,7 @@ public class AccountsFile {
 	private static final String BALANCE_TAG = "Balance: ";
 	private static final String END_TAG = "END";
 	private static final String IGNORE_TAG = "IGNORE: ";
+	private static final String IGNORE_WARN_TAG = "IGNORE! ";
 	private static final String ANALYSIS_HEADER = "Performance vs Budget for entire year";
 	
 	// characters that introduce a comment line
@@ -90,7 +91,12 @@ public class AccountsFile {
 				// lex off the account name
 				int nameStart = IGNORE_TAG.length();
 				String name = line.substring(nameStart);
-				books.addIgnored(name);
+				books.addIgnored(name, false);
+			} else if (line.startsWith(IGNORE_WARN_TAG)) {	// ignore and warn
+				// lex off the account name
+				int nameStart = IGNORE_TAG.length();
+				String name = line.substring(nameStart);
+				books.addIgnored(name, true);
 			} else if (line.startsWith(ACCT_TAG)) {	// is this a new account
 				// lex off the account name
 				int nameStart = ACCT_TAG.length();
@@ -200,7 +206,8 @@ public class AccountsFile {
 		// for each ignored account
 		for( int i = 0; i < books.numAccounts(); i++ ) {
 			if (books.isIgnored(i)) {
-				output.write( IGNORE_TAG + books.accountName(i) + "\n");
+				output.write(books.isWarned(i) ? IGNORE_WARN_TAG : IGNORE_TAG);
+				output.write( books.accountName(i) + "\n");
 			}
 		}
 		

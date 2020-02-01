@@ -220,6 +220,7 @@ public class MainScreen extends JFrame
 		try {
 			int entries = 0;
 			int ignored = 0;
+			int warns = 0;
 			int noAcct = 0;
 			for(String line = reader.readLine(); line != null; line = reader.readLine()) {
 				lines++;
@@ -253,6 +254,11 @@ public class MainScreen extends JFrame
 					continue;
 				}
 				
+				if (books.isWarned(account)) {
+					warns++;
+					System.err.println("WARNING: transaction against ignored account " + acctName);
+				}
+				
 				if (books.isIgnored(account)) {
 					ignored++;
 					continue;
@@ -284,9 +290,12 @@ public class MainScreen extends JFrame
 			// display a processing confirmation dialog
 			String message = "File: " + chosen + 
 					"\nLines: " + lines +
-					"\nEntries: " + entries;
-			if (ignored > 0)
+					"\nProcessed: " + entries;
+			if (ignored > 0) {
 				message = message + "\nIgnored: " + ignored;
+				if (warns > 0)
+					message = message + " (" + warns + " warnings)";
+			}
 			if (noAcct > 0)
 				message += "\nNo Account: " + noAcct;
 			JOptionPane.showMessageDialog(mainPane, message);

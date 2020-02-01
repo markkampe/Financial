@@ -29,6 +29,7 @@ public class Account {
 	public int totDebits;	// debits since asOf
 	public int finalBal;	// final balance
 	public boolean ignored;	// is this just a place holder
+	public boolean warn;	// warn if this account is used
 	
 	private boolean upToDate;	// is the summary up to date
 	
@@ -68,6 +69,7 @@ public class Account {
 		firstElement = null;
 		upToDate = false;
 		ignored = false;
+		warn = false;
 	}
 	
 	/**
@@ -88,6 +90,7 @@ public class Account {
 		firstElement = null;
 		upToDate = false;
 		ignored = true;
+		warn = false;
 	}
 	
 	/**
