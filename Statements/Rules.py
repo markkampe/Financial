@@ -70,6 +70,7 @@ class Rules:
                 if accounts and acct not in accounts:
                     stderr.write("WARNING: unknown account (%s) in rule: %s\n" %
                                  (acct, pat))
+                    stderr.write("         file: %s, line%s\n" % (file, line))
 
                 # anything else, we add to the rules list
                 self.rules.append(Rule(date, pat, acct, descr, proc))
