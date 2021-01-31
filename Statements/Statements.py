@@ -52,7 +52,12 @@ class Statement:
 
     def __init__(self, rules):
         """
-            constructor for a Statement parser
+        constructor for a Statement parser
+
+        Read in the matching rules, and create an aggregation entry for each
+        (account, description) that specifies AGGREGATE processing
+
+        @param rules: (string) name of matching rules file
         """
         self.output = sys.stdout    # default output file
         self.rules = rules          # tranaction clasification rules
@@ -89,7 +94,7 @@ class Statement:
                     key += "-" + r.descr
                 self.aggregations[key] = Entry(date, zero, r.acct, r.descr)
                 self.agg_list.add(r.descr)
-            elif not r.acct in self.aggregations:
+            elif r.acct not in self.aggregations:
                 self.aggregations[r.acct] = Entry(date, zero, r.acct, "")
 
     def analyze_headers(self, cols):
@@ -140,20 +145,13 @@ class Statement:
 
     def find_date(self, cols):
         """
-            find the first column that looks like a date
-            (for files that don't begin with a column header line)
+        find the first column that looks like a date
+        (for files that don't begin with a column header line)
 
-            Args:
-                array of column values from the first input line
-
-            Return:
-                (bool) did we find a date column
-
-            Note:
-                Rather than do a proper regexp, I cheat and just
-                count characters of different classes.
+        @param cols: [(string)] fields from the first line
+        @return: (boolean) did we find a date column
+                 and a setting of self.date
         """
-
         # go through the columns one at a time
         for i in range(len(cols)):
             s = cols[i]
@@ -181,20 +179,14 @@ class Statement:
 
     def find_amt(self, cols):
         """
-            find the first column that looks like an amount
-            (for files that don't begin with a column header line)
+        find the first column that looks like an amount
+        (for files that don't begin with a column header line)
 
-            Args:
-                array of column values from the first input line
+        @param cols: [(string)] fields from the first line
 
-            Return:
-                (bool) did we find an amount column
-
-            Note:
-                Rather than do a proper regexp, I cheat and just
-                count characters of different classes.
+        @return: (boolean) did we find an ammount column
+                 and a setting of self.amt
         """
-
         # go through the columns one at a time
         for i in range(len(cols)):
             # don't reuse columns already discovered
@@ -223,20 +215,14 @@ class Statement:
 
     def find_desc(self, cols):
         """
-            find the first column that looks like a description
-            (for files that don't begin with a column header line)
+        find the first column that looks like a description
+        (for files that don't begin with a column header line)
 
-            Args:
-                array of column values from the first input line
+        @param cols: [(string)] fields from the first line
 
-            Return:
-                (bool) did we find a description column
-
-            Note:
-                Rather than do a proper regexp, I cheat and just
-                count characters of different classes.
+        @return: (boolean) did we find a description column
+                 and a setting of self.desc
         """
-
         # go through the columns one at a time
         for i in range(len(cols)):
             # don't reuse columns already discovered
@@ -254,18 +240,13 @@ class Statement:
 
     def analyze_data(self, cols):
         """
-            analyze a header line to figure out what is in each column
-            (for files that don't begin with a column header line)
+        find the first column that looks like a description
 
-            Args:
-                array of column values from the first input line
+        @param cols: [(string)] fields from the first line
 
-            Return:
-                could we find all required columns
+        @return: (boolean) did we find all needed columns
 
-            Note:
-                if account names have been added to the file, it will
-                have a header line, and we will not have to infer them
+        Note: if we are processing our own output, it will have a header line.
         """
         if self.date < 0 and not self.find_date(cols):
             sys.stderr.write("ERROR: unable to identify date column\n")
@@ -277,15 +258,14 @@ class Statement:
 
     def preamble(self):
         """
-            print out the file preamble (column headings)
+        print out the file preamble (column headings)
         """
         self.output.write("Date, Amount, Account, Description" + "\n")
 
     def process_line(self, cols):
         """
-            process a line and either produce standard output or
-            accumulate a subtotal to be printed at the end of the
-            report
+        process a line and either produce standard output or
+        accumulate a subtotal to be printed at the end of the report
         """
 
         # talley credits and debits
@@ -339,7 +319,8 @@ class Statement:
 
         # check for commas in the description (scare some parsers)
         if ',' in entry.description:
-            sys.stderr.write("WARNING: comma in description (%s: %s)\n" % (entry.date, entry.description))
+            sys.stderr.write("WARNING: comma in description (%s: %s)\n" %
+                             (entry.date, entry.description))
 
         # see if we need to accumulate output for sorting
         if (self.sort):
@@ -349,7 +330,11 @@ class Statement:
 
     def postscript(self):
         """
-            print out the aggregated results and statistics
+        print out the aggregated results and statistics
+
+        Note that for "AGGREGATE" rules we do not generate any output until
+        we have finished processing all input files.  This method looks
+        for the totals we ahve been aggregating and flushes those them out.
         """
         # output any items buffered for sorting
         for entry in sorted(self.buffered, key=lambda e: e.date):
@@ -363,11 +348,11 @@ class Statement:
 
     def processFile(self, filename):
         """
-            process a file
+        process a file full of CSV transactions
+        - analyze first line to know what is in each column
+        - call process_line on each line
 
-            Note: we use the csv reader rather than split because
-                the csv reader knows how to deal with leading/trailing
-                white space and delimiters in quoted strings.
+        @param file: (string) name of file to be read in
         """
 
         # reinitialize the per-file parameters/statistics
@@ -410,7 +395,12 @@ class Statement:
 
     def filestats(self, filename):
         """
-            output the per file statistics
+        output the per file statistics:
+        - number of lines procssed
+        - total credits, debits, net
+
+        @param filename: (string) name of file just processed
+
         """
         statsmsg = "FILE: " + filename
         statsmsg += ",\tcredits=" + str(self.file_credit)
@@ -424,7 +414,12 @@ class Statement:
 
     def totstats(self):
         """
-            output the grand total statistics
+        output the grand total statistics for the processed files
+        - number of lines procssed
+        - total credits, debits, net
+        - number of already tagged transactions
+        - number of transactions matched by rules
+        - number of still un-matched/un-tagged transactions
         """
         statsmsg = "all "
         statsmsg += str(self.tot_files)
@@ -449,8 +444,13 @@ class Statement:
         sys.stderr.write(statsmsg)
 
 
-# read a list of known accounts
 def readAccounts(file):
+    """
+    Read in and return a list of known account names
+
+    @param file: (string) name of file to be read in
+    @return: [(string)] ... list of account names
+    """
     accounts = []
     afile = open(file, 'rb')
     for l in afile:
@@ -461,10 +461,12 @@ def readAccounts(file):
 
 if __name__ == '__main__':
     """
-        CLI entry point
-            process command line arguments
-            process the input file(s)
-            flush out any accumulated subtotals
+    CLI entry point
+    - process command line arguments
+    - for each input file
+       - process_file
+       - filestats
+    - totstats
     """
 
     from optparse import OptionParser

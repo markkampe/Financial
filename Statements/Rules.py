@@ -68,8 +68,8 @@ class Rules:
 
                 # sanity check all accounts if we have a list
                 if accounts and acct not in accounts:
-                    stderr.write("WARNING: unknown account (%s) in rule: %s\n" %
-                                 (acct, pat))
+                    stderr.write("WARNING: unknown account (%s) in rule: %s\n"
+                                 % (acct, pat))
                     stderr.write("         file: %s, line%s\n" % (file, line))
 
                 # anything else, we add to the rules list
@@ -92,7 +92,7 @@ class Rules:
         for r in self.rules:
             if r.date is not None and date != r.date:
                 continue
-            if fnmatch.fnmatch(desc, r.pat) or s_amt==r.pat:
+            if fnmatch.fnmatch(desc, r.pat) or s_amt == r.pat:
                 p = r.process
                 if p == "AGGREGATE":
                     return (Entry("", 0, r.acct, r.descr), False)
