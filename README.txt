@@ -35,6 +35,12 @@ FullMonte
 	It was very useful, in that it showed the futility of waiting 
 	a long time for a bigger dip.
 
+	I also found this data to be very useful when the Spring 20
+	opportunity came.  I processed the (post 1920) data to find,
+	given the market had dropped by X, the probability of it dropping
+	by Y more, and then used these to compute what fraction of my
+	intended purchases I should make at each 5%. 
+
 FinSim
 	
 	I created a ludicrously elaborate financial planning spreadsheet.  I
