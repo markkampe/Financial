@@ -26,6 +26,15 @@ Statements
 	(better anotated) csv statements.  It can reprocess its own
 	output arbitrarily many times.
 
+FullMonte
+
+	I have generally done my dip-buying "by feel", and did not
+	trust myself.  I found 150 years of monthly SP500 data, 
+	built a simulator to play random 20y segments against purchase
+	simulators, and implemented a few simple purchase strategies.
+	It was very useful, in that it showed the futility of waiting 
+	a long time for a bigger dip.
+
 FinSim
 	
 	I created a ludicrously elaborate financial planning spreadsheet.  I
@@ -39,6 +48,6 @@ FinSim
 	parameters.  It wasn't clear to me whether or not I could make these
 	so easily controlled that a non-programmer could use them, but actually
 	that wasn't a constraint on my problem.  I haven't worked on them for
-	two years now (way too busy) but I want to get back to them because I
+	several years now (way too busy) but I want to get back to them because I
 	think it might turn out to be a great toolkit for experimenting with
 	financial planning.
