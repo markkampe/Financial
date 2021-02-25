@@ -1,17 +1,21 @@
 Accounting
 
-	I have had an on-line check-book for over forty years.  The data has
+	I have had on-line accounting for over fifty years.  The data has
 	always been a very simple set of categories, budgets and ledgers (in
 	ASCII text) but the program to operate on them has been rewritten a
 	few times (PDP11/UNIX for CURSES, DOS/C, and finally rewritten in Java
 	(as a Swing application) when I needed to practice Java before teaching
 	a lab.
 
-	Its primary input/output is account/budget/balance lines, followed
-	by indented ledger entries (date, delta, balance, description) for 
-	each account.  I gradually added more built in analytics, but it is
-	basically just a program to enter credits and debits against a bunch
-	of accounts.
+	An accounts file is a series of account/budget/balance lines, followed
+	by indented ledger entries (date, delta, balance, description) under
+	each account.  It also includes, at the end (ignored by the program,
+	but for my benefit) some simple analytics of per-account performance
+	vs budget.
+	
+	Ledger entries can be entered one at a time, but (more usefully)
+	it has the ability to import ledger entries from csv files (date,
+	amount, account, description).
 
 Statements
 
