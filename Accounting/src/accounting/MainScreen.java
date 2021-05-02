@@ -505,7 +505,6 @@ public class MainScreen extends JFrame
 			// get a new file name
 			JFileChooser fc = new JFileChooser();
 			fc.setFileFilter( new FileNameExtensionFilter("Ledgers/Backups (.act/.bak)", "act", "bak" ));
-			// TODO fc.setFileView( new AcctFileView() );
 			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				newFile( fc.getSelectedFile().getAbsolutePath() );
 			}
@@ -526,7 +525,6 @@ public class MainScreen extends JFrame
 		
 		if (o == fileSaveAs && opts.writeable && books != null) {
 			JFileChooser fc = new JFileChooser(fileName);
-			// TODO fc.setFileView( new AcctFileView() );
 			if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				String chosen = "";
 				try {
