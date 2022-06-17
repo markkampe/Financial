@@ -308,12 +308,12 @@ class Statement:
         else:   # see if this result should be aggregated
             key = entry.account
             if entry.description != "":
-                    key += "-" + entry.description
+                key += "-" + entry.description
             if key in self.aggregations:
                 new_entry = self.aggregations[key]
                 entry.amount += new_entry.amount
                 if new_entry.date < entry.date:
-                        entry.date = new_entry.date
+                    entry.date = new_entry.date
                 self.aggregations[key] = entry
                 return
 
@@ -384,6 +384,8 @@ class Statement:
             self.file_line += 1
             self.tot_lines += 1
             if len(cols) < 3:       # ignore blank/short lines
+                continue
+            if cols[0][0] == '#':   # ignore comment lines
                 continue
             # make sure we strip all leading/trailing white space
             for c in range(len(cols)):
