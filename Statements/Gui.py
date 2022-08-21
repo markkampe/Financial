@@ -1,6 +1,6 @@
-from Tkinter import Tk, OptionMenu, Label, LabelFrame, Text, Button, Frame
-from Tkinter import StringVar, Entry
-from Tkinter import END, TOP, LEFT
+from tkinter import Tk, OptionMenu, Label, LabelFrame, Text, Button, Frame
+from tkinter import StringVar, Entry
+from tkinter import END, TOP, LEFT
 
 import Entry
 

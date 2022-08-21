@@ -46,7 +46,7 @@ class Rules:
 
         files = filename.split(',')
         for file in files:
-            rulefile = open(file, 'rb')
+            rulefile = open(file, "rt")
             reader = csv.reader(rulefile, skipinitialspace=True)
             for line in reader:
                 # ignore blank and comment lines

@@ -366,7 +366,7 @@ class Statement:
         self.file_line = 0
 
         # use the first line to figure out the data format
-        input = open(filename, 'rb')
+        input = open(filename, 'rt')
         line = input.readline()
         cols = line.split(',')
         if not self.analyze_headers(cols):
@@ -454,7 +454,7 @@ def readAccounts(file):
     @return: [(string)] ... list of account names
     """
     accounts = []
-    afile = open(file, 'rb')
+    afile = open(file, 'rt')
     for l in afile:
         accounts.append(l.strip())
     afile.close()
