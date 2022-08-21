@@ -455,8 +455,8 @@ def readAccounts(file):
     """
     accounts = []
     afile = open(file, 'rt')
-    for l in afile:
-        accounts.append(l.strip())
+    for line in afile:
+        accounts.append(line.strip())
     afile.close()
     return accounts
 
