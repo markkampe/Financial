@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 class Correction:
     """
     Process historical data to generate a characterization (how much time
-    they spend how bad) of corrections.
+    they spend how bad) of corrections.  Then compute the expected return
+    (probability * profit) of making investments at various discount levels.
 
     Author: Mark Kampe
     """
@@ -120,6 +121,12 @@ class Correction:
 
 
 # basic exerciser
+"""
+1. Review the data to identify corrections/crashes.
+2. Assess the probability of various drop levels.
+3. Compute the expected return (profit * probability) for each level.
+4. Assign fraction-to-purchase-at-that-discount proportional to those expectancies
+"""
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         infile = sys.argv[1]
