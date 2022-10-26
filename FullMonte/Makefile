@@ -1,3 +1,6 @@
+recommendation: Correction.py
+	python3 $<
+
 results: All.png Bottom.png Continuous.png Dips.png
 
 All.png: strat_all.py
