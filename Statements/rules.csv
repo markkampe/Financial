@@ -1,5 +1,5 @@
 #
-# This file contains a list of sample rules for associating accounts and more
+# This file contains a list of rules for associating accounts and more
 # useful descriptions with downloaded check/credit card statements.  
 # Rule lines have four comma-separated fields:
 #
@@ -27,29 +27,86 @@
 
 "FID BKG SVC LLC*", "Transfer", "(FIDO)", REPLACE
 "LENDING CLUB*", "Transfer", "(Lending Club)", REPLACE
+"LENDINGCLUB*", "Transfer", "(Lending Club)", REPLACE
 
-"CHASE*AUTOPAY *", CreditCard, "Chase Visa autopay", REPLACE
+"*CHASE*AUTOPAY *", CreditCard, "Chase Visa autopay", REPLACE
+"AUTOMATIC PAYMENT - THANK", CreditCard, "Amazon Visa autopay", REPLACE
 
 # paycheck deposits
-"pattern", Deposit, "XX YY pay", REPLACE
+"POMONA COLLEGE*", Deposit, "MK Pomona pay", REPLACE
+"*HARVEY MUDD COLL *", Deposit, "MK HMC pay", REPLACE
+"THE CLAREMONT CO PAYMENT *", Deposit, "MK HMC pay", REPLACE
+"*SSA*SOC SEC*", Deposit, "Social Security", REPLACE
 
+# transfers to AH
+"Online Transfer * to AH Checking *", MomCare, "AH home assistant", REPLACE
 # tax and insurance payments
 "IRS*USATAXPYMT*", "Taxes", "IRS", REPLACE
 "FRANCHISE TAX BO PAYMENTS*", "Taxes", "CA", REPLACE
-"LA*C* TTC PAY*", Basic, "LA Prop Taxes", REPLACE
+
+"LA Co TTC *", Basic, "LA Prop Taxes", REPLACE
+"SAN*BER*TAX*",         Basic, "SBDO Prop Taxes", REPLACE
 "County of Rivers*", Basic, "RIV Prop Taxes", REPLACE
+"Online Payment * To State Farm*", Basic, "home insurance", REPLACE
+"California Fair *", Basic, "Tall Pines fire insurance", REPLACE
+"MCGRAW-800-303-5000", Basic, "Tall Pines liability insurance", REPLACE
+"*STATE FARM INSURANCE*", Basic, "LA fire insurance", REPLACE
+"STATE FARM RO *", Basic, "LA fire insurance", REPLACE
 
 # auto-pay utility bills
+"*YOUR PROPANE COM *", Utilities, "propane", REPLACE
+"C T PROPANE", Utilities, "propane", REPLACE
+"AMERIGAS *", Utilities, "propane", REPLACE
+"ATT*",             Utilities, "phone", REPLACE
 "LADWP*",         Utilities, "DWP", REPLACE
 "SO CAL GAS *",     Utilities, "socal gas", REPLACE
+"*SO CAL EDISON *", Utilities, "Tall Pines power", REPLACE
+"*SO CAL GAS*",     Utilities, "socal gas", REPLACE
+"*SPECTRUM*",  Utilities, "cable", REPLACE
+"*TIME WARNER*",  Utilities, "cable", REPLACE
+"*FRONTIER COMMUNI*", Utilities, "TP phone/net", REPLACE
+"CULLIGAN OF ONTA*", Utilities, "Water Purification", REPLACE
+"RING MULTICAM YEARLY", Utilities, "Alarm Monitoring", REPLACE
+"LA POLICEALARM*", Utilities, "Alarm Permit", REPLACE
+
+# regular household purchases
+"ALLABOUTSPAS.COM", Household, "spa supplies", AGGREGATE
+"ARMSTRONG*",    Household, "plants", AGGREGATE
+"BALLER HARDWARE", Household, "hardware", AGGREGATE
+"BELLEFONTAINE NURSERY", Household, "plants", AGGREGATE
+"*BRECKS", Household, "plants", AGGREGATE
+"BRECKS*LAWRENCEBURG*", Household, "plants", AGGREGATE
+"*HOME DEPOT*",     Household, "misc Home Depot", AGGREGATE
+"*FIG EARTH SUPPLY*", Household, "misc plants", AGGREGATE
+"FOREST LUMBER", Household, "misc Tall Pines", AGGREGATE
+"HM WHOLESALE PLANTS", Household, "plants", AGGREGATE
+"THE HOME DEPOT *",     Household, "misc HOME DEPOT", AGGREGATE
+"IDYLLWILD GARDENS NURSERY", Household, "TP plants", REPLACE
+"*LILY ROCK NATIVE*", Household, "plants", AGGREGATE
+"LOWES *",       Household, "misc Lowes", AGGREGATE
+"MIMOSA NURSERY", Household, "plants", AGGREGATE
+"*OTTER IN THE WATER*", Household, "spa repair", REPLACE
+"J&P*PARKSEED*", Household, "plants", AGGREGATE
+"TUESDAY MORNING*", Household, "misc", AGGREGATE
+"VIRGIL'S HARDWARE*", Household, "misc h/w", AGGREGATE
+"VILLAGE HARDWARE", Household, "misc h/w", AGGREGATE
+"WWW.RSABG.ORG*", Household, "plants", AGGREGATE
+"YAMAGUCHI BONSAI NURSERY", Household, "plants", AGGREGATE
 
 # gas stations
+"gas", Transportation, "gas", AGGREGATE
 "76 *", Transportation, "gas", AGGREGATE
 "ARCO *", Transportation, "gas", AGGREGATE
+"CLASSIC PETROLEUM", Transportation, "gas", AGGREGATE
 "CHEVRON *",   Transportation, "gas", AGGREGATE
 "COSTCO GAS*",   Transportation, "gas", AGGREGATE
 "EXXONMOBIL *", Transportation, "gas", AGGREGATE
+"GARO GAS", Transportation, "gas", AGGREGATE
+"SAVINGS OIL", Transportation, "gas", AGGREGATE
 "SHELL OIL*",    Transportation, "gas", AGGREGATE
+"SPEEDWAY *", Transportation, "gas", AGGREGATE
+"MORONGO TRAVEL CENTER", Transportation, "gas", AGGREGATE
+"PETROL X GAS STATION*", Transportation, "gas", AGGREGATE
 "USA *",Transportation, "gas", AGGREGATE
 "* VALERO", Transportation, "gas", AGGREGATE
 "* PETROLEUM *", Transportation, "gas", AGGREGATE
@@ -66,50 +123,417 @@
 "STATE OF CALIF DMV *", Transportation, "DMV", COMBINE
 
 # regular maintenance
+"PEPES TIRE SHOP*", Transportation, "tires", REPLACE
 "AUTOZONE #*", Transportation, "parts", REPLACE
 "* LUBE MASTERS *", Transportation, "oil change", REPLACE
 
 # parking
-"AMPCO PARKING*", Transportation, "parking", AGGREGATE
+"parking", Transportation, "parking", AGGREGATE
+"PARKING *", Transportation, "parking", AGGREGATE
+"* PARKING", Transportation, "parking", AGGREGATE
+"* PARKING *", Transportation, "parking", AGGREGATE
+"* PARKING*", Transportation, "parking", AGGREGATE
+"ABM ONSITE *", Transportation, "parking", AGGREGATE
+"BOB HOPE AIRPORT*", Transportation, "parking", AGGREGATE
+"CITY PASADENA", Transportation, "parking", AGGREGATE
+"CITY OF LA REC AND PARK", Transportation, "parking", AGGREGATE
+"GLENDALE BRAND*", Transportation, "parking", AGGREGATE
+"LAX AIRPORT LOT*", Transportation, "parking", AGGREGATE
+"REDONDO BEACH PIER P*", Transportation, "parking", AGGREGATE
+"UCLA SELFSERVE PARK", Transportation, "parking", AGGREGATE
 
-# entertainment
+"LAXSHUTTLETIX.COM", Vacations, "shuttle", AGGREGATE
+"SCUBA COZUMEL *", Vacations, "Cozumel diving", REPLACE
+"INTERAGENCY VISITOR CENT", Vacations, "Park Admissions", REPLACE
+"NORTHERN QUEEN INN", Vacations, "NorCal lodging", REPLACE
+
+"concert", Food-and-Fun, "concert", AGGREGATE
+"movies", Food-and-Fun, "movies", AGGREGATE
 "AMC *", Food-and-Fun, "movies", AGGREGATE
+"CALTECH TICKET OFFICE", Food-and-Fun, "concert", AGGREGATE
+"EDWARDS *", Food-and-Fun, "movies", AGGREGATE
+"DESCANSO GARDENS *", Food-and-Fun, "garden tour", REPLACE
 "LAEMMLE THEATRES *", Food-and-Fun, "movies", AGGREGTE
 "PACIFIC THEATRES*", Food-and-Fun, "movies", AGGREGATE
+"RUSTIC THEATRE", Food-and-Fun, "movies", AGGREGATE
+"*FANDANGOCOM*", Food-and-Fun, "movies", AGGREGATE
+"EB WHISKY AMP POETRY", Food-and-Fun, "Whisky & Poetry", AGGREGATE
+"EB ARDENT SPIRITS*", Food-and-Fun, "Ardent Spirits", AGGREGATE
 
 # restaurants
+"dinner", Food-and-Fun, "dinner", AGGREGATE
+"ACAPULCO *", Food-and-Fun, "dinner", AGGREGATE
+"ALBERTO* MEXICAN FOOD", Food-and-Fun, "lunch", AGGREGATE
+"AMELIAS DONUTS *", Food-and-Fun, "snacks", AGGREGATE
+"APPLEBEES *", Food-and-Fun, "dinner", AGGREGATE
+"ARBYS *", Food-and-Fun, "lunch", AGGREGATE
+"BARCELONA", Food-and-Fun, "dinner", AGGREGATE
+"THE BRIT*", Food-and-Fun, "dinner", AGGREGATE
+"CACAO MEXICATESSEN", Food-and-Fun, "dinner", AGGREGATE
+"CAFE AROMA", Food-and-Fun, "dinner", AGGREGATE
+"CAFE SANTORINI", Food-and-Fun, "dinner", AGGREGATE
+"CASTAWAY *", Food-and-Fun, "dinner", AGGREGATE
+"CASTANEDAS *", Food-and-Fun, "lunch", AGGREGATE
+"CHARLIE'S TRIO", Food-and-Fun, "dinner", AGGREGATE
+"CHEESECAKE FACTORY*", Food-and-Fun, "dinner", AGGREGATE
+"CHICO*MEXICAN*", Food-and-Fun, "lunch", AGGREGATE
+"CILANTRO FRESH *", Food-and-Fun, "lunch", AGREGATE
+"COMMONWEALTH*", Food-and-Fun, "dinner", AGGREGATE
+"CRAWFISH ON FIRE", Food-and-Fun, "dinner", AGGREGATE
+"EL TORITO *", Food-and-Fun, "dinner", AGGREGATE
+"ELEPHANT BAR *", Food-and-Fun, "dinner", AGGREGATE
+"EL PESCADOR *", Food-and-Fun, "dinner", AGGREGATE
+"ELENA'S GREEK *", Food-and-Fun, "lunch", AGGREGATE
+"EMERILS NO FISH HOUSE", Food-and-Fun, "dinner", AGGREGATE
+"EUREKA CLAREMONT", Food-and-Fun, "dinner", AGGREGATE
+"FERRO", Food-and-Fun, "dinner", AGGREGATE
+"FRATELLO'S *", Food-and-Fun, "dinner", AGGREGATE
+"FRIDA RESTAURANT *", Food-and-Fun, "dinner", AGGREGATE
+"GASTROGNOME *", Food-and-Fun, "dinner", AGGREGATE
+"GLADSTONES*", Food-and-Fun, "dinner", AGGREGATE
 "GRANVILLE *", Food-and-Fun, "dinner", AGGREGATE
+"GRANVILLE *", Food-and-Fun, "dinner", AGGREGATE
+"HAMA SUSHI", Food-and-Fun, "dinner", AGGREGATE
+"HIGHLAND PARK BOWL", Food-and-Fun, "dinner", AGGREGATE
+"HOUSTON'S *", Food-and-Fun, "dinner", AGGREGATE
+"IDYLL AWHILE*", Food-and-Fun, "dinner", AGGREGATE
+"IDYLLWILD PIZZA CO", Food-and-Fun, "lunch", AGGREGAGE
+"IDYOLOGY", Food-and-Fun, "dinner", AGGREGATE
+"ISLAMORADA FISH CO", Food-and-Fun, "dinner", AGGREGATE
+"ISLANDS REST*", Food-and-Fun, "dinner", AGGREGATE
+"JERSEY MIKES *", Food-and-Fun, "lunch", AGGREGATE
+"JITLADA THAI *", Food-and-Fun, "dinner", AGGREGATE
+"JOECRBSHK-*", Food-and-Fun, "dinner", AGGREGATE
+"KAGURA *", Food-and-Fun, "dinner", AGGREGATE
+"KINCAID*", Food-and-Fun, "dinner", AGGREGATE
+"LA CASITA MEXICAN *", Food-and-Fun, "dinner", AGGREGATE
+"LITTLE BEAST *", Food-and-Fun, "dinner", AGGREGATE
+"LUNASIA DIM SUM *", Food-and-Fun, "dinner", AGGREGATE
+"MAPLE BLOCK MEAT CO", Food-and-Fun, "lunch", AGGREGATE
+"MARIE CALLEND*", Food-and-Fun, "dinner", AGGREGATE
+"MASA OF ECHO PARK", Food-and-Fun, "lunch", AGGREGATE
+"MAXIMILIANO", Food-and-Fun, "dinner", AGGREGATE
+"MESSHALL", Food-and-Fun, "dinner", AGGREGATE
+"MIKE AND ANNES*", Food-and-Fun, "dinner", AGGREGATE
+"MILE HIGH CAFE", Food-and-Fun, "dinner", AGGREGATE
+"MIMIS CAFE*", Food-and-Fun, "dinner", AGGREGATE
+"MODAN * RAMEN", Food-and-Fun, "lunch", AGGREGATE
+"MORRISON*", Food-and-Fun, "dinner", AGGREGATE
+"MOMOTARO JAPANESE *", Food-and-Fun, "dinner", AGGREGATE
+"*MOTHER MOO CREAMERY", Food-and-Fun, "dinner", AGGREGATE
+"NEW ARRIBAS MEXICAN*", Food-and-Fun, "dinner", AGGREGATE
+"OCTOPUS JAPANESE*", Food-and-Fun, "dinner", AGGREGATE
+"THE OINKSTER", Food-and-Fun, "lunch", AGGREGATE
+"OOMASA INC*", Food-and-Fun, "dinner", AGGREGATE
+"OUTBACK *", Food-and-Fun, "dinner", AGGREGATE
+"PALERMO RIST*", Food-and-Fun, "dinner", AGGREGATE
+"SQ *PARSNIP", Food-and-Fun, "dinner", AGGREGATE
+"PAYPAL *THIRDCHILD*", Food-and-Fun, "Whisky and Poetry", REPLACE
+"RAGIN CAJUN CAFE*", Food-and-Fun, "dinner", AGGREGATE
+"*Ragin Cajun Cafe*", Food-and-Fun, "dinner", AGGREGATE
+"RECESS EATERY*", Food-and-Fun, "dinner", AGGREGATE
+"REAL FOOD DAILY*", Food-and-Fun, "dinner", AGGREGATE
+"RED LOBSTER *", Food-and-Fun, "dinner", AGGREGATE
+"RICE THAI TAPAS", Food-and-Fun, "dinner", AGGREGATE
+"SALAZAR", Food-and-Fun, "dinner", AGGREGATE
+"SONNYS HIDEAWAY*", Food-and-Fun, "dinner", AGGREGATE
+"SOURDOUGH &amp; CO*", Food-and-Fun, "lunch", AGGREGATE
+"TENDER GREENS *", Food-and-Fun, "dinner", AGGREGATE
+"TENNO SUSHI", Food-and-Fun, "dinner", AGGREGATE
+"TERRANEA RESORT", Food-and-Fun, "dinner", AGGREGATE
+"TEXAS CATTLE COMPANY", Food-and-Fun, "dinner", AGGREGATE
+"THE LOBSTER TRAP", Food-and-Fun, "dinner", AGGREGATE
+"THE PIT", Food-and-Fun, "dinner", AGGREGATE
+"THE YORK", Food-and-Fun, "dinner", AGGREGATE
+"THE HAT*", Food-and-Fun, "lunch", AGGREGATE
+"THAI EAGLE ROX*", Food-and-Fun, "dinner", AGGREGATE
+"TOMOMI SUSHI", Food-and-Fun, "dinner", AGGREWGATE
+"TONYS ON THE PIER*", Food-and-Fun, "dinner", AGGREGATE
+"TONY'S ON THE PIER*", Food-and-Fun, "dinner", AGGREGATE
+"* TONY ROMAS", Food-and-Fun, "dinner", AGGREGATE
+"THE LITTLE EASY", Food-and-Fun, "dinner", AGGREGATE
+"TUSCANY GARDENS", Food-and-Fun, "dinner", AGGREGATE
+"VIVA MADRID*", Food-and-Fun, "dinner", AGGREGATE
+"VIA MAR EXPRESS", Food-and-Fun, "lunch", AGGREGATE
+"WILD CARVERY", Food-and-Fun, "dinner", AGGREGATE
+"YUCHUN", Food-and-Fun, "dinner", AGGREGATE
 
+"*COUNTRY KITCHEN*", Food-and-Fun, "breakfast", AGGREGATE
+"LUMBERJACKS*", Food-and-Fun, "breakfast", AGGREGATE
+
+"lunch", Food-and-Fun, "lunch", AGGREGATE
+"7-ELEVEN *", Food-and-Fun, "beverages", AGGREGATE
+"ARCO *", Food-and-Fun, "beverages", AGGREGATE
+"ANTIGUA BREAD*", Food-and-Fun, "lunch", AGGREGATE
+"ATHENA GRILL*", Food-and-Fun, "lunch", AGGREGATE
+"ANDALE *", Food-and-Fun, "lunch", AGGREGATE
+"ASPC COOP *", Food-and-Fun, "lunch", AGGREGATE
+"AY CARAMBA*", Food-and-Fun, "lunch", AGGREGATE
+"BASKIN *", Food-and-Fun, "lunch", AGGREGATE
+"*BAY SIDE BUFFET", Food-and-Fun, "breakfast", AGGREGATE
+"BEVMO*", Food-and-Fun, "alcohol", AGGREGATE
+"BEVERAGES * MORE*", Food-and-Fun, "alcohol", AGGREGATE
 "BOJANGLES *", Food-and-Fun, "lunch", AGGREGATE
+"BURBANK AIRPORT FOOD *", Food-and-Fun, "lunch", AGGREGATE
+"*BOO'S PHILLY*", Food-and-Fun, "lunch", AGGREGATE
+"BURRITO EXPRESS", Food-and-Fun, "lunch", AGGREGATE
+"CARL'S JR*", Food-and-Fun, "lunch", AGGREGATE
+"CARLS JR*", Food-and-Fun, "lunch", AGGREGATE
+"THE CHEESE STEAK SHOP*", Food-and-Fun, "lunch", AGGREGATE
+"CHILI'S*", Food-and-Fun, "lunch", AGGREGATE
+"CHIPOTLE *", Food-and-Fun, "lunch", AGGREGATE
+"CHOPS MEATS *", Food-and-Fun, "lunch", AGGREGATE
+"COLDSTONE *", Food-and-Fun, "lunch", AGGREGATE
+"COYOTE RED*", Food-and-Fun, "lunch", AGGREGATE
+"CUCS CONNECTION", Food-and-Fun, "lunch", AGGREGATE
+"*DEL TACO*", Food-and-Fun, "lunch", AGGREGATE
+"DENNY'S #*", Food-and-Fun, "lunch", AGGREGATE
+"DENNY'S INC*", Food-and-Fun, "lunch", AGGREGATE
+"*DOUGHNUTS*", Food-and-Fun, "lunch", AGGREGATE
+"*DONUTS*", Food-and-Fun, "lunch", AGGREGATE
+"EL CAPITAN COCINA", Food-and-Fun, "lunch", AGGREGATE
+"EL HURACHE AZTECA", Food-and-Fun, "lunch", AGGREGATE
+"*EL POLLO LOCO*", Food-and-Fun, "lunch", AGGREGATE
+"*FATHER NATURE LAVASH", Food-and-Fun, "lunch", AGGREGATE
+"FARMER BOYS *", Food-and-Fun, "lunch", AGGREGATE
+"FIREHOUSE SUBS *", Food-and-Fun, "lunch", AGGREGATE
+"GIAMELA'S SUBMARIN", Food-and-Fun, "lunch", AGGREGATE
+"GIOVANNI'S PIZZERIA", Food-and-Fun, "lunch", AGGREGATE
+"*GOOD EGG FAMILY*", Food-and-Fun, "lunch", AGGREGATE
+"THE GREYHOUND*", Food-and-Fun, "lunch", AGGREGATE
+"HAAGEN DAZS *", Food-and-Fun, "lunch", AGGREGATE
+"HADLEY'S *", Food-and-Fun, "lunch", AGGREGATE
+"HOLY COW *", Food-and-Fun, "lunch", AGGREGATE
+"HUDSONNEWS *", Food-and-Fun, "lunch", AGGREGATE
+"IHOP *", Food-and-Fun, "lunch", AGGREGATE
+"IDYLLWILD BAKE *", Food-and-Fun, "breakfast", AGGREGATE
+"IKE'S SANDWICH *", Food-and-Fun, "lunch", AGGREGATE
 "IN-N-OUT BURGER *", Food-and-Fun, "lunch", AGGREGATE
+"IN N OUT BURGER *", Food-and-Fun, "lunch", AGGREGATE
+"JACK IN THE BOX *", Food-and-Fun, "lunch", AGGREGATE
+"JERSEY MIKE'S *", Food-and-Fun, "lunch", AGGREGATE
+"JERSEY MKE'S *", Food-and-Fun, "lunch", AGGREGATE
+"JIMMY JOHNS *", Food-and-Fun, "lunch", AGGREGATE
+"KRISPY KREME *", Food-and-Fun, "lunch", AGGREGATE
+"*KOREAN CUISINE", Food-and-Fun, "lunch", AGGREGATE
+"*LAMONICA'S NY-P", Food-and-Fun, "lunch", AGGREGATE
+"La Abeja*", Food-and-Fun, "lunch", AGGREGATE
+"LAKESIDE CAFE*", Food-and-Fun, "lunch", AGGREGATE
+"LASA", Food-and-Fun, "lunch", AGGREGATE
+"LAS LOMAS *", Food-and-Fun, "lunch", AGGREGATE
+"LEE'S HOAGIE HOUSE", Food-and-Fun, "lunch", AGGREGATE
+"*THE LITTLE JEWEL*", Food-and-Fun, "lunch", AGGREGATE
+"LOVE S COUNTRY*", Food-and-Fun, "lunch", AGGREGATE
+"THE LUMBER MILL *", Food-and-Fun, "lunch", AGGREGATE
+"MARCOS PIZZA *", Food-and-Fun, "lunch", AGGREGATE
+"MARIAS MEXICAN *", Food-and-Fun, "lunch", AGGREGATE
+"MCDONALDS*", Food-and-Fun, "lunch", AGGREGATE
+"MCDONALD'S*", Food-and-Fun, "lunch", AGGREGATE
+"MENCHIES *", Food-and-Fun, "lunch", AGGREGATE
+"MINT", Food-and-Fun, "dinner", AGGREGATE
+"OINKSTER", Food-and-Fun, "lunch", AGGREGATE
+"* OG DDLP *", Food-and-Fun, "lunch", AGGREGATE
+"PAT AND LORRAINES", Food-and-Fun, "breakfast", AGGREGATE
+"PEDRO'S RESTAURANT*", Food-and-Fun, "lunch", AGGREGATE
+"PIZZA HUT *", Food-and-Fun, "lunch", AGGREGATE
+"POQUITO MAS *", Food-and-Fun, "lunch", AGGREGATE
+"PSYCHO DONUTS*", Food-and-Fun, "lunch", AGGREGATE
+"QDOBA *", Food-and-Fun, "lunch", AGGREGATE
+"RALLY'S", Food-and-Fun, "lunch", AGGREGATE
+"RED ROBIN *", Food-and-Fun, "lunch", AGGREGATE
+"RUBY*S DINETTE*", Food-and-Fun, "lunch", AGGREGATE
+"RUBY*S DINER*", Food-and-Fun, "lunch", AGGREGATE
+"RUBIO'S *", Food-and-Fun, "lunch", AGGREGATE
+"*SEES CANDY*", Food-and-Fun, "lunch", AGGREGATE
+"SENOR FISH *", Food-and-Fun, "lunch", AGGREGATE
+"Subway *", Food-and-Fun, "lunch", AGGREGATE
+"SUBWAY *", Food-and-Fun, "lunch", AGGREGATE
+"SPECIALTY*S CAFE*", Food-and-Fun, "lunch", AGGREGATE
+"SONIC DRIVE IN *", Food-and-Fun, "lunch", AGGREGATE
+"SWEET TOMATOES *", Food-and-Fun, "lunch", AGGREGATE
+"ST JOHNS BAR & GRILL*", Food-and-Fun, "lunch", AGGREGATE
+"STARBUCKS *", Food-and-Fun, "lunch", AGGREGATE
+"SMOKING PIG*", Food-and-Fun, "lunch", AGGREGATE
+"*SUL N BEANS*", Food-and-Fun, "lunch", AGGREGATE
+"TACO JOES *", Food-and-Fun, "lunch", AGGREGATE
+"TAQUERIA EL TORO", Food-and-Fun, "lunch", AGGREGATE
+"THE HAT #*", Food-and-Fun, "lunch", AGGREGATE
+"* THE TOWN BAKRE" Food-and-Fun, "breakfast", AGGREGATE
+"TOMATINA*", Food-and-Fun, "lunch", AGGREGATE
+"TACO PLUS *", Food-and-Fun, "lunch", AGGREGATE
+"TACO BELL*", Food-and-Fun, "lunch", AGGREGATE
+"TACOS LOS GORDITOS", Food-and-Fun, "lunch", AGGREGATE
+"TASTY SUBS *", Food-and-Fun, "lunch", AGGREGATE
+"TIRSAS", Food-and-Fun, "lunch", AGGREGATE
+"TOMMY'S *", Food-and-Fun, "lunch", AGGREGATE
+"*THE TOWN BAKER", Food-and-Fun, "breakfast", AGGREGATE
+"UCLA RESTAURANTS", Food-and-Fun, "lunch", AGGREGATE
+"VILLAGE DELI*", Food-and-Fun, "lunch", AGGREGATE
+"WHICH WICH*", Food-and-Fun, "lunch", AGGREGATE
+"*WICKED GOOD FOOD*", Food-and-Fun, "lunch", AGGREGATE
+"WIENERSCHNITZEL*", Food-and-Fun, "lunch", AGGREGATE
+"YAN CAN *", Food-and-Fun, "lunch", AGGREGATE
+"Zankou Chicken*", Food-and-Fun, "lunch", AGGREGATE
+"Z SUSHI", Food-and-Fun, "dinner", AGGREGATE
+
+# alcohol
+"BEVERAGES * MORE *", Food-and-Fun, "spirits", AGGREGATE
+"BEVMO *", Food-and-Fun, "alcohol", AGGREGATE
+"Mission Liquor *", Food-and-Fun, "alcohol", AGGREGATE
+"TOTAL WINE *", Food-and-Fun, "alcohol", AGGREGATE
+"*TOTALWINE*", Food-and-Fun, "alcohol", AGGREGATE
 
 # groceries
 "groceries", Groceries, "", AGGREGATE
+"99-CENTS-ONLY *", Groceries, "99-cents", AGGREGATE
+"* ALBERTSONS *", Groceries, "Albertson", AGGREGATE
 "ALBERTSONS *", Groceries, "Albertson", AGGREGATE
+"ALDI *", Groceries, "Aldi", AGGREGATE
+"BIG SAVER FOODS *", Groceries, "Big Saver", AGGREGATE
+"*CHEDRAUI*", Groceries, "", AGGREGATE
+"COSTCO WHSE*", Groceries, "CostCo", AGGREGATE
+"COSTCO WHOLESALE*", Groceries, "CostCo", AGGREGATE
+"FAIRWAY FOODS*", Groceries, "Fairway", AGGREGATE
 "FOOD4LESS*", Groceries, "Food4Less", AGGREGATE
 "FRESH & EASY*", Groceries, "Fresh & Easy", AGGREGATE
 "GELSON'S MARKETS*", Groceries, "Gelsons", AGGREGATE
+"JONS MARKET*", Groceries, "Jons", AGGREGATE
+"H MART LOS ANGELES", Groceries, "K-town", AGGREGATE
+"HARRIS TEETER *", Groceries, "NC?", AGGREGATE
+"IDYLLWILD VILLAGE M", Groceries, "Idyllwild", AGGREGATE
+"INDIA SWEETS AND SPICE", Groceries, "", AGGREGATE
+"INGLES MARKETS *", Groceries, "", AGGREGATE
+"KING SOOPERS *", Groceries, "King", AGGREGATE
 "LUCKY *", Groceries, "Lucky", AGGREGATE
+"LUCKYVITAMIN.COM", Groceries, "", AGGREGATE
+"MOUNTAIN TOP LIQUOR", Groceries, "Idyllwild liquor", REPLACE
+"MOUNTAIN PAWS", Groceries, "dog food", AGGREGATE
+"MISSION LIQUOR*", Groceries, "spirits", REPLACE
+"MISSION WINE*", Groceries, "spirits", REPLACE
 "PAVILIONS *", Groceries, "Pavilions", AGGREGATE
+"PAYPAL*PETCO", Groceries, "dog food", AGGREGATE
+"PETCO*", Groceries, "dog food", AGGREGATE
+"PETSMART *", Groceries, "dog food", AGGREGATE
+"PET FOOD EXPRESS *", Groceries, "dog food", AGGREGATE
+"PINE COVE MARKET *", Groceries, "Idyllwild", AGGREGATE
+"*PITTMAN*DAVIS", Groceries, "Pittman-Davis", AGGREGATE
+"RALEY*", Groceries, "Raley's", AGGREGATE
 "RALPHS *", Groceries, "Ralphs", AGGREGATE
 "SAFEWAY *", Groceries, "Safeway", AGGREGATE
+"SKY ISLAND NATURAL*", Groceries, "Sky Island", AGGREGATE
+"SMARTNFINAL*", Groceries, "Smart&Final", AGGREGATE
+"SMART AND FINAL*", Groceries, "Smart&Final", AGGREGATE
 "SPROUTS FARMERS MAR*", Groceries, "Sprouts", AGGREGATE
-"TRADER JOE'S*", Groceries, "TJs", AGGREGATE
+"SQ *BIRDMAN PET *", Groceries, "bird food", AGGREGATE
+"*STATERBROS*", Groceries, "Stater Brothers", AGGREGATE
+"SUPER KING M*", Groceries, "SuperKing", AGGREGATE
+"*SUPERIOR*GROCE*", Groceries, "Superior", AGGREGATE
+"*SUPERIOR SUPER WHSE", Groceries, "Superior", AGGREGATE
+"TRADER JOE*", Groceries, "TJs", AGGREGATE
 "VONS *", Groceries, "Vons", AGGREGATE
 "WHOLEFDS*", Groceries, "WholeFoods", AGGREGATE
+"* WAKE COUNTY ABC BOARD", Groceries, "CK mistake", REPLACE
+
 
 # medical expenses
+"CMS MEDICARE *", Medical, "Medicare part B", REPLACE
 "*KAISERDUES *", Medical, "Kaiser Adv +", REPLACE
+"Online Payment * To Genworth Life*", Medical, "LTC insurance", REPLACE
+"RICHARD E. HEYES DDS*", Medical, "DD - Heyes", REPLACE
+"*GENESIS DENTAL*", Medical, "DD Baghdasarian", REPLACE
+"ROOTVISION ENDO", Medical, "DD - rootcanal", REPLACE
+"*OSTEOSTRONG *", Medical, "LK Osteostrong", REPLACE
+"*VILLAGEVET*", Medical, "Kaylee", REPLACE
+
+"KEYSTONE CHIROPRACTIC", Medical, "CK chiro", REPLACE
+"PACKARD DENTAL GROUP INC", Medical, "DD - CWK", REPLACE
+"NCSU STUDENT HEALTH", Medical, "CK ov", REPLACE
+"SQ *ASPIRE COUNSEL*", Medical, "CK ov", REPLACE
+"ASPIRE COUNSELING GRP", Medical, "CK ov", REPLACE
+"RALEIGH NEUROLOGY PHARMAC", Medical, "CK Px", REPLACE
+"RESULTS PHYSIOTHE", Medical, "CK phys therapy", REPLACE
+"*RITE AID STORE - 11388", Medical, "CK Px", REPLACE
+"KP RX*", Medical, "Prescriptions", COMBINE
+"OBERLIN ROAD PHARMACY", Medical, "CK Px", REPLACE
+"PERSON STREET PHARMACY", Medical, "CK Px", REPLACE
 "CVS/PHARMACY *", Medical, "JK Px", REPLACE
+"RALEIGH NEUROLOGY ASSOC", Medical, "CK ov", REPLACE
+"RADIANT IMAG*", Medical, "CK lab", REPLACE
+"UNITEDGASTRO*", Medical, "CK ov gastro", REPLACE
+"VISTA COMMUNITY CLINIC", Medical, "CK ov", REPLACE
+"RITE AID STORE - 5635", Medical, "CK Px", REPLACE
+
+"ADVANCED URGENT CARE*", Medical, "JK ov", REPLACE
 "BLUE SHIELD CA*", Medical, "JK ins", REPLACE
+"BLUE SHIELD OF CA*", Medical, "JK ins", REPLACE
+"*ELEANOR LEUNG MD*", Medical, "JK ov Leung", REPLACE
+"FSI*HCSC PREMIUM PMT*", Medical, "JK ins", REPLACE
+"THE HILL MEDICAL CORP", Medical, "JK ov", REPLACE
+"HUNTINGTON DERMATOLOGY*", Medical, "JK ov Huntington", REPLACE
+"KLINGENSMITH*ASSOCIAT", Medical, "DD - JK", REPLACE
+"LENS.COM*", Medical, "JK contacts", REPLACE
+"*JACKLIN POLADIAN MD*", Medical, "JK ov Poladian", REPLACE
+"*KATRIN KOUTASSEVITCH", Medical, "JK counseling", REPLACE
+"MORSE K UPSHAW DPM*", Medical, "JK ov podiatrist", REPLACE
+"*LAURIE MCDONOUGH", Medical, "JK MFC", REPLACE
+"MSP*RALEIGH NEUROLOGY", Medical, "CK ov neruo", REPLACE
+"REGIONAL DERMATOLOGY OF D", Medical, "JK derm", REPLACE
+"USC CARE MEDICAL GROUP*", Medical, "JK ov USC", REPLACE
+"SOUTHERN CALIFORNIA GASTR", Medical, "JK ov gastro", REPLACE
+"CORRECTIVE CHIROPRACTIC", Medical, "CK ov chiro", REPLACE
+"HEATHER LANGAN MA*", Medical, "JK counseling", REPLACE
+"WALGREENS #17971", Medical, "JK Rx", REPLACE
+
+"INTERIM ASSISTED CARE*", Andrea, "AH home care", REPLACE
 
 "* VILLAGE VET", Medical, "vet (village)", REPLACE
 "ANIMAL SERVICES*", Medical, "dog license", REPLACE
+
+# SCUBA expenses
+"CATALINA EXPRESS *", Reimbursable, "catalina express", REPLACE
+"*CATALINA DIVERS SUPPL", Reimbursable, "cylinders/fills", REPLACE
+"CATALINA LANDING*", Reimbursable, "Cat Exp parking", REPLACE
+"DAN SERVICES*", Hobbies, "DAN mshp/ins", REPLACE
+"HANDICAPPED SCUBA AS*", Hobbies, "MK HSA mshp", REPLACE
+"HOLLYWOOD DIVERS*", Hobbies, "SCUBA equipment", REPLACE
+"PADI AMERICAS INC", SCUBA-mship, "PADI mshp/matls", REPLACE
+"VICENCIA AND BUCKLEY*", SCUBA-ins, "liability ins", REPLACE
+
+"SCUBA TRAVEL VENTURE*", Vacations, "", COMBINE
+"SCUBA CLUB COZUMEL", Vacations, "dive: lodging", AGGREGATE
+
+# clothing and hair cuts
+"LK clothing", Clothing, "LK clothing", AGGREGATE
+"CALIFORNIA CUTE CUTS*", Clothing, "LK h/c", REPLACE
+"SUPERCUTS*", Clothing, "MK h/c", REPLACE
+"GOODWILL STORE *", Clothing, "LK clothing", AGGREGATE
+"SOCIETY OF ST VINCENT", Clothing, "LK clothing", AGGREGATE
+
+# memberships
+"THE HUNTINGTON *", Misc, "Huntington mship", REPLACE
+"INTL SOC ARBORICULTURE", Misc, "LK ISA dues", REPLACE
+"MSI*MORNINGSTAR", Misc, "MK Morningstar", REPLACE
+"NATURAL HISTORY MUSEUM*", Misc, "Nat Hist mship", REPLACE
+"INTUIT *TURBOTAX", Misc, "Turbotax", REPLACE
+"LA REC AND PARKS PERMITS", Hobbies, "LK Yoga", REPLACE
 
 # misc supplies
 "USPS*", "Misc", postage, REPLACE
 "STAPLES *", "Misc", "office supplies", REPLACE
 "OFFICE DEPOT *", "Misc", "office supplies", REPLACE
+
+"HARBOR FREIGHT TOOLS*", Toys, "Harbor Freight", REPLACE
+"WILD BIRDS UNLIMITED", Toys, "Wild Birds Unlimited", REPLACE
+"Amazon Services-Kindle", Toys, "kindle book", REPLACE
+
+
+
+"HAWAII FLORAL EXPRESS", Gifts, "AH flowers", AGGREGATE
+
+"donation", Donations, "", PRESERVE
+"WIKIMEDIA*", Donations, "Wikipedia", REPLACE
+"PAYPAL*GIVING FUND", Donations, "PayPal Giving", REPLACE
+
 
 # These are catch-all heuristics, likely to work ... but check
 "* GAS STATION *", Transportation, "gas", COMBINE
@@ -170,6 +594,25 @@
 "* RESORT", Vacations, "resort:", COMBINE
 "* RESORT *", Vacations, "resort:", COMBINE
 "* VACATION RENTAL", Vacations, "rental:", COMBINE
+
+# These are clearly medical, but I am not sure what they actually are
+"Online Payment * To Kaiser *", Medical, "Kaiser:", COMBINE
+"KAISER *", Medical, "Kaiser:", COMBINE
+"QDI*QUEST DIAGNOSTICS*", Medical, "Lab:", COMBINE
+
+# These are initial guesses based on what we usually buy from these vendors
+"BIG 5 SPORTING GOODS*", Clothing, None, PRESERVE
+"DOLRTREE*", Household, None, PRESERVE
+"DELTA AIR*", Vacations, None, PRESERVE
+"AMERICAN AIR*", Vacations, None, PRESERVE
+"JCPENNEY.COM", Clothing, None, PRESERVE
+"MICHAELS*", Toys, None, PRESERVE
+"POTTERY BARN*", Household, None, PRESERVE
+"REI *", Clothing, None, PRESERVE
+"SUR LA TABLE *", Household, None, PRESERVE
+# "TARGET.COM*", Clothing, None, PRESERVE
+# "TARGET *", Clothing, None, PRESERVE
+"THEODORE PAYNE FOUNDAT*", Household, "nursery", REPLACE
 
 # These are not really matching rules.  Just add accounts to menu
 "IT WILL NEVER HAPPEN", Large-Expenses, "", PRESERVE
