@@ -102,6 +102,7 @@
 "COSTCO GAS*",   Transportation, "gas", AGGREGATE
 "EXXONMOBIL *", Transportation, "gas", AGGREGATE
 "GARO GAS", Transportation, "gas", AGGREGATE
+"PINE COVE MARKET AND GAS", Transportation, "gas", AGGREGATE
 "SAVINGS OIL", Transportation, "gas", AGGREGATE
 "SHELL OIL*",    Transportation, "gas", AGGREGATE
 "SPEEDWAY *", Transportation, "gas", AGGREGATE
@@ -399,7 +400,7 @@
 "GELSON'S MARKETS*", Groceries, "Gelsons", AGGREGATE
 "JONS MARKET*", Groceries, "Jons", AGGREGATE
 "H MART LOS ANGELES", Groceries, "K-town", AGGREGATE
-"HARRIS TEETER *", Groceries, "NC?", AGGREGATE
+"HARRIS TEETER 0021", Medical, "CK JM ins offset", AGGREGATE
 "IDYLLWILD VILLAGE M", Groceries, "Idyllwild", AGGREGATE
 "INDIA SWEETS AND SPICE", Groceries, "", AGGREGATE
 "INGLES MARKETS *", Groceries, "", AGGREGATE
@@ -415,7 +416,6 @@
 "PETCO*", Groceries, "dog food", AGGREGATE
 "PETSMART *", Groceries, "dog food", AGGREGATE
 "PET FOOD EXPRESS *", Groceries, "dog food", AGGREGATE
-"PINE COVE MARKET *", Groceries, "Idyllwild", AGGREGATE
 "*PITTMAN*DAVIS", Groceries, "Pittman-Davis", AGGREGATE
 "RALEY*", Groceries, "Raley's", AGGREGATE
 "RALPHS *", Groceries, "Ralphs", AGGREGATE
