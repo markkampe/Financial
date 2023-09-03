@@ -377,6 +377,9 @@
 "Zankou Chicken*", Food-and-Fun, "lunch", AGGREGATE
 "Z SUSHI", Food-and-Fun, "dinner", AGGREGATE
 
+# soda
+"76 - CF UNITED APRO LL", Food-and-Fun, "soda", AGGREGATE
+
 # alcohol
 "BEVERAGES * MORE *", Food-and-Fun, "spirits", AGGREGATE
 "BEVMO *", Food-and-Fun, "alcohol", AGGREGATE
@@ -457,6 +460,7 @@
 "OBERLIN ROAD PHARMACY", Medical, "CK Px", REPLACE
 "PERSON STREET PHARMACY", Medical, "CK Px", REPLACE
 "CVS/PHARMACY *", Medical, "JK Px", REPLACE
+"WALLGREENS #18986", Medical, "JK Px", REPLACE
 "RALEIGH NEUROLOGY ASSOC", Medical, "CK ov", REPLACE
 "RADIANT IMAG*", Medical, "CK lab", REPLACE
 "UNITEDGASTRO*", Medical, "CK ov gastro", REPLACE
@@ -546,6 +550,7 @@
 "* SUPERMARKET *", Groceries, None, PRESERVE
 "* SUPERMARKET", Groceries, None, PRESERVE
 
+"* DONUTS*", Food-and-Fun, "snacks", COMBINE
 "* BAKERY*", Food-and-Fun, "lunch", COMBINE
 "* BURRITO *", Food-and-Fun, "lunch", COMBINE
 "* BURRITO", Food-and-Fun, "lunch", COMBINE
