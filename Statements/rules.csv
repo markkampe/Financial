@@ -403,7 +403,6 @@
 "GELSON'S MARKETS*", Groceries, "Gelsons", AGGREGATE
 "JONS MARKET*", Groceries, "Jons", AGGREGATE
 "H MART LOS ANGELES", Groceries, "K-town", AGGREGATE
-"HARRIS TEETER 0021", Medical, "CK JM ins offset", AGGREGATE
 "IDYLLWILD VILLAGE M", Groceries, "Idyllwild", AGGREGATE
 "INDIA SWEETS AND SPICE", Groceries, "", AGGREGATE
 "INGLES MARKETS *", Groceries, "", AGGREGATE
@@ -441,12 +440,12 @@
 # medical expenses
 "CMS MEDICARE *", Medical, "Medicare part B", REPLACE
 "*KAISERDUES *", Medical, "Kaiser Adv +", REPLACE
-"Online Payment * To Genworth Life*", Medical, "LTC insurance", REPLACE
-"RICHARD E. HEYES DDS*", Medical, "DD - Heyes", REPLACE
+
+"KP RX*", Medical, "Prescriptions", COMBINE
+
 "*GENESIS DENTAL*", Medical, "DD Baghdasarian", REPLACE
 "ROOTVISION ENDO", Medical, "DD - rootcanal", REPLACE
 "*OSTEOSTRONG *", Medical, "LK Osteostrong", REPLACE
-"*VILLAGEVET*", Medical, "Kaylee", REPLACE
 
 "KEYSTONE CHIROPRACTIC", Medical, "CK chiro", REPLACE
 "PACKARD DENTAL GROUP INC", Medical, "DD - CWK", REPLACE
@@ -456,17 +455,21 @@
 "RALEIGH NEUROLOGY PHARMAC", Medical, "CK Px", REPLACE
 "RESULTS PHYSIOTHE", Medical, "CK phys therapy", REPLACE
 "*RITE AID STORE - 11388", Medical, "CK Px", REPLACE
-"KP RX*", Medical, "Prescriptions", COMBINE
 "OBERLIN ROAD PHARMACY", Medical, "CK Px", REPLACE
 "PERSON STREET PHARMACY", Medical, "CK Px", REPLACE
-"CVS/PHARMACY *", Medical, "JK Px", REPLACE
-"WALLGREENS #18986", Medical, "JK Px", REPLACE
 "RALEIGH NEUROLOGY ASSOC", Medical, "CK ov", REPLACE
 "RADIANT IMAG*", Medical, "CK lab", REPLACE
 "UNITEDGASTRO*", Medical, "CK ov gastro", REPLACE
 "VISTA COMMUNITY CLINIC", Medical, "CK ov", REPLACE
 "RITE AID STORE - 5635", Medical, "CK Px", REPLACE
+"MSP*RALEIGH NEUROLOGY", Medical, "CK ov neruo", REPLACE
+"CORRECTIVE CHIROPRACTIC", Medical, "CK ov chiro", REPLACE
 
+"FOOD LION #1491*", Medical, "JM ins offset", REPLACE
+"HARRIS TEETER 0021", Medical, "JM ins offset", AGGREGATE
+
+"WALLGREENS #18986", Medical, "JK Px", REPLACE
+"CVS/PHARMACY *", Medical, "JK Px", REPLACE
 "ADVANCED URGENT CARE*", Medical, "JK ov", REPLACE
 "BLUE SHIELD CA*", Medical, "JK ins", REPLACE
 "BLUE SHIELD OF CA*", Medical, "JK ins", REPLACE
@@ -480,16 +483,13 @@
 "*KATRIN KOUTASSEVITCH", Medical, "JK counseling", REPLACE
 "MORSE K UPSHAW DPM*", Medical, "JK ov podiatrist", REPLACE
 "*LAURIE MCDONOUGH", Medical, "JK MFC", REPLACE
-"MSP*RALEIGH NEUROLOGY", Medical, "CK ov neruo", REPLACE
 "REGIONAL DERMATOLOGY OF D", Medical, "JK derm", REPLACE
 "USC CARE MEDICAL GROUP*", Medical, "JK ov USC", REPLACE
 "SOUTHERN CALIFORNIA GASTR", Medical, "JK ov gastro", REPLACE
-"CORRECTIVE CHIROPRACTIC", Medical, "CK ov chiro", REPLACE
 "HEATHER LANGAN MA*", Medical, "JK counseling", REPLACE
 "WALGREENS #17971", Medical, "JK Rx", REPLACE
 
-"INTERIM ASSISTED CARE*", Andrea, "AH home care", REPLACE
-
+"*VILLAGEVET*", Medical, "Vet", REPLACE
 "* VILLAGE VET", Medical, "vet (village)", REPLACE
 "ANIMAL SERVICES*", Medical, "dog license", REPLACE
 
