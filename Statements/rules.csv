@@ -65,6 +65,7 @@
 "*SPECTRUM*",  Utilities, "cable", REPLACE
 "*TIME WARNER*",  Utilities, "cable", REPLACE
 "*FRONTIER COMMUNI*", Utilities, "TP phone/net", REPLACE
+"*FRONTIER*", Utilities, "TP Internet", REPLACE
 "CULLIGAN OF ONTA*", Utilities, "Water Purification", REPLACE
 "RING PROTECT*", Utilities, "Alarm Monitoring", REPLACE
 "LA POLICEALARM*", Utilities, "Alarm Permit", REPLACE
@@ -193,7 +194,7 @@
 "GASTROGNOME *", Food-and-Fun, "dinner", AGGREGATE
 "GLADSTONES*", Food-and-Fun, "dinner", AGGREGATE
 "GRANVILLE *", Food-and-Fun, "dinner", AGGREGATE
-"GRANVILLE *", Food-and-Fun, "dinner", AGGREGATE
+"*GUISADOS*", Food-and-Fun, "lunch", AGGREGATE
 "HAMA SUSHI", Food-and-Fun, "dinner", AGGREGATE
 "HIGHLAND PARK BOWL", Food-and-Fun, "dinner", AGGREGATE
 "HOUSTON'S *", Food-and-Fun, "dinner", AGGREGATE
