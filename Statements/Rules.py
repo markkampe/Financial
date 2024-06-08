@@ -93,7 +93,8 @@ class Rules:
             if r.date is not None and date != r.date:
                 continue
             combined = str(amt)+"@"+desc
-            if (fnmatch.fnmatch(desc, r.pat) or s_amt == r.pat or fnmatch.fnmatch(combined, r.pat)):
+            if (fnmatch.fnmatch(desc, r.pat) or s_amt == r.pat
+               or fnmatch.fnmatch(combined, r.pat)):
                 p = r.process
                 if p == "AGGREGATE":
                     return (Entry("", 0, r.acct, r.descr), False)
