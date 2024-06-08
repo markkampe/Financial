@@ -8,6 +8,8 @@ import sys
 """
 Purchasing Strategy: continuous
 """
+
+
 def strat_continuous(sequence, period, monthly=False):
     """
     Buy a position over N years (or months)
@@ -45,6 +47,7 @@ num_years = 20      # number of years to track results
 my_name = "Continuous Purchases"
 output = "Continuous.png"
 
+
 def main(random):
     """
     For purchases over 1-5 years,
@@ -67,7 +70,7 @@ def main(random):
         # a statistically interesting number of runs
         for runs in range(num_runs * 2 if random else num_runs):
             sequence = simulator.rates(length=num_years, random=random)
-            results.append( strat_continuous(sequence, num_years, monthly) )
+            results.append(strat_continuous(sequence, num_years, monthly))
 
         # summarize the results
         mean = sum(results) / len(results)
@@ -81,7 +84,7 @@ def main(random):
         (x_values, y_values) = distribution(buckets, granularity)
 
         plt.plot(x_values, y_values, formats[years])
-        legends.append("over " + str(years) +" years")
+        legends.append("over " + str(years) + " years")
 
     # put up the title, axes, and data
     plt.title(title + my_name)

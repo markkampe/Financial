@@ -30,8 +30,8 @@ class Market:
                  monthly=False,
                  start=1950, end=2020,
                  date_field="Date",
-                 price_field="SP500",       # "Real Price" is inflation adjusted
-                 div_field="Dividend",      # "Real Dividend" is inflation adjusted
+                 price_field="SP500",       # inflation adjusted
+                 div_field="Dividend",      # inflation adjusted
                  int_field="Long Interest Rate",
                  date_format="y-m-d", ):
         """
@@ -76,7 +76,7 @@ class Market:
             # make sure we have all of the expected data
             if (fields[date_col] == "" or fields[price_col] == "" or
                 fields[div_col] == "" or fields[rate_col] == ""):
-               continue
+                continue
 
             # extract the interesting fields
             price = float(fields[price_col])
@@ -91,19 +91,19 @@ class Market:
 
             # see if this is within the requested range
             if year >= start and year <= end:
-                    # see if we are doing only annual samples
-                    if month != 1 and not monthly:
-                        continue
-                    appreciation = (price - prev)/prev
-                    tupple = (appreciation, div/price, rate/100)
-                    self.data_points.append(tupple)
-                    prev = price
+                # see if we are doing only annual samples
+                if month != 1 and not monthly:
+                    continue
+                appreciation = (price - prev)/prev
+                tupple = (appreciation, div/price, rate/100)
+                self.data_points.append(tupple)
+                prev = price
 
-                    # and accumulate statistics
-                    ret_sum += 12 * appreciation if monthly else appreciation
-                    div_sum += div/price
-                    rate_sum += rate/100
-                    points += 1
+                # and accumulate statistics
+                ret_sum += 12 * appreciation if monthly else appreciation
+                div_sum += div/price
+                rate_sum += rate/100
+                points += 1
 
         # summarize what we just read
         period = "monthly" if monthly else "annual"
@@ -112,7 +112,6 @@ class Market:
               ", div={:2.1f}%".format(100 * div_sum / points) +
               ", 10Y={:2.1f}%".format(100 * rate_sum / points))
         source.close()
-
 
     def rates(self, length=20, random=False):
         """
@@ -126,11 +125,11 @@ class Market:
 
         if random:
             # return random values
-            return [ self.data_points[randint(0, size - 1)] for i in range(0, length) ]
+            return [self.data_points[randint(0, size - 1)] for i in range(0, length)]
         else:
             # return consecutive values w/random starting point
             start = randint(0, size - 1)
-            return [ self.data_points[(start + i) % size] for i in range(0, length) ]
+            return [self.data_points[(start + i) % size] for i in range(0, length)]
 
 
 # basic exerciser

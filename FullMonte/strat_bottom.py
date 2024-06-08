@@ -7,6 +7,8 @@ import sys
 """
 Purchasing Strategy: by at the bottom
 """
+
+
 def strat_bottom(sequence, fractions, monthly=True):
     """
     Only buy at the lowest prices
@@ -77,6 +79,7 @@ num_years = 20      # number of years to track results
 my_name = "Bottom-Buying"
 output = "Bottom.png"
 
+
 def main(random):
     """
     Only buy in at lows
@@ -97,7 +100,7 @@ def main(random):
         # a statistically interesting number of runs
         for runs in range(num_runs * 2 if random else num_runs):
             sequence = simulator.rates(length=num_years*12, random=random)
-            results.append( strat_bottom(sequence, fractions, monthly) )
+            results.append(strat_bottom(sequence, fractions, monthly))
 
         # summarize the results
         mean = sum(results) / len(results)

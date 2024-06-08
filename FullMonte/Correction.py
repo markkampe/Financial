@@ -31,7 +31,7 @@ class Correction:
     def __init__(self, filename="sp500.csv",
                  start=1950, end=2020,
                  date_field="Date",
-                 price_field="SP500",       # "Real Price" is inflation adjusted
+                 price_field="SP500",   # "Real Price" is inflation adjusted
                  date_format="y-m-d", ):
         """
         Instantiate a collection of price data
@@ -68,7 +68,7 @@ class Correction:
 
             # make sure we have all of the expected data
             if (fields[date_col] == "" or fields[price_col] == ""):
-               continue
+                continue
 
             # extract the interesting fields
             price = float(fields[price_col])
@@ -81,14 +81,13 @@ class Correction:
 
             # see if this is within the requested range
             if year >= start and year <= end:
-                    appreciation = (price - prev)/prev
-                    tupple = (year, month, price)
-                    self.prices.append(tupple)
-                    prev = price
-                    points += 1
+                appreciation = (price - prev)/prev
+                tupple = (year, month, price)
+                self.prices.append(tupple)
+                prev = price
+                points += 1
 
         source.close()
-
 
     def drop_buckets(self, bucket_width=.01):
         """
@@ -103,7 +102,7 @@ class Correction:
         for (year, month, price) in self.prices:
             # keep track of the previous high
             if price > prev_high:
-                prev_high = price;
+                prev_high = price
                 continue
 
             # (allocate and) increment the bucket for this drop
@@ -125,7 +124,7 @@ class Correction:
 1. Review the data to identify corrections/crashes.
 2. Assess the probability of various drop levels.
 3. Compute the expected return (profit * probability) for each level.
-4. Assign fraction-to-purchase-at-that-discount proportional to those expectancies
+4. Assign fraction-to-purchase-at-that-discount proportional to expectancies
 """
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -135,7 +134,7 @@ if __name__ == "__main__":
 
     width = 0.04
     min_drop = 0.08
-    max_drop = 0;
+    max_drop = 0
 
     results = Correction(infile)
     buckets = results.drop_buckets(bucket_width=width)
@@ -169,13 +168,13 @@ if __name__ == "__main__":
 
     # recommend purchanses in proportion to expectancy
     print("Recommended Purchases:")
-    tot_pct = 0;
+    tot_pct = 0
     for i in range(len(drops)):
         drop = drops[i]
         exp = expectancies[i]
         weight = int(100 * exp / total_exp)
         if weight <= 1:
-            continue;
+            continue
         print("-{0: >2}%:\t{1: >3}%".format(drop, weight))
         tot_pct += weight
     print("    \t----\n    \t{0: >3}%".format(tot_pct))

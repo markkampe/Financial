@@ -7,6 +7,8 @@ import sys
 """
 Purchasing Strategy: Buy on the dips
 """
+
+
 def strat_dips(sequence, max_dip, buy_points, monthly=True):
     """
     Only buy at the lowest prices
@@ -62,6 +64,7 @@ num_years = 20      # number of years to track results
 my_name = "Buy the Dips"
 output = "Dips.png"
 
+
 def main(random):
     """
     Buy on the dips
@@ -75,8 +78,8 @@ def main(random):
     monthly = True     # monthly simulations
 
     # mappings from parameters into point formats
-    colors = { 0.10:"r", 0.15:"y", 0.20:"g", 0.25:"c" }
-    symbols = [ "x", ".", "o", "+", "*" ]
+    colors = {0.10: "r", 0.15: "y", 0.20: "g", 0.25: "c"}
+    symbols = ["x", ".", "o", "+", "*"]
 
     legends = []
     simulator = Market(monthly=monthly)
@@ -88,7 +91,7 @@ def main(random):
             # a statistically interesting number of runs
             for runs in range(num_runs * 2 if random else num_runs):
                 sequence = simulator.rates(length=num_years*12, random=random)
-                results.append( strat_dips(sequence, max_dip, buy_points, monthly) )
+                results.append(strat_dips(sequence, max_dip, buy_points, monthly))
 
             # summarize the results
             mean = sum(results) / len(results)

@@ -2,6 +2,7 @@
 These methods turn lists of results into distributions for plotting
 """
 
+
 def bucketwidth(results):
     """
     determine a good bucket width for a set of performance results

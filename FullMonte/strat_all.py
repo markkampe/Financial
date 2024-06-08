@@ -8,6 +8,8 @@ import sys
 """
 Purchasing Strategy: all-in/all-out
 """
+
+
 def strat_all(sequence, play_it_safe, monthly=False):
     """
     All in the market or all out of the market
@@ -39,6 +41,7 @@ num_years = 20      # number of years to track results
 my_name = "All-In/Out"
 output = "All.png"
 
+
 def main(random):
     """
     For all-in and all-out
@@ -59,13 +62,14 @@ def main(random):
         # a statistically interesting number of runs
         for runs in range(num_runs * 2 if random else num_runs):
             sequence = simulator.rates(length=num_years, random=random)
-            results.append( strat_all(sequence, in_cds, monthly) )
+            results.append(strat_all(sequence, in_cds, monthly))
 
         # summarize the results
         mean = sum(results) / len(results)
         sigma = statistics.stdev(results)
         report = "{} {}, {} years: mean={:.2f}, sigma={:.2f}"
-        print(report.format(my_name, "CDs" if in_cds else "market", num_years, mean, sigma))
+        print(report.format(my_name, "CDs" if in_cds else "market",
+              num_years, mean, sigma))
 
         # bucketize and display the results
         granularity = bucketwidth(results)
