@@ -75,7 +75,7 @@ class Market:
 
             # make sure we have all of the expected data
             if (fields[date_col] == "" or fields[price_col] == "" or
-                fields[div_col] == "" or fields[rate_col] == ""):
+               fields[div_col] == "" or fields[rate_col] == ""):
                 continue
 
             # extract the interesting fields
@@ -107,7 +107,8 @@ class Market:
 
         # summarize what we just read
         period = "monthly" if monthly else "annual"
-        print(filename + "({}-{}): {} {} data points".format(start, end, points, period) +
+        print(filename +
+              "({}-{}): {} {} data points".format(start, end, points, period) +
               ", growth={:3.1f}%".format(100 * ret_sum / points) +
               ", div={:2.1f}%".format(100 * div_sum / points) +
               ", 10Y={:2.1f}%".format(100 * rate_sum / points))
@@ -125,11 +126,13 @@ class Market:
 
         if random:
             # return random values
-            return [self.data_points[randint(0, size - 1)] for i in range(0, length)]
+            return [self.data_points[randint(0, size - 1)]
+                    for i in range(0, length)]
         else:
             # return consecutive values w/random starting point
             start = randint(0, size - 1)
-            return [self.data_points[(start + i) % size] for i in range(0, length)]
+            return [self.data_points[(start + i) % size]
+                    for i in range(0, length)]
 
 
 # basic exerciser
