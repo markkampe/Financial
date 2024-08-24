@@ -94,6 +94,10 @@
 "WWW.RSABG.ORG*", Household, "plants", AGGREGATE
 "YAMAGUCHI BONSAI NURSERY", Household, "plants", AGGREGATE
 
+# soda ... must come before gas rules
+"76 - CF UNITED APRO LL", Food-and-Fun, "soda", AGGREGATE
+"-1.00@ARCO*", Food-and-Fun, "soda", AGGREGATE
+
 # gas stations
 "gas", Transportation, "gas", AGGREGATE
 "76 *", Transportation, "gas", AGGREGATE
@@ -144,6 +148,7 @@
 "REDONDO BEACH PIER P*", Transportation, "parking", AGGREGATE
 "UCLA SELFSERVE PARK", Transportation, "parking", AGGREGATE
 
+"LYFT*", Vacations, "Lyft", REPLACE
 "LAXSHUTTLETIX.COM", Vacations, "shuttle", AGGREGATE
 "SCUBA COZUMEL *", Vacations, "Cozumel diving", REPLACE
 "INTERAGENCY VISITOR CENT", Vacations, "Park Admissions", REPLACE
@@ -265,7 +270,6 @@
 
 "lunch", Food-and-Fun, "lunch", AGGREGATE
 "7-ELEVEN *", Food-and-Fun, "beverages", AGGREGATE
-"ARCO *", Food-and-Fun, "beverages", AGGREGATE
 "ANTIGUA BREAD*", Food-and-Fun, "lunch", AGGREGATE
 "ATHENA GRILL*", Food-and-Fun, "lunch", AGGREGATE
 "ANDALE *", Food-and-Fun, "lunch", AGGREGATE
@@ -378,8 +382,6 @@
 "Zankou Chicken*", Food-and-Fun, "lunch", AGGREGATE
 "Z SUSHI", Food-and-Fun, "dinner", AGGREGATE
 
-# soda
-"76 - CF UNITED APRO LL", Food-and-Fun, "soda", AGGREGATE
 
 # alcohol
 "BEVERAGES * MORE *", Food-and-Fun, "spirits", AGGREGATE
