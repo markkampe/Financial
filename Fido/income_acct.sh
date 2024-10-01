@@ -97,5 +97,6 @@ echo -e "\t\$$oth_total"
 
 total=`echo $cd_total + $oth_total | bc`
 echo
-echo -e "CDs + others:\t\$$total"
+echo -e "CDs + others:"
+echo -e "\t\$$total"
 rm /tmp/ret_income
