@@ -187,6 +187,7 @@
 "CILANTRO FRESH *", Food-and-Fun, "lunch", AGREGATE
 "COMMONWEALTH*", Food-and-Fun, "dinner", AGGREGATE
 "CRAWFISH ON FIRE", Food-and-Fun, "dinner", AGGREGATE
+"EL ARCO *", Food-and-Fun, "dinner", AGGREGATE
 "EL TORITO *", Food-and-Fun, "dinner", AGGREGATE
 "ELEPHANT BAR *", Food-and-Fun, "dinner", AGGREGATE
 "EL PESCADOR *", Food-and-Fun, "dinner", AGGREGATE
@@ -437,7 +438,8 @@
 "*SUPERIOR SUPER WHSE", Groceries, "Superior", AGGREGATE
 "TRADER JOE*", Groceries, "TJs", AGGREGATE
 "VONS *", Groceries, "Vons", AGGREGATE
-"WHOLEFDS*", Groceries, "WholeFoods", AGGREGATE
+
+# CK groceries
 "* WAKE COUNTY ABC BOARD", Groceries, "CK mistake", REPLACE
 
 
@@ -469,8 +471,9 @@
 "MSP*RALEIGH NEUROLOGY", Medical, "CK ov neruo", REPLACE
 "CORRECTIVE CHIROPRACTIC", Medical, "CK ov chiro", REPLACE
 
+"WHOEFDS RAL*" Medical, "JM ins offset", REPLACE
 "FOOD LION #1491*", Medical, "JM ins offset", REPLACE
-"HARRIS TEETER 0021", Medical, "JM ins offset", AGGREGATE
+"HARRIS TEETER 0021", Medical, "JM ins offset", REPLACE
 
 "WALLGREENS #18986", Medical, "JK Px", REPLACE
 "CVS/PHARMACY *", Medical, "JK Px", REPLACE
