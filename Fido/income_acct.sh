@@ -11,7 +11,7 @@ else
     input="/home/markk/Downloads/positions.csv"
 fi
 
-account="retirement-income"
+account="Retirement-Income"
 
 # so that the total variables survive after the loops are done
 shopt -s lastpipe
@@ -21,25 +21,25 @@ Income.py $input | grep "$account" > /tmp/ret_income
 
 # extract the money-market positions
 echo "$account: Money Market"
-grep "MMKT" /tmp/ret_income | cut -d' ' --complement -f1-2 | colsum -v 
+grep "MMKT" /tmp/ret_income | cut -d' ' --complement -f1 | colsum -v 
 
 # extract the CD positions
 echo
 echo "$account: CDs"
-grep "CD" /tmp/ret_income | cut -d' ' --complement -f1-2 | colsum -v
+grep "CD" /tmp/ret_income | cut -d' ' --complement -f1 | colsum -v
 
 # extract the treasury positions
 echo
 echo "$account: Treasuries"
-grep "TREAS" /tmp/ret_income | cut -d' ' --complement -f1-2 | colsum -v
+grep "TREAS" /tmp/ret_income | cut -d' ' --complement -f1 | colsum -v
 
 # extract the bond positions
 echo
 echo "$account: Other Bonds"
-grep "BOND" /tmp/ret_income | cut -d' ' --complement -f1-2 | colsum -v
+grep "BOND" /tmp/ret_income | cut -d' ' --complement -f1 | colsum -v
 
 echo
 echo "$account: TREAS+BOND"
-grep "BOND\|TREAS" /tmp/ret_income | cut -d' ' --complement -f1-2 | colsum
+grep "BOND\|TREAS" /tmp/ret_income | cut -d' ' --complement -f1 | colsum
 
 exit
