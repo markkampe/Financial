@@ -1,3 +1,4 @@
+ALL = Correction.py Market.py buckets.py strat_all.py strat_bottom.py strat_continuous.py strat_dips.py
 recommendation: Correction.py
 	python3 $<
 
@@ -14,6 +15,10 @@ Continuous.png: strat_continuous.py
 
 Dips.png: strat_dips.py
 	python3 $<
+
+lint:
+	pycodestyle $(ALL)
+	pylint $(ALL)
 
 clean:
 	rm -f *.png

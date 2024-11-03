@@ -91,13 +91,15 @@ def main(random):
             # a statistically interesting number of runs
             for runs in range(num_runs * 2 if random else num_runs):
                 sequence = simulator.rates(length=num_years*12, random=random)
-                results.append(strat_dips(sequence, max_dip, buy_points, monthly))
+                results.append(strat_dips(sequence, max_dip, buy_points,
+                               monthly))
 
             # summarize the results
             mean = sum(results) / len(results)
             sigma = statistics.stdev(results)
             report = "{}({}%/{}) over {} years: mean={:.2f}, sigma={:.2f}"
-            print(report.format(my_name, int(100*max_dip), buy_points, num_years, mean, sigma))
+            print(report.format(my_name,
+                  int(100*max_dip), buy_points, num_years, mean, sigma))
 
             # bucketize and display the results
             granularity = bucketwidth(results)
