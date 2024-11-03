@@ -21,10 +21,9 @@ def bucketwidth(results):
 
     if max_result/width < 25:
         return width/4
-    elif max_result/width < 50:
+    if max_result/width < 50:
         return width/2
-    else:
-        return width
+    return width
 
 
 def bucketize(results, granularity):
@@ -60,8 +59,8 @@ def distribution(buckets, granularity):
     """
     # get total number of counts
     total = 0
-    for i in range(len(buckets)):
-        total += buckets[i]
+    for b in enumerate(buckets):
+        total += b
 
     x_values = []
     y_values = []
