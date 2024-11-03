@@ -129,7 +129,7 @@
 "STATE OF CALIF DMV *", Transportation, "DMV", COMBINE
 
 # regular maintenance
-"PEPES TIRE SHOP*", Transportation, "tires", REPLACE
+"PEPE'S TIRE SHOP*", Transportation, "tires", REPLACE
 "AUTOZONE #*", Transportation, "parts", REPLACE
 "* LUBE MASTERS *", Transportation, "oil change", REPLACE
 
@@ -438,6 +438,7 @@
 "*SUPERIOR SUPER WHSE", Groceries, "Superior", AGGREGATE
 "TRADER JOE*", Groceries, "TJs", AGGREGATE
 "VONS *", Groceries, "Vons", AGGREGATE
+"WHOLEFDS *", Groceries, "Whole Foods", AGGREGATE
 
 # CK groceries
 "* WAKE COUNTY ABC BOARD", Groceries, "CK mistake", REPLACE
@@ -501,7 +502,7 @@
 "ANIMAL SERVICES*", Medical, "dog license", REPLACE
 
 # SCUBA expenses
-"CATALINA EXPRESS *", Reimbursable, "catalina express", REPLACE
+"*CATALINA EXPRESS*", Reimbursable, "catalina express", REPLACE
 "*CATALINA DIVERS SUPPL", Reimbursable, "cylinders/fills", REPLACE
 "CATALINA LANDING*", Reimbursable, "Cat Exp parking", REPLACE
 "DAN SERVICES*", Hobbies, "DAN mshp/ins", REPLACE
