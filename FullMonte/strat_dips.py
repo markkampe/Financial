@@ -1,14 +1,14 @@
-from Market import Market
-from buckets import *
-import matplotlib.pyplot as plt
-import statistics
-import sys
-
 """
 Purchasing Strategy: Buy on the dips
 """
+import statistics
+import sys
+import matplotlib.pyplot as plt
+from market import Market
+from buckets import bucketwidth, bucketize, distribution
 
 
+# pylint: disable=R0801
 def strat_dips(sequence, max_dip, buy_points, monthly=True):
     """
     Only buy at the lowest prices
@@ -47,7 +47,7 @@ def strat_dips(sequence, max_dip, buy_points, monthly=True):
                 break
 
         # if we are monthly, scale the interest and dividends
-        if (monthly):
+        if monthly:
             dividend /= 12
             interest /= 12
 
@@ -59,16 +59,17 @@ def strat_dips(sequence, max_dip, buy_points, monthly=True):
 
 
 # general simulation parameters
-num_runs = 200      # number of runs per model
-num_years = 20      # number of years to track results
-my_name = "Buy the Dips"
-output = "Dips.png"
+NUM_RUNS = 200      # number of runs per model
+NUM_RUNS = 20      # number of years to track results
+MY_NAME = "Buy the Dips"
+OUTPUT = "Dips.png"
 
 
+# pylint: disable=too-many-locals
 def main(random):
     """
     Buy on the dips
-        run <num_runs> simulations
+        run <NUM_RUNS> simulations
         tracking output over 20 years
         plot a return distribution
     """
@@ -89,8 +90,9 @@ def main(random):
         for buy_points in [1, 2, 3]:
             results = []
             # a statistically interesting number of runs
-            for runs in range(num_runs * 2 if random else num_runs):
-                sequence = simulator.rates(length=num_years*12, random=random)
+            # pylint: disable=unused-variable
+            for runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
+                sequence = simulator.rates(length=NUM_RUNS*12, random=random)
                 results.append(strat_dips(sequence, max_dip, buy_points,
                                monthly))
 
@@ -98,8 +100,8 @@ def main(random):
             mean = sum(results) / len(results)
             sigma = statistics.stdev(results)
             report = "{}({}%/{}) over {} years: mean={:.2f}, sigma={:.2f}"
-            print(report.format(my_name,
-                  int(100*max_dip), buy_points, num_years, mean, sigma))
+            print(report.format(MY_NAME,
+                  int(100*max_dip), buy_points, NUM_RUNS, mean, sigma))
 
             # bucketize and display the results
             granularity = bucketwidth(results)
@@ -112,15 +114,15 @@ def main(random):
         print("")   # blank line between changes in threshold
 
     # put up the title, axes, and data
-    plt.title(title + my_name)
-    plt.xlabel(str(num_years) + "-year return")
+    plt.title(title + MY_NAME)
+    plt.xlabel(str(NUM_RUNS) + "-year return")
     plt.ylabel("probability")
     plt.legend(legends)
-    if output is None:
+    if OUTPUT is None:
         plt.show()
     else:
-        print("saving distribution plot as " + output)
-        plt.savefig(output)
+        print("saving distribution plot as " + OUTPUT)
+        plt.savefig(OUTPUT)
         plt.close()
 
 

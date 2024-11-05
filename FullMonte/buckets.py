@@ -49,6 +49,7 @@ def bucketize(results, granularity):
     return buckets
 
 
+# pylint: disable=consider-using-enumerate
 def distribution(buckets, granularity):
     """
     turn a list of count buckets into scatter-plot points
@@ -59,8 +60,8 @@ def distribution(buckets, granularity):
     """
     # get total number of counts
     total = 0
-    for b in enumerate(buckets):
-        total += b
+    for i in range(len(buckets)):
+        total += buckets[i]
 
     x_values = []
     y_values = []

@@ -1,14 +1,18 @@
+"""
+Process historical data to generate a characterization (how much time
+they spend how bad) of corrections.  Then compute the expected return
+(probability * profit) of making investments at various discount levels.
+
+Author: Mark Kampe
+"""
 import sys
 import matplotlib.pyplot as plt
 
 
+# pylint: disable=R0801
 class Correction:
     """
-    Process historical data to generate a characterization (how much time
-    they spend how bad) of corrections.  Then compute the expected return
-    (probability * profit) of making investments at various discount levels.
-
-    Author: Mark Kampe
+    FIX
     """
     input_file = ""     # file used for simulations
     prices = []         # (year, month, price)
@@ -28,6 +32,7 @@ class Correction:
                          " column in " + self.input_file)
         sys.exit()
 
+    # pylint: disable=too-many-arguments, too-many-locals
     def __init__(self, filename="sp500.csv",
                  start=1950, end=2020,
                  date_field="Date",
@@ -43,7 +48,6 @@ class Correction:
         :param price_field: column heading for price
         :param date_format: date format
         """
-        input_file = filename
         source = open(filename, "r")
 
         # figure out which columns we want
@@ -57,8 +61,6 @@ class Correction:
         year_col = fields.index('y')
         if 'm' in fields:
             month_col = fields.index('m')
-        if 'd' in fields:
-            day_col = fields.index('d')
 
         # process the entire file
         prev = -1
@@ -67,7 +69,7 @@ class Correction:
             fields = line.split(',')
 
             # make sure we have all of the expected data
-            if (fields[date_col] == "" or fields[price_col] == ""):
+            if fields[date_col] == "" or fields[price_col] == "":
                 continue
 
             # extract the interesting fields
@@ -81,7 +83,6 @@ class Correction:
 
             # see if this is within the requested range
             if year >= start and year <= end:
-                appreciation = (price - prev)/prev
                 tupple = (year, month, price)
                 self.prices.append(tupple)
                 prev = price
@@ -126,12 +127,14 @@ class Correction:
 3. Compute the expected return (profit * probability) for each level.
 4. Assign fraction-to-purchase-at-that-discount proportional to expectancies
 """
+# pylint: disable=C0103
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         infile = sys.argv[1]
     else:
         infile = "sp500.csv"
 
+    # pylint: disable=C0103
     width = 0.04
     min_drop = 0.08
     max_drop = 0

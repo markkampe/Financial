@@ -1,14 +1,14 @@
-from Market import Market
-from buckets import *
-import matplotlib.pyplot as plt
-import statistics
-import sys
-
 """
 Purchasing Strategy: by at the bottom
 """
+import statistics
+import sys
+import matplotlib.pyplot as plt
+from market import Market
+from buckets import bucketwidth, bucketize, distribution
 
 
+# pylint: disable=consider-using-enumerate, R0801
 def strat_bottom(sequence, fractions, monthly=True):
     """
     Only buy at the lowest prices
@@ -62,7 +62,7 @@ def strat_bottom(sequence, fractions, monthly=True):
             on_side -= on_side/fractions
 
         # if we are monthly, scale the interest and dividends
-        if (monthly):
+        if monthly:
             dividend /= 12
             interest /= 12
 
@@ -74,12 +74,13 @@ def strat_bottom(sequence, fractions, monthly=True):
 
 
 # general simulation parameters
-num_runs = 200      # number of runs per model
-num_years = 20      # number of years to track results
-my_name = "Bottom-Buying"
-output = "Bottom.png"
+NUM_RUNS = 200      # number of runs per model
+NUM_YEARS = 20      # number of years to track results
+MY_NAME = "Bottom-Buying"
+OUTPUT = "Bottom.png"
 
 
+# pylint: disable=too-many-locals
 def main(random):
     """
     Only buy in at lows
@@ -98,15 +99,16 @@ def main(random):
     for fractions in [1, 2, 3, 4]:
         results = []
         # a statistically interesting number of runs
-        for runs in range(num_runs * 2 if random else num_runs):
-            sequence = simulator.rates(length=num_years*12, random=random)
+        # pylint: disable=unused-variable
+        for runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
+            sequence = simulator.rates(length=NUM_YEARS*12, random=random)
             results.append(strat_bottom(sequence, fractions, monthly))
 
         # summarize the results
         mean = sum(results) / len(results)
         sigma = statistics.stdev(results)
         report = "{} over {} years in {} pieces: mean={:.2f}, sigma={:.2f}"
-        print(report.format(my_name, num_years, fractions, mean, sigma))
+        print(report.format(MY_NAME, NUM_YEARS, fractions, mean, sigma))
 
         # bucketize and display the results
         granularity = bucketwidth(results)
@@ -117,15 +119,15 @@ def main(random):
         legends.append("fractions=" + str(fractions))
 
     # put up the title, axes, and data
-    plt.title(title + my_name)
-    plt.xlabel(str(num_years) + "-year return")
+    plt.title(title + MY_NAME)
+    plt.xlabel(str(NUM_YEARS) + "-year return")
     plt.ylabel("probability")
     plt.legend(legends)
-    if output is None:
+    if OUTPUT is None:
         plt.show()
     else:
-        print("saving distribution plot as " + output)
-        plt.savefig(output)
+        print("saving distribution plot as " + OUTPUT)
+        plt.savefig(OUTPUT)
         plt.close()
 
 

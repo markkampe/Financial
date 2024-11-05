@@ -1,12 +1,16 @@
+"""
+A market return simulator, based on historical data
+
+Author: Mark Kampe
+"""
 import sys
 from random import randint
 
 
+# pylint: disable=R0801
 class Market:
     """
-    A market return simulator, based on historical data
-
-    Author: Mark Kampe
+    FIX
     """
     input_file = ""     # file used for simulations
     data_points = []    # (appreciation, dividend, interest rate)
@@ -26,6 +30,7 @@ class Market:
                          " column in " + self.input_file)
         sys.exit()
 
+    # pylint: disable=too-many-arguments, too-many-locals
     def __init__(self, filename="sp500.csv",
                  monthly=False,
                  start=1950, end=2020,
@@ -45,7 +50,6 @@ class Market:
         :param price_field: column heading for price
         :param date_format: date format
         """
-        input_file = filename
         source = open(filename, "r")
 
         # figure out which columns we want
@@ -61,8 +65,6 @@ class Market:
         year_col = fields.index('y')
         if 'm' in fields:
             month_col = fields.index('m')
-        if 'd' in fields:
-            day_col = fields.index('d')
 
         # process the entire file
         prev = -1
@@ -128,11 +130,10 @@ class Market:
             # return random values
             return [self.data_points[randint(0, size - 1)]
                     for i in range(0, length)]
-        else:
-            # return consecutive values w/random starting point
-            start = randint(0, size - 1)
-            return [self.data_points[(start + i) % size]
-                    for i in range(0, length)]
+        # return consecutive values w/random starting point
+        start = randint(0, size - 1)
+        return [self.data_points[(start + i) % size]
+                for i in range(0, length)]
 
 
 # basic exerciser
@@ -142,13 +143,14 @@ if __name__ == "__main__":
     else:
         infile = "sp500.csv"
 
+    # pylint: disable=C0103
     start = 2017
     end = 2020
 
     heading = "\tappreciation\tdividend\tinterest\n" +\
               "\t------------\t--------\t--------"
 
-    output = "\t{:12.8f}\t{:8.4f}\t{:8.4f}"
+    OUTPUT = "\t{:12.8f}\t{:8.4f}\t{:8.4f}"
 
     for monthly in [False, True]:
         simulator = Market(infile, start=start, end=end, monthly=monthly)
@@ -161,5 +163,5 @@ if __name__ == "__main__":
             sequence = simulator.rates(random=random)
             print(heading)
             for (delta, dividend, interest) in sequence:
-                print(output.format(delta, dividend, interest))
+                print(OUTPUT.format(delta, dividend, interest))
             print("")

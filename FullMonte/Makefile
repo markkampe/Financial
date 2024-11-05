@@ -1,5 +1,5 @@
-ALL = Correction.py Market.py buckets.py strat_all.py strat_bottom.py strat_continuous.py strat_dips.py
-recommendation: Correction.py
+ALL = correction.py market.py buckets.py strat_all.py strat_bottom.py strat_continuous.py strat_dips.py
+recommendation: correction.py
 	python3 $<
 
 results: All.png Bottom.png Continuous.png Dips.png

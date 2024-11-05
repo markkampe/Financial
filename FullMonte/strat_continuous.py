@@ -1,15 +1,14 @@
-from Market import Market
-from buckets import *
-import matplotlib.pyplot as plt
-import statistics
-import sys
-
-
 """
 Purchasing Strategy: continuous
 """
+import statistics
+import sys
+import matplotlib.pyplot as plt
+from market import Market
+from buckets import bucketwidth, bucketize, distribution
 
 
+# pylint: disable=R0801
 def strat_continuous(sequence, period, monthly=False):
     """
     Buy a position over N years (or months)
@@ -25,7 +24,7 @@ def strat_continuous(sequence, period, monthly=False):
 
     for (growth, dividend, interest) in sequence:
         # if we are monthly, scale the interest and dividends
-        if (monthly):
+        if monthly:
             dividend /= 12
             interest /= 12
 
@@ -42,12 +41,13 @@ def strat_continuous(sequence, period, monthly=False):
 
 
 # general simulation parameters
-num_runs = 50       # number of runs per model
-num_years = 20      # number of years to track results
-my_name = "Continuous Purchases"
-output = "Continuous.png"
+NUM_RUNS = 50       # number of runs per model
+NUM_YEARS = 20      # number of years to track results
+MY_NAME = "Continuous Purchases"
+OUTPUT = "Continuous.png"
 
 
+# pylint: disable=too-many-locals
 def main(random):
     """
     For purchases over 1-5 years,
@@ -68,15 +68,16 @@ def main(random):
     for years in range(1, max_period + 1):
         results = []
         # a statistically interesting number of runs
-        for runs in range(num_runs * 2 if random else num_runs):
-            sequence = simulator.rates(length=num_years, random=random)
-            results.append(strat_continuous(sequence, num_years, monthly))
+        # pylint: disable=unused-variable
+        for runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
+            sequence = simulator.rates(length=NUM_YEARS, random=random)
+            results.append(strat_continuous(sequence, NUM_YEARS, monthly))
 
         # summarize the results
         mean = sum(results) / len(results)
         sigma = statistics.stdev(results)
         report = "{} over {} years, {} years: mean={:.2f}, sigma={:.2f}"
-        print(report.format(my_name, years, num_years, mean, sigma))
+        print(report.format(MY_NAME, years, NUM_YEARS, mean, sigma))
 
         # bucketize and display the results
         granularity = bucketwidth(results)
@@ -87,15 +88,15 @@ def main(random):
         legends.append("over " + str(years) + " years")
 
     # put up the title, axes, and data
-    plt.title(title + my_name)
-    plt.xlabel(str(num_years) + "-year return")
+    plt.title(title + MY_NAME)
+    plt.xlabel(str(NUM_YEARS) + "-year return")
     plt.ylabel("probability")
     plt.legend(legends)
-    if output is None:
+    if OUTPUT is None:
         plt.show()
     else:
-        print("saving distribution plot as " + output)
-        plt.savefig(output)
+        print("saving distribution plot as " + OUTPUT)
+        plt.savefig(OUTPUT)
         plt.close()
 
 
