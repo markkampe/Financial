@@ -29,18 +29,21 @@
 import sys
 from decimal import Decimal
 import csv
+# pylint: disable=W0402     # find a new parser
+from optparse import OptionParser
+
 from entry import Entry
 from rules import Rules
 from gui import Gui
 
 
-def findCol(string, array):
+def find_col(string, array):
     """
         see if any of the columns contains a specified string
     """
-    for i in range(len(array)):
-        if string in array[i]:
-            return i
+    for index, entry in enumerate(array):
+        if string in entry:
+            return index
 
     return -1
 
@@ -50,6 +53,7 @@ class Statement:
         Bank statement parser
     """
 
+    # pylint: disable=R0902     # we have a lot of attributes
     def __init__(self, rules):
         """
         constructor for a Statement parser
@@ -75,6 +79,13 @@ class Statement:
         self.tot_credit = 0         # grand total credits
         self.tot_debit = 0          # grand total debits
 
+        self.date = -1              # haven't figured out the columns yet
+        self.amt = -1               # haven't figured out the columns yet
+        self.acct = -1              # haven't figured out the columns yet
+        self.desc = -1              # haven't figured out the columns yet
+        self.filename = None        # have processed any files
+        self.file_line = 0          # haven't processed any lines
+
         self.buffered = []          # buffered output (for sorting)
 
         # initialize the aggregations/accounts lists
@@ -86,16 +97,17 @@ class Statement:
 
         # if we have a rule set, us it to populate aggregations/menus
         ruleset = [] if rules is None else rules.rules
-        for r in ruleset:
-            self.acc_list.add(r.acct)
-            if r.process == "AGGREGATE":
-                key = r.acct
-                if r.descr != "":
-                    key += "-" + r.descr
-                self.aggregations[key] = Entry(date, zero, r.acct, r.descr)
-                self.agg_list.add(r.descr)
-            elif r.acct not in self.aggregations:
-                self.aggregations[r.acct] = Entry(date, zero, r.acct, "")
+        for rule in ruleset:
+            self.acc_list.add(rule.acct)
+            if rule.process == "AGGREGATE":
+                key = rule.acct
+                if rule.descr != "":
+                    key += "-" + rule.descr
+                self.aggregations[key] = Entry(date, zero,
+                                               rule.acct, rule.descr)
+                self.agg_list.add(rule.descr)
+            elif rule.acct not in self.aggregations:
+                self.aggregations[rule.acct] = Entry(date, zero, rule.acct, "")
 
     def analyze_headers(self, cols):
         """
@@ -117,28 +129,28 @@ class Statement:
                 work for a lot of reports.
         """
         if self.date < 0:
-            self.date = findCol("Post Date", cols)
+            self.date = find_col("Post Date", cols)
         if self.date < 0:
-            self.date = findCol("Date", cols)
+            self.date = find_col("Date", cols)
         if self.date < 0:
-            self.date = findCol("date", cols)
+            self.date = find_col("date", cols)
 
         if self.amt < 0 or self.amt == self.date:
-            self.amt = findCol("Amount", cols)
+            self.amt = find_col("Amount", cols)
         if self.amt < 0 or self.amt == self.date:
-            self.amt = findCol("amount", cols)
+            self.amt = find_col("amount", cols)
 
         if self.desc < 0 or self.desc == self.date or self.desc == self.amt:
-            self.desc = findCol("Descr", cols)
+            self.desc = find_col("Descr", cols)
         if self.desc < 0 or self.desc == self.date or self.desc == self.amt:
-            self.desc = findCol("descr", cols)
+            self.desc = find_col("descr", cols)
 
         if self.acct < 0 or self.acct == self.date or self.acct == self.amt \
            or self.acct == self.desc:
-            self.acct = findCol("Account", cols)
+            self.acct = find_col("Account", cols)
         if self.acct < 0 or self.acct == self.date or self.acct == self.amt \
            or self.acct == self.desc:
-            self.acct = findCol("account", cols)
+            self.acct = find_col("account", cols)
 
         # see if we found all the critical fields
         return self.date >= 0 and self.amt >= 0 and self.desc >= 0
@@ -153,18 +165,17 @@ class Statement:
                  and a setting of self.date
         """
         # go through the columns one at a time
-        for i in range(len(cols)):
-            s = cols[i]
+        for index, string in enumerate(cols):
             digits = 0
             slashes = 0
             bogus = 0
             # look at every character in this string
-            for c in s:
-                if c.isdigit():
+            for char in string:
+                if char.isdigit():
                     digits += 1
-                elif c == "/":
+                elif char == "/":
                     slashes += 1
-                elif not c.isspace():
+                elif not char.isspace():
                     bogus += 1
 
             # see if this could plausibly be a date
@@ -172,7 +183,7 @@ class Statement:
                 continue
             if digits < 2 or digits > 8:
                 continue
-            self.date = i
+            self.date = index
             return True
 
         return False
@@ -188,27 +199,26 @@ class Statement:
                  and a setting of self.amt
         """
         # go through the columns one at a time
-        for i in range(len(cols)):
+        for index, string in enumerate(cols):
             # don't reuse columns already discovered
-            if i == self.date:
+            if index == self.date:
                 continue
 
-            s = cols[i]
             digits = 0
             signs = 0
             bogus = 0
             # look at every character in this string
-            for c in s:
-                if c.isdigit():
+            for char in string:
+                if char.isdigit():
                     digits += 1
-                elif c == "-" or c == "$" or c == '.':
+                elif char in ('-', '$', '.'):
                     signs += 1
-                elif not c.isspace():
+                elif not char.isspace():
                     bogus += 1
 
             # see if this could plausibly be an amount
             if digits > 0 and signs < 3 and bogus == 0:
-                self.amt = i
+                self.amt = index
                 return True
 
         return False
@@ -224,17 +234,15 @@ class Statement:
                  and a setting of self.desc
         """
         # go through the columns one at a time
-        for i in range(len(cols)):
-            # don't reuse columns already discovered
-            if i == self.date or i == self.amt:
+        for index, string in enumerate(cols):
+            if index in (self.date, self.amt):
                 continue
 
             # heuristic: descriptions are usually quoted
-            s = cols[i]
-            if s.startswith('"') or s.startswith("'"):
-                if "Reference" in s:    # known exception
+            if string.startswith('"') or string.startswith("'"):
+                if "Reference" in string:    # known exception
                     continue
-                self.desc = i
+                self.desc = index
                 return True
         return True
 
@@ -267,6 +275,7 @@ class Statement:
         process a line and either produce standard output or
         accumulate a subtotal to be printed at the end of the report
         """
+        # pylint: disable=R0912     # we make a lot of decisions
 
         # talley credits and debits
         amount = Decimal(cols[self.amt])
@@ -319,7 +328,8 @@ class Statement:
 
         # check for commas in the description (scare some parsers)
         if ',' in entry.description:
-            sys.stderr.write(f"WARNING: comma in description ({entry.date}: {entry.description}\n")
+            sys.stderr.write(f"WARNING: comma in description ({entry.date}:"
+                             f" {entry.description}\n")
 
         # see if we need to accumulate output for sorting
         if self.sort:
@@ -345,7 +355,7 @@ class Statement:
             if entry.amount != 0:
                 self.output.write(entry.str() + "\n")
 
-    def processFile(self, filename):
+    def process_file(self, filename):
         """
         process a file full of CSV transactions
         - analyze first line to know what is in each column
@@ -365,33 +375,33 @@ class Statement:
         self.file_line = 0
 
         # use the first line to figure out the data format
-        input = open(filename, 'rt', encoding='ascii')
-        line = input.readline()
-        cols = line.split(',')
-        if not self.analyze_headers(cols):
-            if not self.analyze_data(cols):
-                sys.stderr.write("ERROR: column analysis failed for ")
-                sys.stderr.write(filename)
-                sys.stderr.write("\n")
-                return
-            input.seek(0)       # rewind so we can process it
+        with open(filename, 'rt', encoding='ascii') as infile:
+            line = infile.readline()
+            cols = line.split(',')
+            if not self.analyze_headers(cols):
+                if not self.analyze_data(cols):
+                    sys.stderr.write("ERROR: column analysis failed for ")
+                    sys.stderr.write(filename)
+                    sys.stderr.write("\n")
+                    return
+                infile.seek(0)       # rewind so we can process it
 
-        # then process the data lines in the file
-        reader = csv.reader(input, skipinitialspace=True)
-        for cols in reader:
-            self.file_line += 1
-            self.tot_lines += 1
-            if len(cols) < 3:       # ignore blank/short lines
-                continue
-            if cols[0][0] == '#':   # ignore comment lines
-                continue
-            # make sure we strip all leading/trailing white space
-            for c in range(len(cols)):
-                cols[c] = cols[c].strip()
-            self.process_line(cols)
-        input.close()
-        self.filename = None
-        self.tot_files += 1
+            # then process the data lines in the file
+            reader = csv.reader(infile, skipinitialspace=True)
+            for cols in reader:
+                self.file_line += 1
+                self.tot_lines += 1
+                if len(cols) < 3:       # ignore blank/short lines
+                    continue
+                if cols[0][0] == '#':   # ignore comment lines
+                    continue
+                # make sure we strip all leading/trailing white space
+                for index, string in enumerate(cols):
+                    cols[index] = string.strip()
+                self.process_line(cols)
+            infile.close()
+            self.filename = None
+            self.tot_files += 1
 
     def filestats(self, filename):
         """
@@ -444,7 +454,7 @@ class Statement:
         sys.stderr.write(statsmsg)
 
 
-def readAccounts(file):
+def read_accounts(file):
     """
     Read in and return a list of known account names
 
@@ -452,28 +462,23 @@ def readAccounts(file):
     @return: [(string)] ... list of account names
     """
     accounts = []
-    afile = open(file, 'rt', encoding='ascii')
-    for line in afile:
-        accounts.append(line.strip())
-    afile.close()
+    with open(file, 'rt', encoding='ascii') as afile:
+        for line in afile:
+            accounts.append(line.strip())
+        afile.close()
     return accounts
 
 
 if __name__ == '__main__':
-    """
-    CLI entry point
-    - process command line arguments
-    - for each input file
-       - process_file
-       - filestats
-    - totstats
-    """
-
-    from optparse import OptionParser
+    # CLI entry point
+    # - process command line arguments
+    # - for each input file
+    #    - process_file
+    #    - filestats
+    # - totstats
 
     # process the command line arguments
-    umsg = "usage: %prog [options] input_file ..."
-    parser = OptionParser(usage=umsg)
+    parser = OptionParser(usage="usage: %prog [options] input_file ...")
     parser.add_option("-r", "--rules", type="string", dest="rule_file",
                       metavar="FILE", default=None,
                       help="categorizing rules")
@@ -492,7 +497,7 @@ if __name__ == '__main__':
     (opts, files) = parser.parse_args()
 
     # digest the list of known accounts
-    a = None if opts.acct_file is None else readAccounts(opts.acct_file)
+    a = None if opts.acct_file is None else read_accounts(opts.acct_file)
 
     # digest the categorizing rules
     r = None if opts.rule_file is None else Rules(opts.rule_file, a)
@@ -501,6 +506,7 @@ if __name__ == '__main__':
     s = Statement(r)
 
     # set the output file
+    # pylint: disable=R1732         # doesn't make sense here
     if opts.out_file is not None:
         s.output = open(opts.out_file, "w", encoding='ascii')
 
@@ -517,7 +523,7 @@ if __name__ == '__main__':
 
         # process each input file
         for f in files:
-            s.processFile(f)
+            s.process_file(f)
             s.filestats(f)
 
         # write out the postscript stuff
