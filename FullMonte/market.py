@@ -50,7 +50,8 @@ class Market:
         :param price_field: column heading for price
         :param date_format: date format
         """
-        source = open(filename, "r")
+        # pylint: disable=R1732     # I don't want to indent the next 50 lines
+        source = open(filename, "r", encoding='ascii')
 
         # figure out which columns we want
         headers = source.readline()
@@ -92,7 +93,7 @@ class Market:
                 prev = price
 
             # see if this is within the requested range
-            if year >= start and year <= end:
+            if start <= year <= end:
                 # see if we are doing only annual samples
                 if month != 1 and not monthly:
                     continue
@@ -109,11 +110,14 @@ class Market:
 
         # summarize what we just read
         period = "monthly" if monthly else "annual"
+        ret_pct = 100 * ret_sum / points
+        div_pct = 100 * div_sum / points
+        rate_pct = 100 * rate_sum / points
         print(filename +
-              "({}-{}): {} {} data points".format(start, end, points, period) +
-              ", growth={:3.1f}%".format(100 * ret_sum / points) +
-              ", div={:2.1f}%".format(100 * div_sum / points) +
-              ", 10Y={:2.1f}%".format(100 * rate_sum / points))
+              f"({start}-{end}): {points} {period} data points" +
+              f", growth={ret_pct:3.1f}%" +
+              f", div={div_pct:2.1f}%" +
+              f", 10Y={rate_pct:2.1f}%")
         source.close()
 
     def rates(self, length=20, random=False):

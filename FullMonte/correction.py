@@ -48,7 +48,8 @@ class Correction:
         :param price_field: column heading for price
         :param date_format: date format
         """
-        source = open(filename, "r")
+        # pylint: disable=R1732     # don't want to indent next 50 lines
+        source = open(filename, "r", encoding='ascii')
 
         # figure out which columns we want
         headers = source.readline()
@@ -82,7 +83,7 @@ class Correction:
                 prev = price
 
             # see if this is within the requested range
-            if year >= start and year <= end:
+            if start <= year <= end:
                 tupple = (year, month, price)
                 self.prices.append(tupple)
                 prev = price
@@ -179,8 +180,8 @@ if __name__ == "__main__":
         weight = int(100 * exp / total_exp)
         if weight <= 1:
             continue
-        print("-{0: >2}%:\t{1: >3}%".format(drop, weight))
+        print(f"-{drop: >2}%:\t{weight: >3}%")
         tot_pct += weight
-    print("    \t----\n    \t{0: >3}%".format(tot_pct))
+    print(f"    \t----\n    \t{tot_pct: >3}%")
 
     plt.show()
