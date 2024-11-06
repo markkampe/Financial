@@ -7,7 +7,7 @@ import sys
 from random import randint
 
 
-# pylint: disable=R0801
+# pylint: disable=R0801     # correction and market are very similar
 class Market:
     """
     FIX
@@ -138,29 +138,29 @@ class Market:
 
 # basic exerciser
 if __name__ == "__main__":
+    # pylint: disable=C0103     # this is a variable!
     if len(sys.argv) > 1:
         infile = sys.argv[1]
     else:
         infile = "sp500.csv"
 
-    # pylint: disable=C0103
-    start = 2017
-    end = 2020
+    START = 2017
+    END = 2020
 
     heading = "\tappreciation\tdividend\tinterest\n" +\
               "\t------------\t--------\t--------"
 
     OUTPUT = "\t{:12.8f}\t{:8.4f}\t{:8.4f}"
 
-    for monthly in [False, True]:
-        simulator = Market(infile, start=start, end=end, monthly=monthly)
+    for by_month in [False, True]:
+        simulator = Market(infile, start=START, end=END, monthly=by_month)
 
-        for random in [False, True]:
-            print(("Monthly " if monthly else "Annual ") +
-                  ("random return" if random else "sequenced return") +
+        for do_random in [False, True]:
+            print(("Monthly " if by_month else "Annual ") +
+                  ("random return" if do_random else "sequenced return") +
                   " simulation based on " + infile)
 
-            sequence = simulator.rates(random=random)
+            sequence = simulator.rates(random=do_random)
             print(heading)
             for (delta, dividend, interest) in sequence:
                 print(OUTPUT.format(delta, dividend, interest))

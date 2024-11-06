@@ -8,7 +8,7 @@ from market import Market
 from buckets import bucketwidth, bucketize, distribution
 
 
-# pylint: disable=R0801
+# pylint: disable=R0801     # all strat modules have same form
 def strat_all(sequence, play_it_safe, monthly=False):
     """
     All in the market or all out of the market

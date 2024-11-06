@@ -8,7 +8,7 @@ from market import Market
 from buckets import bucketwidth, bucketize, distribution
 
 
-# pylint: disable=R0801
+# pylint: disable=R0801     # all strat modules have same form
 def strat_dips(sequence, max_dip, buy_points, monthly=True):
     """
     Only buy at the lowest prices

@@ -9,7 +9,7 @@ import sys
 import matplotlib.pyplot as plt
 
 
-# pylint: disable=R0801
+# pylint: disable=R0801     # Correction and market are very similar
 class Correction:
     """
     FIX
@@ -98,8 +98,10 @@ class Correction:
         :return [(drop, count)]: # samples in each drop bucket
         """
 
-        buckets = []
+        samples = []
         prev_high = -1
+        # pylint: disable=W0612     # in the tupple, but not needed here
+        # pylint: disable=W0621     # conflicts are locals to main
         for (year, month, price) in self.prices:
             # keep track of the previous high
             if price > prev_high:
@@ -107,34 +109,32 @@ class Correction:
                 continue
 
             # (allocate and) increment the bucket for this drop
-            drop = (prev_high - price) / prev_high
-            bucket_num = int(drop/bucket_width)
-            if bucket_num >= len(buckets):
-                for i in range(len(buckets), bucket_num+1):
+            drop_fraction = (prev_high - price) / prev_high
+            bucket_num = int(drop_fraction/bucket_width)
+            if bucket_num >= len(samples):
+                for i in range(len(samples), bucket_num+1):
                     tupple = (i * bucket_width, 0)
-                    buckets.append(tupple)
+                    samples.append(tupple)
 
-            (bucket, count) = buckets[bucket_num]
-            buckets[bucket_num] = (bucket, count+1)
+            (bucket, count) = samples[bucket_num]
+            samples[bucket_num] = (bucket, count+1)
 
-        return buckets
+        return samples
 
 
 # basic exerciser
-"""
-1. Review the data to identify corrections/crashes.
-2. Assess the probability of various drop levels.
-3. Compute the expected return (profit * probability) for each level.
-4. Assign fraction-to-purchase-at-that-discount proportional to expectancies
-"""
-# pylint: disable=C0103
+#  1. Review the data to identify corrections/crashes.
+#  2. Assess the probability of various drop levels.
+#  3. Compute the expected return (profit * probability) for each level.
+#  4. Assign fraction-to-purchase-at-that-discount proportional to expectancies
 if __name__ == "__main__":
+    # pylint: disable=C0103     # this is a variable!
     if len(sys.argv) > 1:
         infile = sys.argv[1]
     else:
         infile = "sp500.csv"
 
-    # pylint: disable=C0103
+    # pylint: disable=C0103     # real variables with default values
     width = 0.04
     min_drop = 0.08
     max_drop = 0
@@ -143,6 +143,7 @@ if __name__ == "__main__":
     buckets = results.drop_buckets(bucket_width=width)
 
     # how many (interesting) drop samples do we have
+    # pylint: disable=C0200     # enumerate makes this code more complex
     total_count = 0
     for i in range(len(buckets)):
         (drop, count) = buckets[i]

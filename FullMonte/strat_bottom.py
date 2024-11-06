@@ -8,7 +8,7 @@ from market import Market
 from buckets import bucketwidth, bucketize, distribution
 
 
-# pylint: disable=consider-using-enumerate, R0801
+# pylint: disable=R0801     # all strat modules have same form
 def strat_bottom(sequence, fractions, monthly=True):
     """
     Only buy at the lowest prices
@@ -23,6 +23,7 @@ def strat_bottom(sequence, fractions, monthly=True):
     buypoints = [0] * fractions
     bottom = 666.0
     market = 1.0
+    # pylint: disable=C0200     # enumerate would not work here
     for i in range(len(sequence)):
         (growth, dividend, interest) = sequence[i]
         market *= (1 + growth)
