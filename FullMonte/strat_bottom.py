@@ -8,7 +8,6 @@ from market import Market
 from buckets import bucketwidth, bucketize, distribution
 
 
-# pylint: disable=R0801     # all strat modules have same form
 def strat_bottom(sequence, fractions, monthly=True):
     """
     Only buy at the lowest prices
@@ -23,40 +22,36 @@ def strat_bottom(sequence, fractions, monthly=True):
     buypoints = [0] * fractions
     bottom = 666.0
     market = 1.0
-    # pylint: disable=C0200     # enumerate would not work here
-    for i in range(len(sequence)):
-        (growth, dividend, interest) = sequence[i]
+    for i, (growth, dividend, interest) in enumerate(sequence):
         market *= (1 + growth)
         if market < bottom:
             bottom = market
             buypoints[0] = i
 
     # find the buy points before that
-    for f in range(1, fractions):
-        buypoints[f] = 0
+    for fract in range(1, fractions):
+        buypoints[fract] = 0
         bottom = 666.0
         market = 1.0
 
         # see if we have run out of opportunities
-        if buypoints[f-1] == 0:
-            fractions = f
+        if buypoints[fract-1] == 0:
+            fractions = fract
             break
 
         # find the next lowest earlier price
-        for i in range(buypoints[f-1]):
+        for i in range(buypoints[fract-1]):
             (growth, dividend, interest) = sequence[i]
             market *= (1 + growth)
             if market < bottom:
                 bottom = market
-                buypoints[f] = i
+                buypoints[fract] = i
 
     # play the sequence, buying in at the bottom
     in_market = 0.0     # start out with nothing in market
     on_side = 1.0       # start out with everything on the side
 
-    for i in range(len(sequence)):
-        (growth, dividend, interest) = sequence[i]
-
+    for i, (growth, dividend, interest) in enumerate(sequence):
         # see if this is a buy point
         if i in buypoints:
             in_market += on_side/fractions
@@ -100,8 +95,7 @@ def main(random):
     for fractions in [1, 2, 3, 4]:
         results = []
         # a statistically interesting number of runs
-        # pylint: disable=unused-variable
-        for runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
+        for _runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
             sequence = simulator.rates(length=NUM_YEARS*12, random=random)
             results.append(strat_bottom(sequence, fractions, monthly))
 

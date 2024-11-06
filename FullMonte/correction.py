@@ -9,7 +9,6 @@ import sys
 import matplotlib.pyplot as plt
 
 
-# pylint: disable=R0801     # correction.py and market.py are very similar
 class Correction:
     """
     Process a set of (year, month, price) records to identify drops

@@ -18,7 +18,8 @@ Dips.png: strat_dips.py
 
 lint:
 	pycodestyle $(ALL)
-	pylint $(ALL)
+	# most modules have parallel structure
+	pylint -d R0801 $(ALL)
 
 clean:
 	rm -f *.png

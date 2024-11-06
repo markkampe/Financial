@@ -58,15 +58,14 @@ def distribution(buckets, granularity):
     :return ([x-values], [y-percentage-values])
     """
     # get total number of counts
-    #   pylint: disable=consider-using-enumerate   # need both index and value
     total = 0
-    for i in range(len(buckets)):
-        total += buckets[i]
+    for i, count in enumerate(buckets):
+        total += count
 
     x_values = []
     y_values = []
-    for i in range(len(buckets)):
-        pct = buckets[i] * 100 // total
+    for i, count in enumerate(buckets):
+        pct = count * 100 // total
         if pct > 0:
             x_values.append(i * granularity)
             y_values.append(pct)

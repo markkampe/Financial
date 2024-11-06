@@ -8,7 +8,6 @@ from market import Market
 from buckets import bucketwidth, bucketize, distribution
 
 
-# pylint: disable=R0801     # all strat modules have same form
 def strat_dips(sequence, max_dip, buy_points, monthly=True):
     """
     Only buy at the lowest prices
@@ -90,8 +89,7 @@ def main(random):
         for buy_points in [1, 2, 3]:
             results = []
             # a statistically interesting number of runs
-            # pylint: disable=unused-variable
-            for runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
+            for _runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
                 sequence = simulator.rates(length=NUM_RUNS*12, random=random)
                 results.append(strat_dips(sequence, max_dip, buy_points,
                                monthly))

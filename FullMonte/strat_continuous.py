@@ -8,7 +8,6 @@ from market import Market
 from buckets import bucketwidth, bucketize, distribution
 
 
-# pylint: disable=R0801     # all strat modules have same form
 def strat_continuous(sequence, period, monthly=False):
     """
     Buy a position over N years (or months)
@@ -68,8 +67,7 @@ def main(random):
     for years in range(1, max_period + 1):
         results = []
         # a statistically interesting number of runs
-        # pylint: disable=unused-variable
-        for runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
+        for _runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
             sequence = simulator.rates(length=NUM_YEARS, random=random)
             results.append(strat_continuous(sequence, NUM_YEARS, monthly))
 

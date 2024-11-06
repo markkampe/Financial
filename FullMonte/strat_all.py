@@ -8,7 +8,6 @@ from market import Market
 from buckets import bucketwidth, bucketize, distribution
 
 
-# pylint: disable=R0801     # all strat modules have same form
 def strat_all(sequence, play_it_safe, monthly=False):
     """
     All in the market or all out of the market
@@ -61,8 +60,7 @@ def main(random):
     for in_cds in [True, False]:
         results = []
         # a statistically interesting number of runs
-        # pylint: disable=unused-variable
-        for runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
+        for _runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
             sequence = simulator.rates(length=NUM_YEARS, random=random)
             results.append(strat_all(sequence, in_cds, monthly))
 

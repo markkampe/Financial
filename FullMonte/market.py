@@ -7,7 +7,6 @@ import sys
 from random import randint
 
 
-# pylint: disable=R0801     # correction and market are similar
 class Market:
     """
     Digest a file of market quotes (w/date, dividend, price) data
