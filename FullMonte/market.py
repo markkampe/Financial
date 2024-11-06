@@ -7,10 +7,11 @@ import sys
 from random import randint
 
 
-# pylint: disable=R0801     # correction and market are very similar
+# pylint: disable=R0801     # correction and market are similar
 class Market:
     """
-    FIX
+    Digest a file of market quotes (w/date, dividend, price) data
+    Based on which we can return randomly chosen sequences of returns
     """
     input_file = ""     # file used for simulations
     data_points = []    # (appreciation, dividend, interest rate)
@@ -142,7 +143,7 @@ class Market:
 
 # basic exerciser
 if __name__ == "__main__":
-    # pylint: disable=C0103     # this is a variable!
+    # pylint: disable=C0103     # pylint thinks infile is a constant!
     if len(sys.argv) > 1:
         infile = sys.argv[1]
     else:
@@ -153,8 +154,6 @@ if __name__ == "__main__":
 
     heading = "\tappreciation\tdividend\tinterest\n" +\
               "\t------------\t--------\t--------"
-
-    OUTPUT = "\t{:12.8f}\t{:8.4f}\t{:8.4f}"
 
     for by_month in [False, True]:
         simulator = Market(infile, start=START, end=END, monthly=by_month)
@@ -167,5 +166,5 @@ if __name__ == "__main__":
             sequence = simulator.rates(random=do_random)
             print(heading)
             for (delta, dividend, interest) in sequence:
-                print(OUTPUT.format(delta, dividend, interest))
+                print(f"\t{delta:12.8f}\t{dividend:8.4f}\t{interest:8.4f}")
             print("")
