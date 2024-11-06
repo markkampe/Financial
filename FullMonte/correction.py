@@ -9,10 +9,12 @@ import sys
 import matplotlib.pyplot as plt
 
 
-# pylint: disable=R0801     # Correction and market are very similar
+# pylint: disable=R0801     # correction.py and market.py are very similar
 class Correction:
     """
-    FIX
+    Process a set of (year, month, price) records to identify drops
+    Produce a list of counts for how many times a drop (of a specified size)
+    occurred within that history.
     """
     input_file = ""     # file used for simulations
     prices = []         # (year, month, price)
@@ -101,9 +103,7 @@ class Correction:
 
         samples = []
         prev_high = -1
-        # pylint: disable=W0612     # in the tupple, but not needed here
-        # pylint: disable=W0621     # conflicts are locals to main
-        for (year, month, price) in self.prices:
+        for (_year, _month, price) in self.prices:
             # keep track of the previous high
             if price > prev_high:
                 prev_high = price
@@ -123,31 +123,19 @@ class Correction:
         return samples
 
 
-# basic exerciser
-#  1. Review the data to identify corrections/crashes.
-#  2. Assess the probability of various drop levels.
-#  3. Compute the expected return (profit * probability) for each level.
-#  4. Assign fraction-to-purchase-at-that-discount proportional to expectancies
-if __name__ == "__main__":
-    # pylint: disable=C0103     # this is a variable!
-    if len(sys.argv) > 1:
-        infile = sys.argv[1]
-    else:
-        infile = "sp500.csv"
-
-    # pylint: disable=C0103     # real variables with default values
-    width = 0.04
+def analyze(buckets, width):
+    """
+    1. Review the data to identify corrections/crashes.
+    2. Assess the probability of various drop levels.
+    3. Compute the expected return (profit * probability) for each level.
+    4. Assign fraction-to-purchase-at-that-discount proportional to expected
+    """
+    total_count = 0
     min_drop = 0.08
     max_drop = 0
 
-    results = Correction(infile)
-    buckets = results.drop_buckets(bucket_width=width)
-
     # how many (interesting) drop samples do we have
-    # pylint: disable=C0200     # enumerate makes this code more complex
-    total_count = 0
-    for i in range(len(buckets)):
-        (drop, count) = buckets[i]
+    for _index, (drop, count) in enumerate(buckets):
         if drop >= min_drop:
             total_count += count
         max_drop = int(100 * drop)
@@ -156,8 +144,7 @@ if __name__ == "__main__":
     total_exp = 0.0
     drops = []
     expectancies = []
-    for i in range(len(buckets)):
-        (drop, count) = buckets[i]
+    for _index, (drop, count) in enumerate(buckets):
         if drop >= min_drop:
             drops.append(int(drop * 100))
             exp = drop * count / total_count
@@ -174,9 +161,8 @@ if __name__ == "__main__":
     # recommend purchanses in proportion to expectancy
     print("Recommended Purchases:")
     tot_pct = 0
-    for i in range(len(drops)):
-        drop = drops[i]
-        exp = expectancies[i]
+    for index, drop in enumerate(drops):
+        exp = expectancies[index]
         weight = int(100 * exp / total_exp)
         if weight <= 1:
             continue
@@ -185,3 +171,18 @@ if __name__ == "__main__":
     print(f"    \t----\n    \t{tot_pct: >3}%")
 
     plt.show()
+
+
+# basic exerciser
+if __name__ == "__main__":
+    # pylint: disable=C0103     # pylint thinks infile is a constant!
+    if len(sys.argv) > 1:
+        infile = sys.argv[1]
+    else:
+        infile = "sp500.csv"
+
+    BUCKET_WIDTH = 0.04     # % per bucket
+
+    results = Correction(infile)
+    analyze(results.drop_buckets(bucket_width=BUCKET_WIDTH),
+            width=BUCKET_WIDTH)
