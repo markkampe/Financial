@@ -1,30 +1,33 @@
 #!/usr/bin/python3
+"""
+Process a fidelity income statement, identify the interest-paying positions
+"""
 import sys
 import csv
+import argparse
 
 # lengths of the desired output fields (including inter-field padding))
-lAcct = 24
-lType = 12      # CD, US-TREAS, MMKT BOND
-lValue = 12     # enough for tens of millions
-lQuant = 10     # enough for millions
-lRate = 9       # enough for 99.99%
-lDate = 14      # mm/dd/yyyy
-
-headers = False     # print a line of column headers
+L_ACCT = 24
+L_TYPE = 12      # CD, US-TREAS, MMKT BOND
+L_VALUE = 12     # enough for tens of millions
+L_QUANT = 10     # enough for millions
+L_RATE = 9       # enough for 99.99%
+L_DATE = 14      # mm/dd/yyyy
 
 
-def findCol(row, title):
+def find_col(row, title):
     """ find the row containing a desired heading """
-    for x in range(len(row)):
-        if row[x] == title:
-            return x
+    for i, string in enumerate(row):
+        if string == title:
+            return i
 
     sys.stderr.write("Unable to find column for " + title + "\n")
     sys.exit(-1)
 
 
-class Entry(object):
-
+class Entry():
+    """ an instrument description in a maturity-date sorted list """
+    # pylint: disable=too-few-public-methods    # this is a data class
     def __init__(self, item_string, date_order):
         self.item = item_string
         self.order = date_order
@@ -34,66 +37,63 @@ class Entry(object):
         return self.item
 
 
-# sorted list of entries to be printed
-entries = None
-
-
-def simplify(file):
+# pylint: disable=too-many-locals, too-many-statements, too-many-branches
+def simplify(file, entries, headers=False):
     """
     read named (csv) file from a FIDO positions download,
-    and print out a simpler version with:
+    find the (interest paying) debt instruments
+    create and return a date-sorted list of
         account, type, value, amount, rate, date
     """
     # process each line in the CSV file
-    with open(file) as csv_file:
+    with open(file, encoding='utf-8') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
 
         # print out the desired fields from each line
-        lineNum = 0
+        line_num = 0
         for row in csv_reader:
-            lineNum += 1
+            line_num += 1
             # skip the heading line
-            if lineNum == 1:
-                xAcct = findCol(row, "Account Name")
-                xSym = findCol(row, "Symbol")
-                xValue = findCol(row, "Current Value")
-                xDescr = findCol(row, "Description")
-                xQuant = findCol(row, "Quantity")
+            if line_num == 1:
+                x_acct = find_col(row, "Account Name")
+                x_value = find_col(row, "Current Value")
+                x_descr = find_col(row, "Description")
+                x_quant = find_col(row, "Quantity")
 
                 if headers:
-                    line = "Account".ljust(lAcct, " ")
-                    line += "Type".ljust(lType, " ")
-                    line += "Value".rjust(lValue, " ")
-                    line += "Quant".rjust(lQuant, " ")
-                    line += "Rate".rjust(lRate, " ")
-                    line += "Date      ".rjust(lDate, " ")
+                    line = "Account".ljust(L_ACCT, " ")
+                    line += "Type".ljust(L_TYPE, " ")
+                    line += "Value".rjust(L_VALUE, " ")
+                    line += "Quant".rjust(L_QUANT, " ")
+                    line += "Rate".rjust(L_RATE, " ")
+                    line += "Date      ".rjust(L_DATE, " ")
                     print(line)
 
-                    line = "-------".ljust(lAcct, " ")
-                    line += "-------".ljust(lType, " ")
-                    line += "----------".rjust(lValue, " ")
-                    line += "------".rjust(lQuant, " ")
-                    line += "------".rjust(lRate, " ")
-                    line += "----------".rjust(lDate, " ")
+                    line = "-------".ljust(L_ACCT, " ")
+                    line += "-------".ljust(L_TYPE, " ")
+                    line += "----------".rjust(L_VALUE, " ")
+                    line += "------".rjust(L_QUANT, " ")
+                    line += "------".rjust(L_RATE, " ")
+                    line += "----------".rjust(L_DATE, " ")
                     print(line)
                 continue
 
             # skip lines that don't seem to contain a value
-            if len(row) < xValue+1:
+            if len(row) < x_value+1:
                 continue
-            if not row[xValue]:
+            if not row[x_value]:
                 continue
 
             # get and decipher the instrument type
-            descr = row[xDescr]
+            descr = row[x_descr]
             if 'MONEY MARKET' in descr:
-                vType = "MMKT"
+                v_type = "MMKT"
             elif "S TREAS" in descr:
-                vType = "TREAS"
+                v_type = "TREAS"
             elif " CD " in descr:
-                vType = "CD"
+                v_type = "CD"
             else:
-                vType = None
+                v_type = None
 
             # see if description includes an interest rate
             if '%' in descr:
@@ -102,27 +102,26 @@ def simplify(file):
                 pos = pct
                 while pos > 0 and descr[pos - 1] != ' ':
                     pos -= 1
-                vRate = descr[pos:pct]
+                v_rate = descr[pos:pct]
                 # limit the precision to .00%
-                if '.' in vRate:
-                    dot = vRate.index(".")
-                    if len(vRate) > dot + 3:
-                        vRate = vRate[0:dot+3]
+                if '.' in v_rate:
+                    dot = v_rate.index(".")
+                    if len(v_rate) > dot + 3:
+                        v_rate = v_rate[0:dot+3]
                 # eliminate leading zero
-                if vRate[0] == '0' and vRate[1] != '.':
-                    vRate = vRate[1:]
-                vRate += '%'
+                if v_rate[0] == '0' and v_rate[1] != '.':
+                    v_rate = v_rate[1:]
+                v_rate += '%'
 
                 # anything else with a rate, we will call a BOND
-                if vType is None:
-                    vType = "BOND"
+                if v_type is None:
+                    v_type = "BOND"
             else:
                 # probably not a debt instrument
-                if vType is None:
+                if v_type is None:
                     continue
-                else:
-                    vRate = ""
-                    pct = 999
+                v_rate = ""
+                pct = 999
 
             # see if the rate is followed by a date
             start = pct + 1
@@ -132,25 +131,24 @@ def simplify(file):
             while end < len(descr) and descr[end] != ' ':
                 end += 1
             if end > start:
-                vDate = descr[start:end]
-                month = int(vDate[0:2])
-                day = int(vDate[3:5])
-                year = int(vDate[6:10])
+                v_date = descr[start:end]
+                month = int(v_date[0:2])
+                day = int(v_date[3:5])
+                year = int(v_date[6:10])
                 posn = (365 * year) + (31 * month) + day
             else:
-                vDate = ""
+                v_date = ""
                 posn = 0
 
             # extract (and pad) the desired fields
-            summary = row[xAcct].ljust(lAcct, " ")
-            summary += vType.ljust(lType, " ")
-            summary += row[xValue].rjust(lValue, " ")
-            summary += row[xQuant].rjust(lQuant, " ")
-            summary += vRate.rjust(lRate, " ")
-            summary += vDate.rjust(lDate, " ")
+            summary = row[x_acct].ljust(L_ACCT, " ")
+            summary += v_type.ljust(L_TYPE, " ")
+            summary += row[x_value].rjust(L_VALUE, " ")
+            summary += row[x_quant].rjust(L_QUANT, " ")
+            summary += v_rate.rjust(L_RATE, " ")
+            summary += v_date.rjust(L_DATE, " ")
 
             # do a sorted insertion into our list
-            global entries
             entry = Entry(summary, posn)
             if entries is None:
                 entries = entry
@@ -164,11 +162,14 @@ def simplify(file):
                 entry.next = prev.next
                 prev.next = entry
 
+        return entries
+
 
 def main():
-
+    """
+    parse the arguments, process the input files, and print out the report
+    """
     # parse the arguments
-    import argparse
     parser = argparse.ArgumentParser(description='Fidelity Downloads')
     parser.add_argument("filename", nargs='+', help="csv of positions")
     parser.add_argument("--headers", "-v", default=False, action="store_true")
@@ -178,12 +179,13 @@ def main():
         sys.stderr.write(
             "Usage: Positions.py [--headers] filename.csv\n")
         sys.exit(-1)
-    global headers
-    headers = args.headers
+
+    # initialize list of accumulated instruments
+    entries = None
 
     # process all of the named files
     for name in args.filename:
-        simplify(name)
+        entries = simplify(name, entries=entries, headers=args.headers)
 
     # print out the accumulated list of entries
     prev = entries

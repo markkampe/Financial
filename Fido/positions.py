@@ -1,82 +1,85 @@
 #!/usr/bin/python3
+"""
+Simplify a Fidelity positions download
+"""
 import sys
 import csv
+import argparse
+
 
 # lengths of the desired output fields
-lAcct = 24
-lSym = 12
-lValue = 12     # enough for $9999999.99
-
-basis = False       # print basis as well as values
-headers = False     # print a line of column headers
+L_ACCT = 24
+L_SYM = 12
+L_VALUE = 12     # enough for $9999999.99
 
 
-def findCol(row, title):
+def find_col(row, title):
     """ find the row containing a desired heading """
-    for x in range(len(row)):
-        if row[x] == title:
-            return x
+    for i, string in enumerate(row):
+        if string == title:
+            return i
 
     sys.stderr.write("Unable to find column for " + title + "\n")
     sys.exit(-1)
 
 
-def simplify(file):
+def simplify(file, basis=False, headers=False):
     """
     read named (csv) file from a FIDO positions download,
     and print out a simpler version with:
         merely the account, symbol, value (and optional basis)
     """
     # process each line in the CSV file
-    with open(file) as csv_file:
+    with open(file, encoding='utf-8') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
 
         # print out the desired fields from each line
-        lineNum = 0
+        line_num = 0
         for row in csv_reader:
-            lineNum += 1
+            line_num += 1
             # skip the heading line
-            if lineNum == 1:
-                xAcct = findCol(row, "Account Name")
-                xSym = findCol(row, "Symbol")
-                xValue = findCol(row, "Current Value")
+            if line_num == 1:
+                x_acct = find_col(row, "Account Name")
+                x_sym = find_col(row, "Symbol")
+                x_value = find_col(row, "Current Value")
                 if basis:
-                    xBasis = findCol(row, "Cost Basis Total")
+                    x_basis = find_col(row, "Cost Basis Total")
 
                 if headers:
-                    line = "Account".ljust(lAcct, " ")
-                    line += "Symbol".ljust(lSym, " ")
-                    line += "Value".rjust(lValue, " ")
+                    line = "Account".ljust(L_ACCT, " ")
+                    line += "Symbol".ljust(L_SYM, " ")
+                    line += "Value".rjust(L_VALUE, " ")
                     if basis:
-                        line += "Basis".rjust(lValue, " ")
+                        line += "Basis".rjust(L_VALUE, " ")
                     print(line)
-                    line = "-------".ljust(lAcct, " ")
-                    line += "-------".ljust(lSym, " ")
-                    line += "----------".rjust(lValue, " ")
+                    line = "-------".ljust(L_ACCT, " ")
+                    line += "-------".ljust(L_SYM, " ")
+                    line += "----------".rjust(L_VALUE, " ")
                     if basis:
-                        line += "----------".rjust(lValue, " ")
+                        line += "----------".rjust(L_VALUE, " ")
                     print(line)
                 continue
 
             # skip lines that don't seem to contain a value
-            if len(row) < xValue+1:
+            if len(row) < x_value+1:
                 continue
-            if not row[xValue]:
+            if not row[x_value]:
                 continue
 
             # extract (and pad) the desired fields
-            summary = row[xAcct].ljust(lAcct, " ")
-            summary += row[xSym].ljust(lSym, " ")
-            summary += row[xValue].rjust(lValue, " ")
+            summary = row[x_acct].ljust(L_ACCT, " ")
+            summary += row[x_sym].ljust(L_SYM, " ")
+            summary += row[x_value].rjust(L_VALUE, " ")
             if basis:
-                summary += row[xBasis].rjust(lValue, " ")
+                summary += row[x_basis].rjust(L_VALUE, " ")
             print(summary)
 
 
 def main():
-
+    """
+    read the input and print out its simplified form
+    """
     # parse the arguments
-    import argparse
     parser = argparse.ArgumentParser(description='Fidelity Downloads')
     parser.add_argument("filename", nargs='+', help="csv of positions")
     parser.add_argument("--basis",  default=False, action="store_true")
@@ -86,14 +89,10 @@ def main():
     if not args.filename:
         sys.stderr.write("Usage: Positions.py [--basis] filename.csv\n")
         sys.exit(-1)
-    global basis
-    basis = args.basis
-    global headers
-    headers = args.headers
 
     # process all of the named files
     for name in args.filename:
-        simplify(name)
+        simplify(name, basis=args.basis, headers=args.headers)
     sys.exit(0)
 
 
