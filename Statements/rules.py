@@ -89,7 +89,7 @@ class Rules:
                 should this be confirmed if possible
         """
         # look for a rule that matches the (date and) description/amount
-        s_amt = f"{amt:%.2f}"
+        s_amt = f"{amt:.2f}"
         for r in self.rules:
             if r.date is not None and date != r.date:
                 continue
