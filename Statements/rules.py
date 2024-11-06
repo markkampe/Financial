@@ -1,16 +1,17 @@
 #!/usr/bin/python
-#
-#   This class implements the digesting and execution of rules for
-#   mapping ledger descriptions into accounts and comments
-#
+"""
+    This class implements the digesting and execution of rules for
+    mapping ledger descriptions into accounts and comments
+"""
 
 
 import csv      # this is much smarter than split(',')
 import fnmatch  # use shell wild cards rather than true REs
 from sys import stderr
-from Entry import Entry
+from entry import Entry
 
 
+# pylint: disable=R0903         # purely data class
 class Rule:
     """
         a rule is:
@@ -33,6 +34,7 @@ class Rule:
 
 class Rules:
     """
+    Read a Rule set in from a CSV rules file
     """
     def __init__(self, filename, accounts=None):
         """
@@ -46,14 +48,14 @@ class Rules:
 
         files = filename.split(',')
         for file in files:
-            rulefile = open(file, "rt")
+            rulefile = open(file, "rt", encoding='ascii')
             reader = csv.reader(rulefile, skipinitialspace=True)
             for line in reader:
                 # ignore blank and comment lines
                 if len(line) < 4 or line[0].startswith('#'):
                     continue
 
-                if (len(line) == 4):
+                if len(line) == 4:
                     date = None
                     pat = line[0]
                     acct = line[1]
@@ -68,9 +70,8 @@ class Rules:
 
                 # sanity check all accounts if we have a list
                 if accounts and acct not in accounts:
-                    stderr.write("WARNING: unknown account (%s) in rule: %s\n"
-                                 % (acct, pat))
-                    stderr.write("         file: %s, line%s\n" % (file, line))
+                    stderr.write(f"WARNING: unknown account ({acct}) in rule: {pat}\n")
+                    stderr.write(f"         file: {file}, line{line}\n")
 
                 # anything else, we add to the rules list
                 self.rules.append(Rule(date, pat, acct, descr, proc))
@@ -88,7 +89,7 @@ class Rules:
                 should this be confirmed if possible
         """
         # look for a rule that matches the (date and) description/amount
-        s_amt = "%.2f" % (amt)
+        s_amt = f"{amt:%.2f}"
         for r in self.rules:
             if r.date is not None and date != r.date:
                 continue
@@ -98,13 +99,13 @@ class Rules:
                 p = r.process
                 if p == "AGGREGATE":
                     return (Entry("", 0, r.acct, r.descr), False)
-                elif p == "REPLACE":
+                if p == "REPLACE":
                     return (Entry("", 0, r.acct, r.descr), False)
-                elif p == "COMBINE":
+                if p == "COMBINE":
                     newdesc = r.descr + ': ' + desc
                     return (Entry("", 0, r.acct, newdesc), True)
-                else:   # preserve
-                    return (Entry("", 0, r.acct, desc), False)
+                # preserve
+                return (Entry("", 0, r.acct, desc), False)
 
         return (None, False)
 

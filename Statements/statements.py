@@ -1,37 +1,37 @@
 #!/usr/bin/python
-#
-#   program to process one or more bank statements (in csv format)
-#   categorizing entries, optionally aggregating them, and producing
-#   standard format columns.
-#
-#   usage: python Statements.py [options] csv-input-file ...
-#
-#   options:
-#       --rules=file
-#
-#   input files are in csv format, optional 1st line headers
-#
-#   Notes:
-#       There are two different types of pattern matching done here:
-#        1) figuring out what the columns mean
-#               preferably based on header lines, but otherwise
-#               based on a few hard-coded heuristics
-#        2) associating descriptions with accounts
-#               which is done by the Rules.Rule class
-#               based on rules read in from a configuration file
-#
-#       In principle we could use a different configuration file
-#       per input source ... but (assuming there are no conflicts)
-#       it is easier to have a single set of rules that could be
-#       applied to reports from multiple institutions.   The primary
-#       down-side is that more rules result in slower execution.
-#
+"""
+    program to process one or more bank statements (in csv format)
+    categorizing entries, optionally aggregating them, and producing
+    standard format columns.
+
+    usage: python Statements.py [options] csv-input-file ...
+
+    options:
+        --rules=file
+
+    input files are in csv format, optional 1st line headers
+
+    Notes:
+        There are two different types of pattern matching done here:
+         1) figuring out what the columns mean
+                preferably based on header lines, but otherwise
+                based on a few hard-coded heuristics
+         2) associating descriptions with accounts
+                which is done by the Rules.Rule class
+                based on rules read in from a configuration file
+
+        In principle we could use a different configuration file
+        per input source ... but (assuming there are no conflicts)
+        it is easier to have a single set of rules that could be
+        applied to reports from multiple institutions.   The primary
+        down-side is that more rules result in slower execution.
+"""
 import sys
 from decimal import Decimal
 import csv
-from Entry import Entry
-from Rules import Rules
-from Gui import Gui
+from entry import Entry
+from rules import Rules
+from gui import Gui
 
 
 def findCol(string, array):
@@ -319,11 +319,10 @@ class Statement:
 
         # check for commas in the description (scare some parsers)
         if ',' in entry.description:
-            sys.stderr.write("WARNING: comma in description (%s: %s)\n" %
-                             (entry.date, entry.description))
+            sys.stderr.write(f"WARNING: comma in description ({entry.date}: {entry.description}\n")
 
         # see if we need to accumulate output for sorting
-        if (self.sort):
+        if self.sort:
             self.buffered.append(entry)
         else:
             self.output.write(entry.str() + "\n")
@@ -366,7 +365,7 @@ class Statement:
         self.file_line = 0
 
         # use the first line to figure out the data format
-        input = open(filename, 'rt')
+        input = open(filename, 'rt', encoding='ascii')
         line = input.readline()
         cols = line.split(',')
         if not self.analyze_headers(cols):
@@ -375,8 +374,7 @@ class Statement:
                 sys.stderr.write(filename)
                 sys.stderr.write("\n")
                 return
-            else:
-                input.seek(0)       # rewind so we can process it
+            input.seek(0)       # rewind so we can process it
 
         # then process the data lines in the file
         reader = csv.reader(input, skipinitialspace=True)
@@ -454,7 +452,7 @@ def readAccounts(file):
     @return: [(string)] ... list of account names
     """
     accounts = []
-    afile = open(file, 'rt')
+    afile = open(file, 'rt', encoding='ascii')
     for line in afile:
         accounts.append(line.strip())
     afile.close()
@@ -504,7 +502,7 @@ if __name__ == '__main__':
 
     # set the output file
     if opts.out_file is not None:
-        s.output = open(opts.out_file, "w")
+        s.output = open(opts.out_file, "w", encoding='ascii')
 
     # check the boolean options
     if opts.sort:

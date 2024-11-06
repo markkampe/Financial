@@ -1,16 +1,18 @@
+"""
+    This is a single-transaction dialog box for characterizing
+    entries that could not be definitively classified by rule.
+"""
 from tkinter import Tk, OptionMenu, Label, LabelFrame, Text, Button, Frame
 from tkinter import StringVar, Entry
 from tkinter import END, TOP, LEFT
 
-import Entry
+#import entry
 
 
 class Gui(object):
     """
-        This is a single-transaction dialog box for characterizing
-        entries that could not be definitively classified by rule.
+        Dialog box to confirm/correct an auto-characterization
     """
-
     BORDER = 5
     ACCT_WID = 20
     DESC_WID = 40
@@ -116,7 +118,6 @@ class Gui(object):
         """
         self.acct.delete(1.0, END)
         self.acct.insert(1.0, selection)
-        return
 
     def chooseDesc(self, selection):
         """
@@ -127,11 +128,10 @@ class Gui(object):
         if acct is not None and self.rules.validFor(selection, acct):
             self.desc.delete(1.0, END)
             self.desc.insert(1.0, selection)
-        return
 
     def mainloop(self):
         """
             process the dialog and return the constructed entry
         """
         self.root.mainloop()
-        return(self.entry)
+        return self.entry
