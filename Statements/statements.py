@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """
     program to process one or more bank statements (in csv format)
     categorizing entries, optionally aggregating them, and producing
@@ -29,9 +29,7 @@
 import sys
 from decimal import Decimal
 import csv
-# pylint: disable=W0402     # find a new parser
-from optparse import OptionParser
-
+import argparse
 from entry import Entry
 from rules import Rules
 from gui import Gui
@@ -328,7 +326,7 @@ class Statement:
 
         # check for commas in the description (scare some parsers)
         if ',' in entry.description:
-            sys.stderr.write(f"WARNING: comma in description ({entry.date}:"
+            sys.stderr.write(f"WARNING: comma in description ({entry.date}:" +
                              f" {entry.description}\n")
 
         # see if we need to accumulate output for sorting
@@ -478,51 +476,48 @@ if __name__ == '__main__':
     # - totstats
 
     # process the command line arguments
-    parser = OptionParser(usage="usage: %prog [options] input_file ...")
-    parser.add_option("-r", "--rules", type="string", dest="rule_file",
-                      metavar="FILE", default=None,
-                      help="categorizing rules")
-    parser.add_option("-a", "--accounts", type="string", dest="acct_file",
-                      metavar="FILE", default=None,
-                      help="known accounts")
-    parser.add_option("-o", "--outfile", type="string", dest="out_file",
-                      metavar="FILE", default=None,
-                      help="output file")
-    parser.add_option("-s", "--sort", action="store_true",
-                      dest="sort",
-                      help="sort output by date")
-    parser.add_option("-i", "--interactive", action="store_true",
-                      dest="interactive",
-                      help="interactive review/correction")
-    (opts, files) = parser.parse_args()
+    parser = argparse.ArgumentParser(description='activity download processor')
+    parser.add_argument("file", nargs='+',
+                        help="down-loaded actvity csv")
+    parser.add_argument("-r", "--rules", default=None,
+                        help="categorizing rules")
+    parser.add_argument("-a", "--accounts", default=None,
+                        help="file of known account names")
+    parser.add_argument("-o", "--outfile", default=None,
+                        help="output file")
+    parser.add_argument("-s", "--sort", action='store_true',
+                        help="sort output by date")
+    parser.add_argument("-i", "--interactive", action='store_true',
+                        help="interacive review/correction")
+    args = parser.parse_args()
 
     # digest the list of known accounts
-    a = None if opts.acct_file is None else read_accounts(opts.acct_file)
+    a = None if args.accounts is None else read_accounts(args.accounts)
 
     # digest the categorizing rules
-    r = None if opts.rule_file is None else Rules(opts.rule_file, a)
+    r = None if args.rules is None else Rules(args.rules, a)
 
     # instantiate a statement object
     s = Statement(r)
 
     # set the output file
     # pylint: disable=R1732         # doesn't make sense here
-    if opts.out_file is not None:
-        s.output = open(opts.out_file, "w", encoding='ascii')
+    if args.outfile is not None:
+        s.output = open(args.outfile, "w", encoding='ascii')
 
     # check the boolean options
-    if opts.sort:
+    if args.sort:
         s.sort = True
-    if opts.interactive:
+    if args.interactive:
         s.interactive = True
 
     # process the input
-    if len(files) >= 1:
+    if len(args.file) >= 1:
         # write out a standard file header
         s.preamble()
 
         # process each input file
-        for f in files:
+        for f in args.file:
             s.process_file(f)
             s.filestats(f)
 
@@ -532,5 +527,5 @@ if __name__ == '__main__':
     else:
         sys.stderr.write("ERROR: no input file(s) specified\n")
 
-    if opts.out_file is not None:
+    if args.outfile is not None:
         s.output.close()
