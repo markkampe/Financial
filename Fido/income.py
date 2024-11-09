@@ -170,21 +170,17 @@ def main():
     parse the arguments, process the input files, and print out the report
     """
     # parse the arguments
-    parser = argparse.ArgumentParser(description='Fidelity Downloads')
-    parser.add_argument("filename", nargs='+', help="csv of positions")
-    parser.add_argument("--headers", "-v", default=False, action="store_true")
+    parser = argparse.ArgumentParser(description='Fidelity downloads')
+    parser.add_argument("file", nargs='+', help="positions csv file")
+    parser.add_argument("--headers", "-v", default=False, action="store_true",
+                        help="with column headers")
     args = parser.parse_args()
-
-    if not args.filename:
-        sys.stderr.write(
-            "Usage: Positions.py [--headers] filename.csv\n")
-        sys.exit(-1)
 
     # initialize list of accumulated instruments
     entries = None
 
     # process all of the named files
-    for name in args.filename:
+    for name in args.file:
         entries = simplify(name, entries=entries, headers=args.headers)
 
     # print out the accumulated list of entries

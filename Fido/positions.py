@@ -81,17 +81,15 @@ def main():
     """
     # parse the arguments
     parser = argparse.ArgumentParser(description='Fidelity Downloads')
-    parser.add_argument("filename", nargs='+', help="csv of positions")
-    parser.add_argument("--basis",  default=False, action="store_true")
-    parser.add_argument("--headers", "-v", default=False, action="store_true")
+    parser.add_argument("file", nargs='+', help="positions csv file")
+    parser.add_argument("--basis",  default=False, action="store_true",
+                        help="include basis column")
+    parser.add_argument("--headers", "-v", default=False, action="store_true",
+                        help="include column headers")
     args = parser.parse_args()
 
-    if not args.filename:
-        sys.stderr.write("Usage: Positions.py [--basis] filename.csv\n")
-        sys.exit(-1)
-
     # process all of the named files
-    for name in args.filename:
+    for name in args.file:
         simplify(name, basis=args.basis, headers=args.headers)
     sys.exit(0)
 
