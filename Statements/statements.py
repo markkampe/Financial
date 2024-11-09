@@ -373,7 +373,7 @@ class Statement:
         self.file_line = 0
 
         # use the first line to figure out the data format
-        with open(filename, 'rt', encoding='ascii') as infile:
+        with open(filename, 'rt', encoding='utf-8') as infile:
             line = infile.readline()
             cols = line.split(',')
             if not self.analyze_headers(cols):
@@ -478,9 +478,9 @@ if __name__ == '__main__':
     # process the command line arguments
     parser = argparse.ArgumentParser(description='activity download processor')
     parser.add_argument("file", nargs='+',
-                        help="down-loaded actvity csv")
+                        help="account actvity csv file")
     parser.add_argument("-r", "--rules", default=None,
-                        help="categorizing rules")
+                        help="file of categorizing rules")
     parser.add_argument("-a", "--accounts", default=None,
                         help="file of known account names")
     parser.add_argument("-o", "--outfile", default=None,
@@ -511,21 +511,17 @@ if __name__ == '__main__':
     if args.interactive:
         s.interactive = True
 
-    # process the input
-    if len(args.file) >= 1:
-        # write out a standard file header
-        s.preamble()
+    # write out a standard file header
+    s.preamble()
 
-        # process each input file
-        for f in args.file:
-            s.process_file(f)
-            s.filestats(f)
+    # process each input file
+    for f in args.file:
+        s.process_file(f)
+        s.filestats(f)
 
-        # write out the postscript stuff
-        s.postscript()
-        s.totstats()
-    else:
-        sys.stderr.write("ERROR: no input file(s) specified\n")
+    # write out the postscript stuff
+    s.postscript()
+    s.totstats()
 
     if args.outfile is not None:
         s.output.close()
