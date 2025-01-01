@@ -17,7 +17,7 @@ account="Retirement-Income"
 shopt -s lastpipe
 
 # generate a report of all of the debt instruments
-Income.py $input | grep "$account" > /tmp/ret_income
+./income.py $input | grep "$account" > /tmp/ret_income
 
 # extract the money-market positions
 echo "$account: Money Market"
