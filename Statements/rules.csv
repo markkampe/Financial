@@ -472,9 +472,9 @@
 "MSP*RALEIGH NEUROLOGY", Medical, "CK ov neruo", REPLACE
 "CORRECTIVE CHIROPRACTIC", Medical, "CK ov chiro", REPLACE
 
-"WHOEFDS RAL*" Medical, "JM ins offset", REPLACE
-"FOOD LION #1491*", Medical, "JM ins offset", REPLACE
-"HARRIS TEETER 0021", Medical, "JM ins offset", REPLACE
+"WHOEFDS RAL*" JM_ins, "offset: Whole Foods", REPLACE
+"FOOD LION #1491*", JM_ins, "offset: Food Lion", REPLACE
+"HARRIS TEETER 0021", JM_ins, "offset: Harris Teeter", REPLACE
 
 "WALLGREENS #18986", Medical, "JK Px", REPLACE
 "CVS/PHARMACY *", Medical, "JK Px", REPLACE
