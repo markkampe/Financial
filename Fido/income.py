@@ -5,6 +5,7 @@ Process a fidelity income statement, identify the interest-paying positions
 import sys
 import csv
 import argparse
+from datetime import datetime
 
 # lengths of the desired output fields (including inter-field padding))
 L_ACCT = 24
@@ -13,6 +14,7 @@ L_VALUE = 12     # enough for tens of millions
 L_QUANT = 10     # enough for millions
 L_RATE = 9       # enough for 99.99%
 L_DATE = 14      # mm/dd/yyyy
+L_DURATION = 7   # decades
 
 
 def find_col(row, title):
@@ -45,6 +47,8 @@ def simplify(file, entries, headers=False):
     create and return a date-sorted list of
         account, type, value, amount, rate, date
     """
+    now = datetime.now()    # note the current date
+
     # process each line in the CSV file
     with open(file, encoding='utf-8') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
@@ -67,6 +71,7 @@ def simplify(file, entries, headers=False):
                     line += "Quant".rjust(L_QUANT, " ")
                     line += "Rate".rjust(L_RATE, " ")
                     line += "Date      ".rjust(L_DATE, " ")
+                    line += "Dur".rjust(L_DURATION, " ")
                     print(line)
 
                     line = "-------".ljust(L_ACCT, " ")
@@ -75,6 +80,7 @@ def simplify(file, entries, headers=False):
                     line += "------".rjust(L_QUANT, " ")
                     line += "------".rjust(L_RATE, " ")
                     line += "----------".rjust(L_DATE, " ")
+                    line += "-----".rjust(L_DURATION, " ")
                     print(line)
                 continue
 
@@ -136,9 +142,14 @@ def simplify(file, entries, headers=False):
                 day = int(v_date[3:5])
                 year = int(v_date[6:10])
                 posn = (365 * year) + (31 * month) + day
+
+                # accumulate this into short vs med/long term income category
+                then = datetime(year, month, day)
+                distance = (then - now).days
             else:
                 v_date = ""
                 posn = 0
+                distance = 0
 
             # extract (and pad) the desired fields
             summary = row[x_acct].ljust(L_ACCT, " ")
@@ -147,6 +158,8 @@ def simplify(file, entries, headers=False):
             summary += row[x_quant].rjust(L_QUANT, " ")
             summary += v_rate.rjust(L_RATE, " ")
             summary += v_date.rjust(L_DATE, " ")
+            if distance > 0:
+                summary += str(distance).rjust(L_DURATION, " ")
 
             # do a sorted insertion into our list
             entry = Entry(summary, posn)
