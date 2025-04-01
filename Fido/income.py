@@ -14,7 +14,7 @@ L_VALUE = 12     # enough for tens of millions
 L_QUANT = 10     # enough for millions
 L_RATE = 9       # enough for 99.99%
 L_DATE = 14      # mm/dd/yyyy
-L_DURATION = 7   # decades
+L_DURATION = 10  # decades
 
 
 def find_col(row, title):
@@ -40,7 +40,7 @@ class Entry():
 
 
 # pylint: disable=too-many-locals, too-many-statements, too-many-branches
-def simplify(file, entries, headers=False):
+def simplify(file, entries, headers=False, short_term=0):
     """
     read named (csv) file from a FIDO positions download,
     find the (interest paying) debt instruments
@@ -71,7 +71,8 @@ def simplify(file, entries, headers=False):
                     line += "Quant".rjust(L_QUANT, " ")
                     line += "Rate".rjust(L_RATE, " ")
                     line += "Date      ".rjust(L_DATE, " ")
-                    line += "Dur".rjust(L_DURATION, " ")
+                    if short_term > 0:
+                        line += "Duration".rjust(L_DURATION, " ")
                     print(line)
 
                     line = "-------".ljust(L_ACCT, " ")
@@ -80,7 +81,8 @@ def simplify(file, entries, headers=False):
                     line += "------".rjust(L_QUANT, " ")
                     line += "------".rjust(L_RATE, " ")
                     line += "----------".rjust(L_DATE, " ")
-                    line += "-----".rjust(L_DURATION, " ")
+                    if short_term > 0:
+                        line += "---------".rjust(L_DURATION, " ")
                     print(line)
                 continue
 
@@ -158,8 +160,11 @@ def simplify(file, entries, headers=False):
             summary += row[x_quant].rjust(L_QUANT, " ")
             summary += v_rate.rjust(L_RATE, " ")
             summary += v_date.rjust(L_DATE, " ")
-            if distance > 0:
-                summary += str(distance).rjust(L_DURATION, " ")
+            if short_term > 0 and distance > 0:
+                closeness = "near-term" \
+                            if distance <= short_term \
+                            else "long-term"
+                summary += closeness.rjust(L_DURATION, " ")
 
             # do a sorted insertion into our list
             entry = Entry(summary, posn)
@@ -187,6 +192,8 @@ def main():
     parser.add_argument("file", nargs='+', help="positions csv file")
     parser.add_argument("--headers", "-v", default=False, action="store_true",
                         help="with column headers")
+    parser.add_argument("--near", "-n", type=int, dest='near', default=0,
+                        help="near term bond duration")
     args = parser.parse_args()
 
     # initialize list of accumulated instruments
@@ -194,7 +201,8 @@ def main():
 
     # process all of the named files
     for name in args.file:
-        entries = simplify(name, entries=entries, headers=args.headers)
+        entries = simplify(name, entries=entries,
+                           headers=args.headers, short_term=args.near)
 
     # print out the accumulated list of entries
     prev = entries
