@@ -102,6 +102,7 @@
 "gas", Transportation, "gas", AGGREGATE
 "76 *", Transportation, "gas", AGGREGATE
 "ARCO *", Transportation, "gas", AGGREGATE
+"*USA GAS", Transportation, "gas", AGGREGATE
 "CLASSIC PETROLEUM", Transportation, "gas", AGGREGATE
 "CHEVRON *",   Transportation, "gas", AGGREGATE
 "COSTCO GAS*",   Transportation, "gas", AGGREGATE
