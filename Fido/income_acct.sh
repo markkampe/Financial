@@ -26,8 +26,11 @@ grep "MMKT" /tmp/ret_income | cut -d' ' --complement -f1 | colsum -v
 
 # extract the CD positions
 echo
-echo "$account: CDs"
-grep "CD" /tmp/ret_income | cut -d' ' --complement -f1 | colsum -v
+echo "$account: CDs (short term)"
+grep "CD" /tmp/ret_income | cut -d' ' --complement -f1 | grep near-term | colsum -v
+echo
+echo "$account: CDs (long term)"
+grep "CD" /tmp/ret_income | cut -d' ' --complement -f1 | grep long-term | colsum -v
 
 # extract the treasury positions
 echo
