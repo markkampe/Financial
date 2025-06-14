@@ -1,5 +1,8 @@
 #!/bin/bash
-#   display the investment (vs income) account positions
+#   starting with (all accounts) Fidelity portfolio download
+#   strip out the entries from the Retierment-Income account
+#   run the equity positions simplifier to list:
+#	account, instrument, value, basis
 #
 
 # figure out what our input file is
