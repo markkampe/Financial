@@ -1,6 +1,12 @@
 #!/bin/bash
-#   Break the contents of the Retirement Income account into its 
-#   sub-components: cash, treasuries, CDs and Bonds
+#   starting with (all accounts) Fidelity portfolio download
+#   run the interest-paying instrument analyzer
+#   pull out and separately sub-total the:
+#	cash (MMKT) positions
+#	short-term CDs
+#	med/long-term CDs
+#	Treasury notes
+#	bonds
 #
 SHORT_TERM=560		# 18 months
 
@@ -43,8 +49,9 @@ echo "$account: Other Bonds"
 grep "BOND" /tmp/ret_income | cut -d' ' --complement -f1 | colsum -v
 
 echo
-echo -n "cash,short term:     "
+echo -n "cash, near term:     "
 grep -e "near-term" -e "MMKT" /tmp/ret_income | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | colsum
+
 echo -n "med/long term:       "
 grep -e "long-term" /tmp/ret_income | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | colsum
 exit
