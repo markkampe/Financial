@@ -1,6 +1,6 @@
 #!/bin/bash
 #   starting with (all accounts) Fidelity portfolio download
-#   run the interest-paying instrument analyzer
+#   run the interest-paying instrument analyzer on the income account
 #   pull out and separately sub-total the:
 #	cash (MMKT) positions
 #	short-term CDs
@@ -8,50 +8,76 @@
 #	Treasury notes
 #	bonds
 #
-SHORT_TERM=560		# 18 months
+
+SHORT_TERM=560			# 18 months (cut-off for short-term income)
+TEMPFILE="/tmp/ret_income"	# temp file of income-processed info
+DEFAULT="/home/markk/Downloads/positions.csv"
+
+# strings to match in our input
+ACCOUNT="Retirement-Income"		# name of income account
+SHORT="near-term"			# due before SHORT_TERM
+LONG="long-term"			# due after SHORT_TERM
 
 # figure out what our input file is
 if [ -n "$1" ]
 then
     input="$1"
 else
-    input="/home/markk/Downloads/positions.csv"
+    input="$DEFAULT"
 fi
-
-account="Retirement-Income"
-
-# so that the total variables survive after the loops are done
-shopt -s lastpipe
+echo "Processing positions download: $input"
 
 # generate a report of all of the debt instruments
-./income.py --near=$SHORT_TERM $input | grep "$account" > /tmp/ret_income
+./income.py --near=$SHORT_TERM $input | grep "$ACCOUNT" > $TEMPFILE
+
+# Note: since all of these numbers are coming from a single account, we
+#	run a "cut --complement -f1" to simplify the output by removing
+#	the (obvious) account name from each line.
+#	
 
 # extract the money-market positions
-echo "$account: Money Market"
-grep "MMKT" /tmp/ret_income | cut -d' ' --complement -f1 | colsum -v 
+echo
+echo "$ACCOUNT: Money Market"
+grep "MMKT" $TEMPFILE | cut -d' ' --complement -f1 | colsum -v 
 
 # extract the CD positions
 echo
-echo "$account: CDs (short term)"
-grep "CD" /tmp/ret_income | cut -d' ' --complement -f1 | grep near-term | colsum -v
+echo "$ACCOUNT: CDs (short term)"
+grep "CD" $TEMPFILE | cut -d' ' --complement -f1 | grep $SHORT | colsum -v
 echo
-echo "$account: CDs (long term)"
-grep "CD" /tmp/ret_income | cut -d' ' --complement -f1 | grep long-term | colsum -v
+# grand total for short-term
+echo -n "cash, near-term:     "
+grep -e "$SHORT" -e "MMKT" $TEMPFILE | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | colsum
+
+echo
+echo "$ACCOUNT: CDs (long term)"
+grep "CD" $TEMPFILE | cut -d' ' --complement -f1 | grep $LONG | colsum -v
 
 # extract the treasury positions
 echo
-echo "$account: Treasuries"
-grep "TREAS" /tmp/ret_income | cut -d' ' --complement -f1 | colsum -v
+echo "$ACCOUNT: Treasuries"
+grep "TREAS" $TEMPFILE | cut -d' ' --complement -f1 | colsum -v
 
 # extract the bond positions
 echo
-echo "$account: Other Bonds"
-grep "BOND" /tmp/ret_income | cut -d' ' --complement -f1 | colsum -v
+echo "$ACCOUNT: Other Bonds"
+grep "BOND" $TEMPFILE | cut -d' ' --complement -f1 | colsum -v
 
+# grand total for med/long-term
 echo
-echo -n "cash, near term:     "
-grep -e "near-term" -e "MMKT" /tmp/ret_income | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | colsum
+echo -n "med/long-term:       "
+grep -e "$LONG" $TEMPFILE | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | colsum
 
-echo -n "med/long term:       "
-grep -e "long-term" /tmp/ret_income | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | colsum
+# second summary for comparison with the Cash Flow Ladder sheet
+echo
+echo "Bond Ladder Summary:"
+grep -v "MMKT" $TEMPFILE | sed 's/\s\s*/ /g' | cut -d ' ' -f4,6 | sed \
+	-e 's/0[123]\/[0-9][0-9]\/20/1Q/' \
+	-e 's/0[456]\/[0-9][0-9]\/20/2Q/' \
+	-e 's/0[789]\/[0-9][0-9]\/20/3Q/' \
+	-e 's/1[012]\/[0-9][0-9]\/20/4Q/' | \
+    awk '{printf "\t%s %s", $2, $1; if ((NR % 5)==0) { print "" }}'
+echo 
+
+rm $TEMPFILE
 exit
