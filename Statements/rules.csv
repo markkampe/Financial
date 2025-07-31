@@ -49,9 +49,10 @@
 "County of Rivers*", Basic, "RIV Prop Taxes", REPLACE
 "Online Payment * To State Farm*", Basic, "home insurance", REPLACE
 "California Fair *", Basic, "Tall Pines fire insurance", REPLACE
+"California FAIR *", Basic, "Tall Pines fire insurance", REPLACE
 "MCGRAW-800-303-5000", Basic, "Tall Pines liability insurance", REPLACE
 "*STATE FARM INSURANCE*", Basic, "LA fire insurance", REPLACE
-"STATE FARM RO *", Basic, "LA fire insurance", REPLACE
+"*STATE FARM RO *", Basic, "LA fire insurance", REPLACE
 
 # auto-pay utility bills
 "*YOUR PROPANE COM *", Utilities, "propane", REPLACE
@@ -59,6 +60,7 @@
 "AMERIGAS *", Utilities, "propane", REPLACE
 "ATT*",             Utilities, "phone", REPLACE
 "LADWP*",         Utilities, "DWP", REPLACE
+"SoCalGas*", Utilities, "socal gas", REPLACE
 "SO CAL GAS *",     Utilities, "socal gas", REPLACE
 "*SO CAL EDISON *", Utilities, "Tall Pines power", REPLACE
 "*SO CAL GAS*",     Utilities, "socal gas", REPLACE
@@ -172,7 +174,7 @@
 "dinner", Food-and-Fun, "dinner", AGGREGATE
 "ACAPULCO *", Food-and-Fun, "dinner", AGGREGATE
 "ALBERTO* MEXICAN FOOD", Food-and-Fun, "lunch", AGGREGATE
-"AMELIAS DONUTS *", Food-and-Fun, "snacks", AGGREGATE
+"*DONUTS*", Food-and-Fun, "MK snacks", REPLACE
 "APPLEBEES *", Food-and-Fun, "dinner", AGGREGATE
 "ARBYS *", Food-and-Fun, "lunch", AGGREGATE
 "BARCELONA", Food-and-Fun, "dinner", AGGREGATE
@@ -210,6 +212,7 @@
 "IDYOLOGY", Food-and-Fun, "dinner", AGGREGATE
 "ISLAMORADA FISH CO", Food-and-Fun, "dinner", AGGREGATE
 "ISLANDS REST*", Food-and-Fun, "dinner", AGGREGATE
+"ISLANDS *", Food-and-Fun, "dinner", AGGREGATE
 "JERSEY MIKES *", Food-and-Fun, "lunch", AGGREGATE
 "JITLADA THAI *", Food-and-Fun, "dinner", AGGREGATE
 "JOECRBSHK-*", Food-and-Fun, "dinner", AGGREGATE
@@ -399,7 +402,9 @@
 "ALBERTSONS *", Groceries, "Albertson", AGGREGATE
 "ALDI *", Groceries, "Aldi", AGGREGATE
 "BIG SAVER FOODS *", Groceries, "Big Saver", AGGREGATE
+"BRISTOL FARMS *", Groceries, "Bristol Farms", AGGREGATE
 "*CHEDRAUI*", Groceries, "", AGGREGATE
+"*CHEWY INC", Groceries, "dog food", REPLACE
 "COSTCO WHSE*", Groceries, "CostCo", AGGREGATE
 "COSTCO WHOLESALE*", Groceries, "CostCo", AGGREGATE
 "FAIRWAY FOODS*", Groceries, "Fairway", AGGREGATE
@@ -521,6 +526,7 @@
 "SUPERCUTS*", Clothing, "MK h/c", REPLACE
 "GOODWILL STORE *", Clothing, "LK clothing", AGGREGATE
 "SOCIETY OF ST VINCENT", Clothing, "LK clothing", AGGREGATE
+"*IDYLLWILD HELP CENTER", Clothing, "help center", REPLACE
 
 # memberships
 "THE HUNTINGTON *", Misc, "Huntington mship", REPLACE
