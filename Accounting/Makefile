@@ -24,9 +24,10 @@ $(JAR): rebuild $(CLASSES)
 # So I just wrote this simple rule to recompile everything
 rebuild: $(SOURCES)
 	javac -d $(OUTDIR) $(SRCDIR)/accounting/*.java
+	cp $(SRCDIR)/accounting/images/*.png $(OUTDIR)/accounting/images
 
 clean:
-	rm -f $(CLASSES)
+	rm -f $(CLASSES) $(OUTDIR)/accounting/images/*.png
 
 clobber:
 	rm -f $(JAR) $(CLASSES)
