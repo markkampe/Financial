@@ -23,6 +23,7 @@ $(JAR): rebuild $(CLASSES)
 #
 # So I just wrote this simple rule to recompile everything
 rebuild: $(SOURCES)
+	mkdir -p $(OUTDIR)/accounting/images
 	javac -d $(OUTDIR) $(SRCDIR)/accounting/*.java
 	cp $(SRCDIR)/accounting/images/*.png $(OUTDIR)/accounting/images
 
