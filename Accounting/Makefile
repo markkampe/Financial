@@ -1,5 +1,32 @@
-JAR=Accounting.jar
+#
+# build a jar for the accounting app
+#
+SRCDIR=src
+OUTDIR=bin
 
-$(JAR): 
-	javac -d bin src/accounting/*.java
-	cd bin; jar -cvfm ../Accounting.jar ../Accounting.mf accounting/*.class accounting/images
+JAR=Accounting.jar
+MANIFEST=Accounting.mf
+
+SOURCES = $(wildcard $(SRCDIR)/accounting/*.java)
+CLASSES = $(patsubst $(SRCDIR)/accounting/%.java,$(OUTDIR)/accounting/%.class,$(SOURCES))
+
+.PHONY: rebuild clean clobber
+
+$(JAR): rebuild $(CLASSES)
+	cd bin; jar -cvfm ../$(JAR) ../$(MANIFEST) accounting/*.class accounting/images
+
+#
+# I tried building a per-file rule to do this, but the individual compiles
+#   failed for want of other classes in the same package:
+#	$(OUTDIR)/accounting/%.class: $SRCDIR)/accounting/%.java
+#		javac -d $(OUTDIR) $<
+#
+# So I just wrote this simple rule to recompile everything
+rebuild: $(SOURCES)
+	javac -d $(OUTDIR) $(SRCDIR)/accounting/*.java
+
+clean:
+	rm -f $(CLASSES)
+
+clobber:
+	rm -f $(JAR) $(CLASSES)
