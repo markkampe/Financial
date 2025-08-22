@@ -90,6 +90,11 @@ public class JournalWindow implements WindowListener, ActionListener {
 		cleanup();
 	}
 	
+	/*
+	 * TODO: update code for shouldYieldFocus(source, target)
+	 *		 but I haven't a clue where focus should go if the
+	 *		 Date/Dollar field is correct.
+	 */
 	/**
 	 * input verifier for date fields
 	 *	run it through the date parser, catching/handling any exceptions
