@@ -94,7 +94,11 @@ public class MainScreen extends JFrame
 		books = null;
 		refDate = when;
 		
-		// get our window icon
+		// get our window icon ... no longer works!!!
+		//		getResource is returning the expected URL
+		//		getImage is not reporting failure
+		//		setIconImage is not reporting failure
+		//		but the window icons are not changing!!!
 		Image myIcon = getToolkit().getImage(getClass().getResource(ICON_IMAGE));
 		setIconImage(myIcon);
 		
