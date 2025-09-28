@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
-Simplify a Fidelity positions download
+Simplify a Fidelity positions download to the bare basics
+    output: account, symbol value
 """
 import sys
 import csv

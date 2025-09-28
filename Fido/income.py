@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 """
-Process a fidelity income statement, identify the interest-paying positions
+Process a fidelity income-account statement
+    identify the interest-paying positions
+    classify them as near-term and long-term
+    output information, grouped by type, sorted by maturity
 """
 import sys
 import csv
@@ -212,7 +215,7 @@ def main():
     parser.add_argument("--headers", "-v", default=False, action="store_true",
                         help="with column headers")
     parser.add_argument("--near", "-n", type=int, dest='near', default=0,
-                        help="near term bond duration")
+                        help="near term bond duration (days)")
     parser.add_argument("--syms", "-s", type=str, dest='syms',
                         default=None, help="short/long")
     args = parser.parse_args()
