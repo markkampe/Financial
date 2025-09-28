@@ -15,6 +15,7 @@ L_QUANT = 10     # enough for millions
 L_RATE = 9       # enough for 99.99%
 L_DATE = 14      # mm/dd/yyyy
 L_DURATION = 10  # decades
+L_SYMBOL = 10    # 8 characters
 
 
 def find_col(row, title):
@@ -63,6 +64,7 @@ def simplify(file, entries, headers=False, short_term=0):
                 x_value = find_col(row, "Current Value")
                 x_descr = find_col(row, "Description")
                 x_quant = find_col(row, "Quantity")
+                x_symbol = find_col(row, "Symbol")
 
                 if headers:
                     line = "Account".ljust(L_ACCT, " ")
@@ -73,6 +75,7 @@ def simplify(file, entries, headers=False, short_term=0):
                     line += "Date      ".rjust(L_DATE, " ")
                     if short_term > 0:
                         line += "Duration".rjust(L_DURATION, " ")
+                    line += "Symbol".rjust(L_SYMBOL, " ")
                     print(line)
 
                     line = "-------".ljust(L_ACCT, " ")
@@ -83,6 +86,7 @@ def simplify(file, entries, headers=False, short_term=0):
                     line += "----------".rjust(L_DATE, " ")
                     if short_term > 0:
                         line += "---------".rjust(L_DURATION, " ")
+                    line += "------".rjust(L_SYMBOL, " ")
                     print(line)
                 continue
 
@@ -160,11 +164,23 @@ def simplify(file, entries, headers=False, short_term=0):
             summary += row[x_quant].rjust(L_QUANT, " ")
             summary += v_rate.rjust(L_RATE, " ")
             summary += v_date.rjust(L_DATE, " ")
+
+            # figure out if it is short- or long-term
             if short_term > 0 and distance > 0:
                 closeness = "near-term" \
                             if distance <= short_term \
                             else "long-term"
                 summary += closeness.rjust(L_DURATION, " ")
+
+            # include a (for reference) shortened symbol for bonds
+            #   a non-obvious form, but the one I use in Cash Flow sheet
+            if v_type != "MMKT":
+                v_sym = row[x_symbol]
+                if v_type == "TREAS":
+                    v_sym = "US-" + v_sym[6:9]
+                else:
+                    v_sym =  ".." + v_sym[5:9]
+                summary += v_sym.rjust(L_SYMBOL, " ")
 
             # do a sorted insertion into our list
             entry = Entry(summary, posn)

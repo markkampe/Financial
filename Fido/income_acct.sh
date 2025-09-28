@@ -68,16 +68,5 @@ echo
 echo -n "med/long-term:       "
 grep -e "$LONG" $TEMPFILE | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | colsum
 
-# second summary for comparison with the Cash Flow Ladder sheet
-echo
-echo "Bond Ladder Summary:"
-grep -v "MMKT" $TEMPFILE | sed 's/\s\s*/ /g' | cut -d ' ' -f4,6 | sed \
-	-e 's/0[123]\/[0-9][0-9]\/20/1Q/' \
-	-e 's/0[456]\/[0-9][0-9]\/20/2Q/' \
-	-e 's/0[789]\/[0-9][0-9]\/20/3Q/' \
-	-e 's/1[012]\/[0-9][0-9]\/20/4Q/' | \
-    awk '{printf "\t%s %s", $2, $1; if ((NR % 5)==0) { print "" }}'
-echo 
-
 rm $TEMPFILE
 exit
