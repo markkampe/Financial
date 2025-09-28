@@ -15,7 +15,7 @@ L_QUANT = 10     # enough for millions
 L_RATE = 9       # enough for 99.99%
 L_DATE = 14      # mm/dd/yyyy
 L_DURATION = 10  # decades
-L_SYMBOL = 10    # 8 characters
+L_SYMBOL = 12    # 8 characters
 
 
 def find_col(row, title):
@@ -41,7 +41,7 @@ class Entry():
 
 
 # pylint: disable=too-many-locals, too-many-statements, too-many-branches
-def simplify(file, entries, headers=False, short_term=0):
+def simplify(file, entries, headers=False, short_term=0, syms="none"):
     """
     read named (csv) file from a FIDO positions download,
     find the (interest paying) debt instruments
@@ -75,7 +75,8 @@ def simplify(file, entries, headers=False, short_term=0):
                     line += "Date      ".rjust(L_DATE, " ")
                     if short_term > 0:
                         line += "Duration".rjust(L_DURATION, " ")
-                    line += "Symbol".rjust(L_SYMBOL, " ")
+                    if syms is not None:
+                        line += "Symbol".rjust(L_SYMBOL, " ")
                     print(line)
 
                     line = "-------".ljust(L_ACCT, " ")
@@ -86,7 +87,8 @@ def simplify(file, entries, headers=False, short_term=0):
                     line += "----------".rjust(L_DATE, " ")
                     if short_term > 0:
                         line += "---------".rjust(L_DURATION, " ")
-                    line += "------".rjust(L_SYMBOL, " ")
+                    if syms is not None:
+                        line += "------".rjust(L_SYMBOL, " ")
                     print(line)
                 continue
 
@@ -174,12 +176,13 @@ def simplify(file, entries, headers=False, short_term=0):
 
             # include a (for reference) shortened symbol for bonds
             #   a non-obvious form, but the one I use in Cash Flow sheet
-            if v_type != "MMKT":
+            if syms is not None and v_type != "MMKT":
                 v_sym = row[x_symbol]
-                if v_type == "TREAS":
-                    v_sym = "US-" + v_sym[6:9]
-                else:
-                    v_sym =  ".." + v_sym[5:9]
+                if syms == "short":
+                    if v_type == "TREAS":
+                        v_sym = "US-" + v_sym[6:9]
+                    else:
+                        v_sym = ".." + v_sym[5:9]
                 summary += v_sym.rjust(L_SYMBOL, " ")
 
             # do a sorted insertion into our list
@@ -210,6 +213,8 @@ def main():
                         help="with column headers")
     parser.add_argument("--near", "-n", type=int, dest='near', default=0,
                         help="near term bond duration")
+    parser.add_argument("--syms", "-s", type=str, dest='syms',
+                        default=None, help="short/long")
     args = parser.parse_args()
 
     # initialize list of accumulated instruments
@@ -218,7 +223,9 @@ def main():
     # process all of the named files
     for name in args.file:
         entries = simplify(name, entries=entries,
-                           headers=args.headers, short_term=args.near)
+                           headers=args.headers,
+                           short_term=args.near,
+                           syms=args.syms)
 
     # print out the accumulated list of entries
     prev = entries

@@ -25,7 +25,7 @@ echo "Processing positions download: $input"
 echo
 
 # generate a report of all of the debt instruments
-./income.py --near=$SHORT_TERM $input | grep "$ACCOUNT" > $TEMPFILE
+./income.py --near=$SHORT_TERM --syms=short $input | grep "$ACCOUNT" > $TEMPFILE
 
 # for each non-MMKT likes from the Income account
 #	replace the month with a quarter
