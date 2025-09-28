@@ -31,14 +31,14 @@ echo
 #	replace the month with a quarter
 #	print the fields in CashFlow!Ladder order
 #	print the lines in year,quarter order
-echo -e "year\tqtr\trate\tamount\tsymbol"
-echo -e "---\t---\t-----\t------\t------"
+echo -e "year  qtr   rate   amount   symbol"
+echo -e "----  ---  -----  -------   ------"
 grep -v "MMKT" $TEMPFILE | sed 's/\s\s*/ /g' | sed \
 	-e 's/0[123]\/[0-9][0-9]\//1 /' \
 	-e 's/0[456]\/[0-9][0-9]\//2 /' \
 	-e 's/0[789]\/[0-9][0-9]\//3 /' \
 	-e 's/1[012]\/[0-9][0-9]\//4 /' | \
-    awk '{printf "%s\t%s\t%s\t$%s\t%s\n", $7, $6, $5, $4, $9 }' | \
+    awk '{printf "%s   %s   %s  $%6s   %s\n", $7, $6, $5, $4, $9 }' | \
     sort -k 2,1
 
 rm $TEMPFILE

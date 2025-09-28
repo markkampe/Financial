@@ -182,7 +182,7 @@ def simplify(file, entries, headers=False, short_term=0, syms="none"):
                     if v_type == "TREAS":
                         v_sym = "US-" + v_sym[6:9]
                     else:
-                        v_sym = ".." + v_sym[5:9]
+                        v_sym = "..." + v_sym[6:9]
                 summary += v_sym.rjust(L_SYMBOL, " ")
 
             # do a sorted insertion into our list
