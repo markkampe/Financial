@@ -10,7 +10,7 @@ MANIFEST=Accounting.mf
 SOURCES = $(wildcard $(SRCDIR)/accounting/*.java)
 CLASSES = $(patsubst $(SRCDIR)/accounting/%.java,$(OUTDIR)/accounting/%.class,$(SOURCES))
 
-.PHONY: rebuild clean clobber
+.PHONY: rebuild clean clobber lint
 
 $(JAR): rebuild $(CLASSES)
 	cd bin; jar -cvfm ../$(JAR) ../$(MANIFEST) accounting/*.class accounting/images
@@ -32,3 +32,7 @@ clean:
 
 clobber:
 	rm -f $(JAR) $(CLASSES)
+
+lint:	makebudget.py
+	pycodestyle makebudget.py
+	pylint makebudget.py

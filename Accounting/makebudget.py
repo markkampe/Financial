@@ -7,8 +7,6 @@
         name of CSV download
         --year=####     ... defaults to current
         --accounts=file    ...
-        --carry         ... file full of balance carry forwards
-
 """
 import sys
 import csv
@@ -102,11 +100,10 @@ class Account:
     - monthly budget
     - current balance
     """
-    def __init__(self, name, budget):
+    def __init__(self, name, budget, balance):
         self.name = name
         self.monthly = budget
-        self.carry = 0.00
-        self.reason = None
+        self.carry = balance
 
 
 class Accounts:
@@ -138,16 +135,19 @@ class Accounts:
                 if (c1 == '' or c3 == ''):
                     continue
 
+                # some lines have a balance carried forward
+                c4 = cols[3] if len(cols) > 3 else ''
+
                 # ignore lines before the expected column titles
                 if processing:
-                    self.process(c1, c2, c3)
+                    self.process(c1, c2, c3, c4)
                 elif (c1 == headings[0] and
                       c2 == headings[1] and
                       c3 == headings[2]):
                     processing = True
             infile.close()
 
-    def process(self, cat, item, budget):
+    def process(self, cat, item, budget, balance):
         """
         process a Budget csv into a list of ledger accounts
 
@@ -174,41 +174,27 @@ class Accounts:
 
         # turn the dollars and cents into a number
         budget = float(budget.replace('$', '').replace(',', ''))
+        if balance == '':
+            balance = 0.0
+        else:
+            balance = float(balance.replace('$', '').replace(',', ''))
 
         # see if we already have an entry for this account
         # pylint: disable=redefined-outer-name
         for a in self.list:
             if a.name == account:
                 a.monthly += budget
+                a.carry += balance
                 return
 
         # create a new ledger entry for this account
-        self.list.append(Account(account, budget))
-
-    def carry_over(self, filename):
-        """ associate a carry over balance with an account """
-
-        with open(filename, 'rt', encoding='utf-8') as infile:
-            reader = csv.reader(infile, skipinitialspace=True)
-            for cols in reader:
-                if len(cols) < 2:
-                    continue
-                if cols[0][0] == '#':
-                    continue
-                # pylint: disable=redefined-outer-name
-                for a in self.list:
-                    if a.name == cols[0]:
-                        a.carry = float(cols[1])
-                        if len(cols) > 2:
-                            a.reason = cols[2]
-                        break
-            infile.close()
+        self.list.append(Account(account, budget, balance))
 
 
 if __name__ == '__main__':
     # CLI entry point
     #   process command line arguments
-    #   read in the list of accounts
+    #   read in the list accounts binding rules
     #   process the provided input file
     #   produce the requested accounts file
 
@@ -218,8 +204,6 @@ if __name__ == '__main__':
                         help="Budget sheet CSV")
     parser.add_argument("-a", "--accounts", default=None,
                         help="file of category/item->account rules")
-    parser.add_argument('-c', '--carry', default=None,
-                        help="carry-over CSV")
     parser.add_argument("-y", "--year", default=None,
                         help="year for new ledger")
     args = parser.parse_args()
@@ -236,10 +220,6 @@ if __name__ == '__main__':
     for f in args.file:
         accounts = Accounts(f, rules)
 
-    # process any carry-overs
-    if args.carry:
-        accounts.carry_over(args.carry)
-
     # generate starting entries for the accounts in this ledgetr
     for a in accounts.list:
         print(f"ACCOUNT: {a.name:16}", end='    ')
@@ -248,8 +228,6 @@ if __name__ == '__main__':
         print(f"         0/01/{year}\t${a.carry:.2f}", end='    ')
         if a.carry == 0:
             print("initial balance")
-        elif a.reason is not None:
-            print(f"Carry forward {a.reason}")
         else:
             print("Carry forward")
         print()
