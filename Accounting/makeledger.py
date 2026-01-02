@@ -44,31 +44,35 @@ class Rules:
         # if I ever need to change these, the right thing to do is create
         #    a new CSV file containing all of this information.
 
+        # Note: this controls the order in which they are output
+
         # categories that translate directly into accounts
         self.list.append(Rule('Basic', 'Basic', None))
-        self.list.append(Rule('Medical', 'Medical', None))
-        self.list.append(Rule('Utilities', 'Utilities', None))
         self.list.append(Rule('Household', 'Home', None))
+        self.list.append(Rule('Utilities', 'Utilities', None))
         self.list.append(Rule('Transportation', 'Transportation', None))
-        self.list.append(Rule('Large-Expenses', 'Amortization', None))
-        self.list.append(Rule('JM_ins', 'JM_ins', None))
-        self.list.append(Rule('JK_ins', 'JK_ins', None))
-        self.list.append(Rule('Reimbursable', 'Reimbursable', None))
+        self.list.append(Rule('Medical', 'Medical', None))
 
-        # categories that include multiple accounts
+        # gross categories that include multiple accounts
         self.list.append(Rule('Groceries', 'Living', 'groceries'))
         self.list.append(Rule('Clothing', 'Living', 'clothing'))
-        self.list.append(Rule('Misc', 'Living', 'postage'))
-        self.list.append(Rule('Gifts', 'QoL', 'gifts'))
-        self.list.append(Rule('Vacations', 'QoL', 'vacations'))
-        self.list.append(Rule('Donations', 'QoL', 'donations'))
         self.list.append(Rule('Food-and-Fun', 'QoL', 'dinner/fun'))
         self.list.append(Rule('Food-and-Fun', 'QoL', 'lunches'))
         self.list.append(Rule('Food-and-Fun', 'QoL', 'alcohol'))
+        self.list.append(Rule('Vacations', 'QoL', 'vacations'))
         self.list.append(Rule('Toys', 'QoL', 'toys'))
         self.list.append(Rule('Hobbies', 'QoL', 'hobbies'))
+        self.list.append(Rule('Gifts', 'QoL', 'gifts'))
+        self.list.append(Rule('Donations', 'QoL', 'donations'))
         self.list.append(Rule('Misc', 'QoL', 'subscriptions'))
         self.list.append(Rule('Misc', 'QoL', 'dues'))
+        self.list.append(Rule('Misc', 'Living', 'postage'))
+
+        # categories I want to put at the end
+        self.list.append(Rule('Large-Expenses', 'Amortization', None))
+        self.list.append(Rule('Reimbursable', 'Reimbursable', None))
+
+        # categories that are external to our living budget
         self.list.append(Rule('JM_ins', 'external', 'JM_ins'))
         self.list.append(Rule('JK_ins', 'external', 'JK_ins'))
 
@@ -98,12 +102,13 @@ class Account:
     one ledger account
     - name of the account
     - monthly budget
-    - current balance
+    - initial balance
     """
     def __init__(self, name, budget, balance):
         self.name = name
         self.monthly = budget
         self.carry = balance
+        self.reported = False
 
 
 class Accounts:
@@ -220,17 +225,26 @@ if __name__ == '__main__':
     for f in args.file:
         accounts = Accounts(f, rules)
 
-    # generate starting entries for the accounts in this ledgetr
-    for a in accounts.list:
-        print(f"ACCOUNT: {a.name:16}", end='    ')
-        print(f"Budget: ${a.monthly:.2f} /mo", end='    ')
-        print(f"Balance: ${a.carry:.2f}")
-        print(f"         0/01/{year}\t${a.carry:.2f}", end='    ')
-        if a.carry == 0:
-            print("initial balance")
-        else:
-            print("Carry forward")
-        print()
+    # generate starting entries for accounts in this ledger, in Rule order
+    for r in rules.list:
+        if r.category in ['IGNORE', 'WARNING']:
+            continue
+
+        # find the entry for this (not yet reported) account
+        for a in accounts.list:
+            if a.name == r.account:
+                if a.reported is False:
+                    print(f"ACCOUNT: {a.name:16}", end='    ')
+                    print(f"Budget: ${a.monthly:.2f} /mo", end='    ')
+                    print(f"Balance: ${a.carry:.2f}")
+                    print(f"         0/01/{year}\t${a.carry:.2f}", end='    ')
+                    if a.carry == 0:
+                        print("initial balance")
+                    else:
+                        print("Carry forward")
+                    print()
+                    a.reported = True
+                break
 
     # generate a list of accounts to ignore in this ledger
     for r in rules.list:
