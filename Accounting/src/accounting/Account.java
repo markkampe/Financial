@@ -258,6 +258,9 @@ public class Account {
 			}
 			
 			if (perfVsBudget) {
+				result += COL_SEP;
+				for( int j = 0; j < Dollars.width; j++ ) 
+					result += '_';
 				for( int i = 0; i < 3; i++ ) {
 					result += COL_SEP;
 					for( int j = 0; j < PCTG_WIDTH; j++ ) {
@@ -283,11 +286,13 @@ public class Account {
 			result += String.format(COLUMN_FORMAT, "balance ");
 			if (perfVsBudget) {
 				result += COL_SEP;
-				result += String.format(PCTG_FORMAT, "   net" );
+				result += String.format(COLUMN_FORMAT, "bgt-deb ");
 				result += COL_SEP;
-				result += String.format(PCTG_FORMAT, "budget" );
+				result += String.format(PCTG_FORMAT, "bal/bgt" );
 				result += COL_SEP;
-				result += String.format(PCTG_FORMAT, "credit" );
+				result += String.format(PCTG_FORMAT, "exp/bgt" );
+				result += COL_SEP;
+				result += String.format(PCTG_FORMAT, "exp/tot" );
 			}
 		} else {
 			// figure out what the name output format should be
@@ -317,6 +322,7 @@ public class Account {
 				// net expenses for year as a fraction of the annual budget
 				int vsBudget = percentage(budget + debits, budget);
 					
+				result += COL_SEP + Dollars.toString(budget + debits);
 				result += COL_SEP + String.format(PCTG_FORMAT, net);
 				result += COL_SEP + String.format(PCTG_FORMAT, vsBudget);
 				result += COL_SEP + String.format(PCTG_FORMAT, vsCredits);

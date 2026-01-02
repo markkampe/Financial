@@ -219,14 +219,21 @@ public class AccountsFile {
 			output.write(comment + "\n");
 			output.write(comment + " " + ANALYSIS_HEADER + "\n");
 			output.write(comment + "\n");
+			output.write(comment + " " + "NOTES:" + "\n");
+			output.write(comment + "    " + "bgt-deb: budget - debits" + "\n");
+			output.write(comment + "    " + "bal/bgt: % balance vs budget" + "\n");
+			output.write(comment + "    " + "exp/bgt: % expenses vs budget" + "\n");
+			output.write(comment + "    " + "exp/tot: % expenses vs budget+credits" + "\n");
+			output.write(comment + "\n");
 			
 			String dump[] = books.analysis();
 			for( int i = 0; i < dump.length; i++ ) {
 				if (dump[i] != null)
 					output.write( dump[i] + "\n" );
 			}
+
+			// explanatory notes
 		}
-		
 		output.close();
 	}
 	
