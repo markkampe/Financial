@@ -33,6 +33,6 @@ clean:
 clobber:
 	rm -f $(JAR) $(CLASSES)
 
-lint:	makebudget.py
-	pycodestyle makebudget.py
-	pylint makebudget.py
+lint:	makeledger.py
+	pycodestyle $<
+	pylint $<
