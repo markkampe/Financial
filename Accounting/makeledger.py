@@ -71,6 +71,8 @@ class Rules:
         # categories I want to put at the end
         self.list.append(Rule('Large-Expenses', 'Amortization', None))
         self.list.append(Rule('Reimbursable', 'Reimbursable', None))
+        self.list.append(Rule('JM_ins', 'JM ins reimb', None))
+        self.list.append(Rule('JK_ins', 'JK ins reimb', None))
 
         # categories that are external to our living budget
         self.list.append(Rule('JM_ins', 'external', 'JM_ins'))
