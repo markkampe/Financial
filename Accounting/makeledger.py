@@ -36,66 +36,34 @@ class Rule:
 
 # pylint: disable=too-few-public-methods
 class Rules:
-    """ list of desired accounts and how to handle them """
-    def __init__(self, infile):
-        del infile              # instead of hard-coded rules below
+    """ read accounts file to generate a list of accounts """
+    def __init__(self, rules_file):
         self.list = []
 
-        # if I ever need to change these, the right thing to do is create
-        #    a new CSV file containing all of this information.
+        got_headers = False
+        with open(rules_file, 'rt', encoding='utf-8') as infile:
+            reader = csv.reader(infile, skipinitialspace=True)
+            for cols in reader:
+                # ignoere empty lines
+                if len(cols) < 2:
+                    continue
 
-        # Note: this controls the order in which they are output
+                # ignore comments
+                if cols[0][0] == '#':
+                    continue
 
-        # categories that translate directly into accounts
-        self.list.append(Rule('Basic', 'Basic', None))
-        self.list.append(Rule('Household', 'Home', None))
-        self.list.append(Rule('Utilities', 'Utilities', None))
-        self.list.append(Rule('Transportation', 'Transportation', None))
-        self.list.append(Rule('Medical', 'Medical', None))
+                # see if this is the column headers
+                if not got_headers:
+                    got_headers = True
+                    continue
 
-        # gross categories that include multiple accounts
-        self.list.append(Rule('Groceries', 'Living', 'groceries'))
-        self.list.append(Rule('Clothing', 'Living', 'clothing'))
-        self.list.append(Rule('Food-and-Fun', 'QoL', 'dinner/fun'))
-        self.list.append(Rule('Food-and-Fun', 'QoL', 'lunches'))
-        self.list.append(Rule('Food-and-Fun', 'QoL', 'alcohol'))
-        self.list.append(Rule('Vacations', 'QoL', 'vacations'))
-        self.list.append(Rule('Toys', 'QoL', 'toys'))
-        self.list.append(Rule('Hobbies', 'QoL', 'hobbies'))
-        self.list.append(Rule('Gifts', 'QoL', 'gifts'))
-        self.list.append(Rule('Donations', 'QoL', 'donations'))
-        self.list.append(Rule('Misc', 'QoL', 'subscriptions'))
-        self.list.append(Rule('Misc', 'QoL', 'dues'))
-        self.list.append(Rule('Misc', 'Living', 'postage'))
+                # pick up the three fields
+                acct = cols[0]
+                cat = cols[1]
+                item = None if len(cols) == 2 else cols[2]
 
-        # categories I want to put at the end
-        self.list.append(Rule('Large-Expenses', 'Amortization', None))
-        self.list.append(Rule('Reimbursable', 'Reimbursable', None))
-        self.list.append(Rule('JM_ins', 'JM ins reimb', None))
-        self.list.append(Rule('JK_ins', 'JK ins reimb', None))
-
-        # categories that are external to our living budget
-        self.list.append(Rule('JM_ins', 'external', 'JM_ins'))
-        self.list.append(Rule('JK_ins', 'external', 'JK_ins'))
-
-        # entries that aren't relevant to accounting
-        self.list.append(Rule('Cash', "IGNORE", None))
-        self.list.append(Rule('Deposit', "IGNORE", None))
-        self.list.append(Rule('CreditCard', "IGNORE", None))
-        self.list.append(Rule('Transfer', "IGNORE", None))
-        self.list.append(Rule('Taxes', "IGNORE", None))
-        self.list.append(Rule('Special', "IGNORE", None))
-
-        # entries that go in other ledgers
-        self.list.append(Rule('TP-Improve', 'WARNING', None))
-        self.list.append(Rule('LA-Improve', 'WARNING', None))
-        self.list.append(Rule('SCUBA-mship', 'WARNING', None))
-        self.list.append(Rule('SCUBA-ins', 'WARNING', None))
-        self.list.append(Rule('SCUBA-matls', 'WARNING', None))
-        self.list.append(Rule('SCUBA-gear', 'WARNING', None))
-        self.list.append(Rule('SCUBA-maint', 'WARNING', None))
-        self.list.append(Rule('SCUBA-expenses', 'WARNING', None))
-        self.list.append(Rule('SCUBA-pay', 'WARNING', None))
+                self.list.append(Rule(acct, cat, item))
+            infile.close()
 
 
 # pylint: disable=too-few-public-methods
@@ -209,7 +177,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='accounting ledger creation')
     parser.add_argument("file", nargs='+',
                         help="Budget sheet CSV")
-    parser.add_argument("-a", "--accounts", default=None,
+    parser.add_argument("-a", "--accounts", default="accounts.csv",
                         help="file of category/item->account rules")
     parser.add_argument("-y", "--year", default=None,
                         help="year for new ledger")

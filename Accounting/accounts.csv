@@ -1,0 +1,63 @@
+# List of general ledger accounts
+#
+# This file defines the mapping from <Category,Item> entries in the Budget
+#      spreadsheet to account names in the Leger file.
+#      Each line is of the form:
+Account, Category, Item
+#	Account:	account name to appear in ledger
+#	Category:	gross accounting area in budget file
+#	Item:		(optional) sub-area within that category
+#
+#      This is mapping is useful because:
+#	- the budget is more fine-grained (sub-categories) than the leger
+#	- different Items witin a Category can map to different Accounts
+#       - it also enables us to define the order of Accounts in the ledger
+#
+
+# basic categories corresponding to a singe account
+Basic, Basic
+Household, Home
+Utilities, Utilities
+Transportation, Transportation
+Medical, Medical
+
+# categories who's items go to multiple accounts
+Groceries, Living, groceries
+Clothing, Living, clothing
+Food-and-Fun, QoL, dinner/fun
+Food-and-Fun, QoL, lunches
+Food-and-Fun, QoL, alcohol
+Vacations, QoL, vacations
+Toys, QoL, toys
+Hobbies, QoL, hobbies
+Gifts, QoL, gifts
+Donations, QoL, donations
+Misc, QoL, subscriptions
+Misc, QoL, dues
+Misc, Living, postage
+
+Large-Expenses, Amortization
+
+# categories that are external to our living budget
+Reimbursable, Extra-budget, Reimbursable
+JM_ins, Extra-budget, "Jairlyn ins"
+JK_ins, Extra-budget, "Jennifer ins"
+
+# these entries are for accounts that should be ignored
+Cash, "IGNORE"
+Deposit, "IGNORE"
+CreditCard, "IGNORE"
+Transfer, "IGNORE"
+Taxes, "IGNORE"
+Special, "IGNORE"
+
+# these entries are for other ledgers, should not see them
+TP-Improve, WARNING
+LA-Improve, WARNING
+SCUBA-mship, WARNING
+SCUBA-ins, WARNING
+SCUBA-matls, WARNING
+SCUBA-gear, WARNING
+SCUBA-maint, WARNING
+SCUBA-expenses, WARNING
+SCUBA-pay, WARNING
