@@ -39,6 +39,9 @@ class Rules:
     """ read accounts file to generate a list of accounts """
     def __init__(self, rules_file):
         self.list = []
+        col_acct = -1
+        col_cat = -1
+        col_item = -1
 
         got_headers = False
         with open(rules_file, 'rt', encoding='utf-8') as infile:
@@ -54,14 +57,35 @@ class Rules:
 
                 # see if this is the column headers
                 if not got_headers:
+                    # pull off the expected columns
+                    for col in range(3):
+                        if cols[col] == "Account":
+                            col_acct = col
+                        elif cols[col] == "Category":
+                            col_cat = col
+                        elif cols[col] == "Item":
+                            col_item = col
+                        else:
+                            sys.stderr.write("Unknown column heading: "
+                                             + cols[col] + "\n")
+                    # make sure we got them all
+                    if col_acct < 0:
+                        sys.stderr.write("Error: Accounts column heading not found\n")
+                        sys.exit(-1)
+                    if col_cat < 0:
+                        sys.stderr.write("Error: Category column heading not found\n")
+                        sys.exit(-1)
+                    if col_item < 0:
+                        sys.stderr.write("Error: Item column heading not found\n")
+                        sys.exit(-1)
+
                     got_headers = True
                     continue
 
                 # pick up the three fields
-                acct = cols[0]
-                cat = cols[1]
-                item = None if len(cols) == 2 else cols[2]
-
+                acct = cols[col_acct]
+                cat = cols[col_cat]
+                item = None if len(cols) == 2 else cols[col_item]
                 self.list.append(Rule(acct, cat, item))
             infile.close()
 
