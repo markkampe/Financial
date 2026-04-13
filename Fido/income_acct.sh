@@ -11,6 +11,7 @@
 
 SHORT_TERM=560			# 18 months (cut-off for short-term income)
 TEMPFILE="/tmp/ret_income"	# temp file of income-processed info
+RATEFILE="/tmp/ret_rate"	# temp file of effective rates of return
 DEFAULT="/home/markk/Downloads/positions.csv"
 
 # strings to match in our input
@@ -28,7 +29,7 @@ fi
 echo "Processing positions download: $input"
 
 # generate a report of all of the debt instruments
-./income.py --near=$SHORT_TERM $input | grep "$ACCOUNT" > $TEMPFILE
+./income.py --near=$SHORT_TERM $input 2> $RATEFILE | grep "$ACCOUNT" > $TEMPFILE
 
 # Note: since all of these numbers are coming from a single account, we
 #	run a "cut --complement -f1" to simplify the output by removing
@@ -68,5 +69,10 @@ echo
 echo -n "med/long-term:       "
 grep -e "$LONG" $TEMPFILE | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | colsum
 
-rm $TEMPFILE
+# print out the final rates of return
+echo
+echo "Effective interest rate for low-risk tier:"
+cat $RATEFILE
+
+rm $TEMPFILE $RATEFILE
 exit

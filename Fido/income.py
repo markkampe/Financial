@@ -43,6 +43,16 @@ class Entry():
         return self.item
 
 
+def return_rate(future, present, days):
+    """ effective rate of return on a discounted zero """
+
+    years = float(days) / 365.0
+    increase = (future / present) - 1.0
+    # sleazy first cut, ignores compound interest
+    annual = increase / years
+    return 100 * annual
+
+
 # pylint: disable=too-many-locals, too-many-statements, too-many-branches
 def simplify(file, entries, headers=False, short_term=0, syms="none"):
     """
@@ -52,6 +62,10 @@ def simplify(file, entries, headers=False, short_term=0, syms="none"):
         account, type, value, amount, rate, date
     """
     now = datetime.now()    # note the current date
+    bond_dollars = 0.0
+    bond_product = 0.0
+    zero_dollars = 0.0
+    zero_product = 0.0
 
     # process each line in the CSV file
     with open(file, encoding='utf-8') as csv_file:
@@ -188,6 +202,23 @@ def simplify(file, entries, headers=False, short_term=0, syms="none"):
                         v_sym = "..." + v_sym[6:9]
                 summary += v_sym.rjust(L_SYMBOL, " ")
 
+            # accumulate effective rate for entire portfolio
+            s = row[x_value]
+            v = float(s[1:]) if s[0] == '$' else float(s)
+            if v_rate not in ("", "0.00%"):
+                # bonds with specified rate of return
+                r = float(v_rate[:-1])
+                # sys.stderr.write(f"{v:.2f} at {r:.2f}%\n")
+                bond_dollars += v
+                bond_product += v * r
+            elif v_type == 'TREAS' and v_rate == "0.00%":
+                # zeroes where we must compute effective return
+                a = float(row[x_quant])
+                r = return_rate(a, v, distance)
+                # sys.stderr.write(f"{v:.2f} at {r:.2f}%\n")
+                zero_dollars += v
+                zero_product += v * r
+
             # do a sorted insertion into our list
             entry = Entry(summary, posn)
             if entries is None:
@@ -201,6 +232,19 @@ def simplify(file, entries, headers=False, short_term=0, syms="none"):
                     prev = prev.next
                 entry.next = prev.next
                 prev.next = entry
+
+        # print out the dollar-weighted return
+        if bond_dollars > 0:
+            r = bond_product / bond_dollars
+            sys.stderr.write(f"    Bonds:  ${bond_dollars:9.2f} at {r:.2f}%\n")
+        if zero_dollars > 0:
+            r = zero_product / zero_dollars
+            sys.stderr.write(f"    Zeroes: ${zero_dollars:9.2f} at {r:.2f}%")
+            sys.stderr.write(" (simple)\n")
+        t = bond_dollars + zero_dollars
+        if t > 0:
+            r = (bond_product + zero_product) / t
+            sys.stderr.write(f"    Total:  ${t:9.2f} at {r:.2f}%\n")
 
         return entries
 
