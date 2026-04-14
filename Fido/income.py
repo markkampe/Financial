@@ -86,12 +86,30 @@ class Entry():
 
 
 def return_rate(future, present, days):
-    """ effective rate of return on a discounted zero """
-    years = float(days) / 365.0
+    """ effective rate of return on a discounted zero (within .1%)"""
+    # start with a trivially calculated simple interest rate
     increase = (future / present) - 1.0
-    # sleazy first cut, ignores compound interest
+    years = float(days) / 365.0
     annual = increase / years
-    return 100 * annual
+
+    # tweak that until we find the correct compound rate
+    while True:     # python does not have do ... until
+        # see if a 0.1% lower rate achieves specified future earnings
+        value = present
+        period = days
+        rate = annual - 0.001
+
+        # compound interest for specified period
+        while period >= 365:
+            value += value * rate
+            period -= 365
+        if period > 0:
+            value += value * rate * period / 365
+
+        # if resulting value is too low, previous rate was correct
+        if value < future:
+            return 100 * rate
+        annual = rate
 
 
 # accumulate aggregate returns each type of debt instrument
