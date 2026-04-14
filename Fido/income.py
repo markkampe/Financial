@@ -31,9 +31,37 @@ def find_col(row, title):
     sys.exit(-1)
 
 
+class Returns():
+    """ aggregate return calculator for a series of investments """
+    def __init__(self, title):
+        self.title = title  # name of this aggregation
+        self.dollars = 0.0  # total dollars in this class
+        self.product = 0.0  # sum-product of dollars * rate
+
+    def __str__(self):
+        """ generate a report line for this agregate return """
+        r = self.product / self.dollars
+        s = self.title.ljust(L_TYPE, " ")
+        s += f"${self.dollars:.2f}".rjust(L_VALUE, " ")
+        s += "".rjust(L_QUANT, " ")
+        s += f"{r:.2f}%".rjust(L_RATE, " ")
+        return s
+
+    def add(self, amount, rate):
+        """ add another instrument to this aggregation """
+        self.dollars += amount
+        self.product += amount * rate
+
+    def combine(self, other):
+        """ combine smaller aggregations into a larger one """
+        self.dollars += other.dollars
+        self.product += other.product
+
+
 class Entry():
     """ an instrument description in a maturity-date sorted list """
-    # pylint: disable=too-few-public-methods    # this is a data class
+    entries = None              # list of all analyzed positions
+
     def __init__(self, item_string, date_order):
         self.item = item_string
         self.order = date_order
@@ -42,10 +70,23 @@ class Entry():
     def __str__(self):
         return self.item
 
+    def append(self):
+        """ append a new entry to a list """
+        if Entry.entries is None:
+            Entry.entries = self
+        elif self.order < Entry.entries.order:
+            self.next = Entry.entries
+            Entry.entries = self
+        else:
+            prev = Entry.entries
+            while prev.next is not None and prev.next.order <= self.order:
+                prev = prev.next
+            self.next = prev.next
+            prev.next = self
+
 
 def return_rate(future, present, days):
     """ effective rate of return on a discounted zero """
-
     years = float(days) / 365.0
     increase = (future / present) - 1.0
     # sleazy first cut, ignores compound interest
@@ -53,8 +94,14 @@ def return_rate(future, present, days):
     return 100 * annual
 
 
+# accumulate aggregate returns each type of debt instrument
+cd_returns = Returns("CDs")         # rate of return for CDs
+bond_returns = Returns("BONDs")     # rate of return for interest bearing notes
+zero_returns = Returns("ZEROes")    # rate of return from OID on zeroes
+
+
 # pylint: disable=too-many-locals, too-many-statements, too-many-branches
-def simplify(file, entries, headers=False, short_term=0, syms="none"):
+def simplify(file, headers=False, short_term=0, syms="none"):
     """
     read named (csv) file from a FIDO positions download,
     find the (interest paying) debt instruments
@@ -62,10 +109,6 @@ def simplify(file, entries, headers=False, short_term=0, syms="none"):
         account, type, value, amount, rate, date
     """
     now = datetime.now()    # note the current date
-    bond_dollars = 0.0
-    bond_product = 0.0
-    zero_dollars = 0.0
-    zero_product = 0.0
 
     # process each line in the CSV file
     with open(file, encoding='utf-8') as csv_file:
@@ -206,47 +249,21 @@ def simplify(file, entries, headers=False, short_term=0, syms="none"):
             s = row[x_value]
             v = float(s[1:]) if s[0] == '$' else float(s)
             if v_rate not in ("", "0.00%"):
-                # bonds with specified rate of return
+                # CDs and bonds with specified rate of return
                 r = float(v_rate[:-1])
-                # sys.stderr.write(f"{v:.2f} at {r:.2f}%\n")
-                bond_dollars += v
-                bond_product += v * r
+                if v_type == "CD":
+                    cd_returns.add(v, r)
+                else:
+                    bond_returns.add(v, r)
             elif v_type == 'TREAS' and v_rate == "0.00%":
                 # zeroes where we must compute effective return
                 a = float(row[x_quant])
                 r = return_rate(a, v, distance)
-                # sys.stderr.write(f"{v:.2f} at {r:.2f}%\n")
-                zero_dollars += v
-                zero_product += v * r
+                zero_returns.add(v, r)
 
             # do a sorted insertion into our list
             entry = Entry(summary, posn)
-            if entries is None:
-                entries = entry
-            elif entry.order < entries.order:
-                entry.next = entries.order
-                entries = entry
-            else:
-                prev = entries
-                while prev.next is not None and prev.next.order < entry.order:
-                    prev = prev.next
-                entry.next = prev.next
-                prev.next = entry
-
-        # print out the dollar-weighted return
-        if bond_dollars > 0:
-            r = bond_product / bond_dollars
-            sys.stderr.write(f"    Bonds:  ${bond_dollars:9.2f} at {r:.2f}%\n")
-        if zero_dollars > 0:
-            r = zero_product / zero_dollars
-            sys.stderr.write(f"    Zeroes: ${zero_dollars:9.2f} at {r:.2f}%")
-            sys.stderr.write(" (simple)\n")
-        t = bond_dollars + zero_dollars
-        if t > 0:
-            r = (bond_product + zero_product) / t
-            sys.stderr.write(f"    Total:  ${t:9.2f} at {r:.2f}%\n")
-
-        return entries
+            entry.append()
 
 
 def main():
@@ -264,18 +281,34 @@ def main():
                         default=None, help="short/long")
     args = parser.parse_args()
 
-    # initialize list of accumulated instruments
-    entries = None
-
     # process all of the named files
     for name in args.file:
-        entries = simplify(name, entries=entries,
-                           headers=args.headers,
-                           short_term=args.near,
-                           syms=args.syms)
+        simplify(name, headers=args.headers,
+                 short_term=args.near,
+                 syms=args.syms)
+
+    # create additional entries for the aggregate returns
+    h = "AGGREGATE-RETURN".ljust(L_ACCT, " ")
+    forever = 2100 * 365
+    total_returns = Returns("TOTAL")
+    if cd_returns.dollars > 0:
+        total_returns.combine(cd_returns)
+        e = Entry(h + str(cd_returns), forever)
+        e.append()
+    if bond_returns.dollars > 0:
+        total_returns.combine(bond_returns)
+        e = Entry(h + str(bond_returns), forever)
+        e.append()
+    if zero_returns.dollars > 0:
+        total_returns.combine(zero_returns)
+        e = Entry(h + str(zero_returns), forever)
+        e.append()
+    if total_returns.dollars > 0:
+        e = Entry(h + str(total_returns), forever)
+        e.append()
 
     # print out the accumulated list of entries
-    prev = entries
+    prev = Entry.entries
     while prev is not None:
         print(prev.item)
         prev = prev.next
