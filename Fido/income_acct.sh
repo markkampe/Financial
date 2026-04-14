@@ -34,6 +34,12 @@ echo "Processing positions download: $input"
 # Note: since all of these numbers are coming from a single account, we
 #	run a "cut --complement -f1" to simplify the output by removing
 #	the (obvious) account name from each line.
+#
+#   But, the AGGREGATE-RETURN rate includes CDs from all accounts.
+#	This is not a problem for the fin-plan modeling of expected
+#   interest income, but it does mean that the CD total for the
+#   aggregate returns will likely be greater than the sum of the
+#	long-term and short-term CDs reported for the income account.
 #	
 
 # extract the money-market positions
