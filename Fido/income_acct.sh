@@ -11,13 +11,13 @@
 
 SHORT_TERM=560			# 18 months (cut-off for short-term income)
 TEMPFILE="/tmp/ret_income"	# temp file of income-processed info
-RATEFILE="/tmp/ret_rate"	# temp file of effective rates of return
 DEFAULT="/home/markk/Downloads/positions.csv"
 
 # strings to match in our input
 ACCOUNT="Retirement-Income"		# name of income account
-SHORT="near-term"			# due before SHORT_TERM
-LONG="long-term"			# due after SHORT_TERM
+SHORT="near-term"				# due before SHORT_TERM
+LONG="long-term"				# due after SHORT_TERM
+AGGREGATE="AGGREGATE-RETURN"	# aggregate return output
 
 # figure out what our input file is
 if [ -n "$1" ]
@@ -29,7 +29,7 @@ fi
 echo "Processing positions download: $input"
 
 # generate a report of all of the debt instruments
-./income.py --near=$SHORT_TERM $input 2> $RATEFILE | grep "$ACCOUNT" > $TEMPFILE
+./income.py --near=$SHORT_TERM $input | grep -e "$ACCOUNT" -e "$AGGREGATE" > $TEMPFILE
 
 # Note: since all of these numbers are coming from a single account, we
 #	run a "cut --complement -f1" to simplify the output by removing
@@ -52,7 +52,7 @@ grep -e "$SHORT" -e "MMKT" $TEMPFILE | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | cols
 
 echo
 echo "$ACCOUNT: CDs (long term)"
-grep "CD" $TEMPFILE | cut -d' ' --complement -f1 | grep $LONG | colsum -v
+grep "CD " $TEMPFILE | cut -d' ' --complement -f1 | grep $LONG | colsum -v
 
 # extract the treasury positions
 echo
@@ -62,7 +62,7 @@ grep "TREAS" $TEMPFILE | cut -d' ' --complement -f1 | colsum -v
 # extract the bond positions
 echo
 echo "$ACCOUNT: Other Bonds"
-grep "BOND" $TEMPFILE | cut -d' ' --complement -f1 | colsum -v
+grep "BOND " $TEMPFILE | cut -d' ' --complement -f1 | colsum -v
 
 # grand total for med/long-term
 echo
@@ -71,8 +71,10 @@ grep -e "$LONG" $TEMPFILE | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | colsum
 
 # print out the final rates of return
 echo
-echo "Effective interest rate for low-risk tier:"
-cat $RATEFILE
+echo "Effective interest rate for low-risk tier debt:"
+grep -e "$AGGREGATE" $TEMPFILE | grep -v "TOTAL" | cut -d' ' --complement -f1
+echo "       -----       ------------             ------"
+grep -e "$AGGREGATE" $TEMPFILE | grep "TOTAL" | cut -d' ' --complement -f1
 
-rm $TEMPFILE $RATEFILE
+rm $TEMPFILE
 exit
