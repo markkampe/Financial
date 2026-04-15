@@ -10,6 +10,9 @@ import csv
 import argparse
 from datetime import datetime
 
+DAYS_IN_YEAR = 365.0
+FAR_FUTURE = 2100       # later than any bond I will own
+
 # lengths of the desired output fields (including inter-field padding))
 L_ACCT = 24
 L_TYPE = 12      # CD, US-TREAS, MMKT BOND
@@ -19,6 +22,10 @@ L_RATE = 9       # enough for 99.99%
 L_DATE = 14      # mm/dd/yyyy
 L_DURATION = 10  # decades
 L_SYMBOL = 12    # 8 characters
+
+# rates are comuted to the nearest hundredth percent
+RATE_DIGITS = 4
+RATE_DELTA = 0.0001
 
 
 def find_col(row, title):
@@ -86,25 +93,25 @@ class Entry():
 
 
 def return_rate(future, present, days):
-    """ effective rate of return on a discounted zero (within .1%)"""
+    """ effective rate of return on a discounted zero (within .01%)"""
     # start with a trivially calculated simple interest rate
     increase = (future / present) - 1.0
-    years = float(days) / 365.0
-    annual = increase / years
+    years = float(days) / DAYS_IN_YEAR
+    annual = round(increase/years, RATE_DIGITS)
 
     # tweak that until we find the correct compound rate
     while True:     # python does not have do ... until
-        # see if a 0.1% lower rate achieves specified future earnings
+        # see if a slightly lower rate achieves specified future earnings
         value = present
         period = days
-        rate = annual - 0.001
+        rate = annual - RATE_DELTA
 
         # compound interest for specified period
-        while period >= 365:
+        while period >= DAYS_IN_YEAR:
             value += value * rate
-            period -= 365
+            period -= DAYS_IN_YEAR
         if period > 0:
-            value += value * rate * period / 365
+            value += value * rate * period / DAYS_IN_YEAR
 
         # if resulting value is too low, previous rate was correct
         if value < future:
@@ -227,7 +234,7 @@ def simplify(file, headers=False, short_term=0, syms="none"):
                 month = int(v_date[0:2])
                 day = int(v_date[3:5])
                 year = int(v_date[6:10])
-                posn = (365 * year) + (31 * month) + day
+                posn = (DAYS_IN_YEAR * year) + (31 * month) + day
 
                 # accumulate this into short vs med/long term income category
                 then = datetime(year, month, day)
@@ -307,20 +314,14 @@ def main():
 
     # create additional entries for the aggregate returns
     h = "AGGREGATE-RETURN".ljust(L_ACCT, " ")
-    forever = 2100 * 365
+    forever = FAR_FUTURE * DAYS_IN_YEAR
     total_returns = Returns("TOTAL")
-    if cd_returns.dollars > 0:
-        total_returns.combine(cd_returns)
-        e = Entry(h + str(cd_returns), forever)
-        e.append()
-    if bond_returns.dollars > 0:
-        total_returns.combine(bond_returns)
-        e = Entry(h + str(bond_returns), forever)
-        e.append()
-    if zero_returns.dollars > 0:
-        total_returns.combine(zero_returns)
-        e = Entry(h + str(zero_returns), forever)
-        e.append()
+    for instrument in [cd_returns, bond_returns, zero_returns]:
+        if instrument.dollars > 0:
+            total_returns.combine(instrument)
+            e = Entry(h + str(instrument), forever)
+            e.append()
+
     if total_returns.dollars > 0:
         e = Entry(h + str(total_returns), forever)
         e.append()
