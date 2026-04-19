@@ -432,8 +432,8 @@ class Statement:
         """
         msg = f"FILE: {filename:13}"
         msg += f"\tcredits={self.file_credit:9.2f}"
-        msg += f",\tdebits={self.file_debit:9.2f}"
-        msg += f",\tnet={self.file_credit+self.file_debit:9.2f}"
+        msg += f"\tdebits={self.file_debit:9.2f}"
+        msg += f"\tnet={self.file_credit+self.file_debit:9.2f}"
         msg += '\n'
         sys.stderr.write(msg)
 
@@ -451,13 +451,14 @@ class Statement:
         """
         msg = f"all {self.tot_files}, {self.tot_lines} lines:"
         msg += f"\tcredits={self.tot_credit:9.2f}"
-        msg += f",\tdebits={self.tot_debit:9.2f}"
-        msg += f",\tnet={self.tot_credit+self.tot_debit:9.2f}"
+        msg += f"\tdebits={self.tot_debit:9.2f}"
+        msg += f"\tnet={self.tot_credit+self.tot_debit:9.2f}"
         msg += '\n'
         sys.stderr.write(msg)
 
         # output the statistics
-        msg = "STATISTICS: "
+        msg = "\n"
+        msg += "STATISTICS: "
         msg += "tagged="
         msg += str(self.tagged)
         msg += "\tmatched="
@@ -551,10 +552,10 @@ if __name__ == '__main__':
         tot_debits = 0.00
         sys.stderr.write("\n")
         for a, (creds, debits) in by_account.items():
-            statsmsg = f"ACCT: {a:15}"
+            statsmsg = f"ACCT: {a:13}"
             statsmsg += f"\tcredits={creds:9.2f}"
-            statsmsg += f",\tdebits={debits:9.2f}"
-            statsmsg += f",\tnet={creds+debits:9.2f}"
+            statsmsg += f"\tdebits={debits:9.2f}"
+            statsmsg += f"\tnet={creds+debits:9.2f}"
             statsmsg += '\n'
             sys.stderr.write(statsmsg)
             tot_credits += creds
@@ -562,8 +563,8 @@ if __name__ == '__main__':
             tot_accts += 1
         statmsg = f"all {tot_accts} accounts:"
         statmsg += f"\tcredits={tot_credits:9.2f}"
-        statmsg += f",\tdebits={tot_debits:9.2f}"
-        statmsg += f",\tnet={tot_debits+tot_credits:9.2f}\n"
+        statmsg += f"\tdebits={tot_debits:9.2f}"
+        statmsg += f"\tnet={tot_debits+tot_credits:9.2f}\n"
         sys.stderr.write(statmsg)
 
     if args.outfile is not None:
