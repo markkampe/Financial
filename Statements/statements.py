@@ -360,7 +360,7 @@ class Statement:
         print out the aggregated results and statistics
 
         Note that for "AGGREGATE" rules we do not generate any output until
-        we have finished processing all input files.  This method looks
+       we have finished processing all input files.  This method looks
         for the totals we ahve been aggregating and flushes those them out.
         """
         # output any items buffered for sorting
@@ -550,8 +550,12 @@ if __name__ == '__main__':
         tot_accts = 0
         tot_credits = 0.00
         tot_debits = 0.00
+
+        ignore = ["Deposit", "CreditCard"]
         sys.stderr.write("\n")
         for a, (creds, debits) in by_account.items():
+            if a in ignore:
+                continue
             statsmsg = f"ACCT: {a:13}"
             statsmsg += f"\tcredits={creds:9.2f}"
             statsmsg += f"\tdebits={debits:9.2f}"
