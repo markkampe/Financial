@@ -22,6 +22,7 @@ L_RATE = 9       # enough for 99.99%
 L_DATE = 14      # mm/dd/yyyy
 L_DURATION = 10  # decades
 L_SYMBOL = 12    # 8 characters
+L_INTR = 13      # expectred interest (<100K)
 
 # rates are comuted to the nearest hundredth percent
 RATE_DIGITS = 4
@@ -52,6 +53,7 @@ class Returns():
         s += f"${self.dollars:.2f}".rjust(L_VALUE, " ")
         s += "".rjust(L_QUANT, " ")
         s += f"{r:.2f}%".rjust(L_RATE, " ")
+        s += f"   ${self.product/100:.0f}".rjust(L_INTR, " ")
         return s
 
     def add(self, amount, rate):

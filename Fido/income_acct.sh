@@ -79,7 +79,7 @@ grep -e "$LONG" $TEMPFILE | sed 's/\s\s*/ /g' | cut -d ' ' -f3 | colsum
 echo
 echo "Effective interest rate for low-risk tier debt:"
 grep -e "$AGGREGATE" $TEMPFILE | grep -v "TOTAL" | cut -d' ' --complement -f1
-echo "       -----       ------------             ------"
+echo "       -----       ------------             ------       ------"
 grep -e "$AGGREGATE" $TEMPFILE | grep "TOTAL" | cut -d' ' --complement -f1
 
 rm $TEMPFILE
