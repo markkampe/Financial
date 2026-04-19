@@ -46,6 +46,10 @@ def find_col(string, array):
     return -1
 
 
+# credits and debits per account
+by_account = {}
+
+
 class Statement:
     """
         Bank statement parser
@@ -66,6 +70,7 @@ class Statement:
         self.process = True         # apply matching rules
         self.sort = False           # sort output by date
         self.interactive = False    # no interactive resolutions
+        self.verbose = False        # no per-account summary at end
 
         self.tagged = 0             # lines that had acct tags
         self.matched = 0            # lines for which we found acct tags
@@ -274,6 +279,9 @@ class Statement:
         accumulate a subtotal to be printed at the end of the report
         """
         # pylint: disable=R0912     # we make a lot of decisions
+        # pylint: disable=R0915     # we do a lot of things
+        # pylint: disable=W0602     # doesn't notice that we assign to it
+        global by_account
 
         # talley credits and debits
         amount = Decimal(cols[self.amt])
@@ -323,6 +331,18 @@ class Statement:
                     entry.date = new_entry.date
                 self.aggregations[key] = entry
                 return
+
+            # accumulate debits and credits per account
+            # pylint: disable=C0201         # this is obviously not iteration
+            if entry.account in by_account.keys():
+                (cred, deb) = by_account[entry.account]
+            else:
+                (cred, deb) = (0.00, 0.00)
+            if amount > 0:
+                cred += float(amount)
+            else:
+                deb += float(amount)
+            by_account[entry.account] = (cred, deb)
 
         # check for commas in the description (scare some parsers)
         if ',' in entry.description:
@@ -410,12 +430,12 @@ class Statement:
         @param filename: (string) name of file just processed
 
         """
-        statsmsg = "FILE: " + filename
-        statsmsg += ",\tcredits=" + str(self.file_credit)
-        statsmsg += ",\tdebits=" + str(self.file_debit)
-        statsmsg += ",\tnet=" + str(self.file_credit + self.file_debit)
-        statsmsg += '\n'
-        sys.stderr.write(statsmsg)
+        msg = f"FILE: {filename:13}"
+        msg += f"\tcredits={self.file_credit:9.2f}"
+        msg += f",\tdebits={self.file_debit:9.2f}"
+        msg += f",\tnet={self.file_credit+self.file_debit:9.2f}"
+        msg += '\n'
+        sys.stderr.write(msg)
 
         self.tot_credit += self.file_credit
         self.tot_debit += self.file_debit
@@ -429,27 +449,23 @@ class Statement:
         - number of transactions matched by rules
         - number of still un-matched/un-tagged transactions
         """
-        statsmsg = "all "
-        statsmsg += str(self.tot_files)
-        statsmsg += " files, "
-        statsmsg += str(self.tot_lines)
-        statsmsg += " lines:\t"
-        statsmsg += "\tcredits=" + str(self.tot_credit)
-        statsmsg += ",\tdebits=" + str(self.tot_debit)
-        statsmsg += ",\tnet=" + str(self.tot_credit + s.tot_debit)
-        statsmsg += '\n'
-        sys.stderr.write(statsmsg)
+        msg = f"all {self.tot_files}, {self.tot_lines} lines:"
+        msg += f"\tcredits={self.tot_credit:9.2f}"
+        msg += f",\tdebits={self.tot_debit:9.2f}"
+        msg += f",\tnet={self.tot_credit+self.tot_debit:9.2f}"
+        msg += '\n'
+        sys.stderr.write(msg)
 
         # output the statistics
-        statsmsg = "STATISTICS: "
-        statsmsg += "tagged="
-        statsmsg += str(self.tagged)
-        statsmsg += "\tmatched="
-        statsmsg += str(self.matched)
-        statsmsg += "\tunmatched="
-        statsmsg += str(self.unmatched)
-        statsmsg += "\n"
-        sys.stderr.write(statsmsg)
+        msg = "STATISTICS: "
+        msg += "tagged="
+        msg += str(self.tagged)
+        msg += "\tmatched="
+        msg += str(self.matched)
+        msg += "\tunmatched="
+        msg += str(self.unmatched)
+        msg += "\n"
+        sys.stderr.write(msg)
 
 
 def read_accounts(file):
@@ -487,6 +503,8 @@ if __name__ == '__main__':
                         help="output file")
     parser.add_argument("-s", "--sort", action='store_true',
                         help="sort output by date")
+    parser.add_argument("-v", "--verbose", action='store_true',
+                        help="output net per each account")
     parser.add_argument("-i", "--interactive", action='store_true',
                         help="interacive review/correction")
     args = parser.parse_args()
@@ -510,6 +528,8 @@ if __name__ == '__main__':
         s.sort = True
     if args.interactive:
         s.interactive = True
+    if args.verbose:
+        s.verbose = True
 
     # write out a standard file header
     s.preamble()
@@ -518,10 +538,33 @@ if __name__ == '__main__':
     for f in args.file:
         s.process_file(f)
         s.filestats(f)
+    s.totstats()
 
     # write out the postscript stuff
     s.postscript()
-    s.totstats()
+
+    # write out net updates to each account
+    if s.verbose:
+        # pylint: disable=C0103     # these are obviously not constants
+        tot_accts = 0
+        tot_credits = 0.00
+        tot_debits = 0.00
+        sys.stderr.write("\n")
+        for a, (creds, debits) in by_account.items():
+            statsmsg = f"ACCT: {a:15}"
+            statsmsg += f"\tcredits={creds:9.2f}"
+            statsmsg += f",\tdebits={debits:9.2f}"
+            statsmsg += f",\tnet={creds+debits:9.2f}"
+            statsmsg += '\n'
+            sys.stderr.write(statsmsg)
+            tot_credits += creds
+            tot_debits += debits
+            tot_accts += 1
+        statmsg = f"all {tot_accts} accounts:"
+        statmsg += f"\tcredits={tot_credits:9.2f}"
+        statmsg += f",\tdebits={tot_debits:9.2f}"
+        statmsg += f",\tnet={tot_debits+tot_credits:9.2f}\n"
+        sys.stderr.write(statmsg)
 
     if args.outfile is not None:
         s.output.close()
