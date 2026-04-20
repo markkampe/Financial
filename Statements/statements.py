@@ -551,7 +551,7 @@ if __name__ == '__main__':
         tot_credits = 0.00
         tot_debits = 0.00
 
-        ignore = ["Deposit", "CreditCard"]
+        ignore = ["Deposit", "CreditCard", "Transfer"]
         sys.stderr.write("\n")
         for a, (creds, debits) in by_account.items():
             if a in ignore:
