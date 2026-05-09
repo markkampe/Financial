@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 A market return simulator, based on historical data
 
@@ -13,7 +14,6 @@ class Market:
     Based on which we can return randomly chosen sequences of returns
     """
     input_file = ""     # file used for simulations
-    data_points = []    # (appreciation, dividend, interest rate)
 
     def column(self, header, desired):
         """
@@ -50,6 +50,9 @@ class Market:
         :param price_field: column heading for price
         :param date_format: date format
         """
+        # re-initialize the output array
+        self.data_points = []
+
         # pylint: disable=R1732     # I don't want to indent the next 50 lines
         source = open(filename, "r", encoding='ascii')
 
@@ -68,7 +71,7 @@ class Market:
             month_col = fields.index('m')
 
         # process the entire file
-        prev = -1
+        prev = 0
         rate_sum = 0
         div_sum = 0
         ret_sum = 0
@@ -81,15 +84,15 @@ class Market:
                fields[div_col] == "" or fields[rate_col] == ""):
                 continue
 
-            # extract the interesting fields
-            price = float(fields[price_col])
-            div = float(fields[div_col])
-            rate = float(fields[rate_col])
+            # pull out the date to see if it qualifies
             date = fields[date_col]
             date_fields = date.split(delimiter)
             year = int(date_fields[year_col])
             month = int(date_fields[month_col])
-            if prev < 0:
+
+            # we will need to know the last price before our start
+            price = float(fields[price_col])    # dollars
+            if year < start and (monthly or month == 1):
                 prev = price
 
             # see if this is within the requested range
@@ -97,47 +100,74 @@ class Market:
                 # see if we are doing only annual samples
                 if month != 1 and not monthly:
                     continue
-                appreciation = (price - prev)/prev
-                tupple = (appreciation, div/price, rate/100)
+
+                # pull out the price, dividend and interest rates
+                appreciation = price - prev         # $
+                div = float(fields[div_col])        # $ interp from 4Q totals
+                rate = float(fields[rate_col])      # % long rate
+
+                # we record all of these as fractional values
+                tupple = (appreciation/prev, div/price, rate/100)
                 self.data_points.append(tupple)
                 prev = price
 
-                # and accumulate statistics
-                ret_sum += 12 * appreciation if monthly else appreciation
+                # accumulate statistics for the whole sequence
+                ret_sum += appreciation/prev
                 div_sum += div/price
                 rate_sum += rate/100
                 points += 1
 
         # summarize what we just read
         period = "monthly" if monthly else "annual"
-        ret_pct = 100 * ret_sum / points
+        ret_pct = 100 * ret_sum / points * (12 if monthly else 1)
         div_pct = 100 * div_sum / points
         rate_pct = 100 * rate_sum / points
         print(filename +
               f"({start}-{end}): {points} {period} data points" +
               f", growth={ret_pct:3.1f}%" +
               f", div={div_pct:2.1f}%" +
-              f", 10Y={rate_pct:2.1f}%")
+              f", int(10y)={rate_pct:2.1f}%")
         source.close()
 
     def rates(self, length=20, random=False):
         """
-        return a list of market performance tupples
+        return a (randomly chosen) list of market performance tupples
 
         :param length: number of desired prices
-        :param random: random order
+        :param random: random order (vs real sequences)
         :return: list of price changes (appreciation, dividend, long rate)
         """
         size = len(self.data_points)
-
         if random:
             # return random values
             return [self.data_points[randint(0, size - 1)]
                     for i in range(0, length)]
         # return consecutive values w/random starting point
-        start = randint(0, size - 1)
-        return [self.data_points[(start + i) % size]
+        first = randint(0, size - 1)
+        return [self.data_points[(first + i) % size]
                 for i in range(0, length)]
+
+    def chosen(self, first=0, length=0):
+        """
+        return a (contiguous) subset of the list
+
+        :param first: index of first desired element
+        :param length: number of desired elements
+        :return: list of data points
+        """
+        # figure out how many items to return
+        if length == 0:
+            length = len(self.data_points) - first
+
+        return [self.data_points[first + i]
+                for i in range(0, length)]
+
+
+def t_dump(app_rate, div_rate, int_rate):
+    """ format a tupple for printing """
+    return f"\t{app_rate*100:11.3f}%" +    \
+           f"\t{div_rate*100:7.2f}%" +   \
+           f"\t{int_rate*100:7.2f}%"
 
 
 # basic exerciser
@@ -148,7 +178,7 @@ if __name__ == "__main__":
     else:
         infile = "sp500.csv"
 
-    START = 2017
+    START = 1950
     END = 2020
 
     heading = "\tappreciation\tdividend\tinterest\n" +\
@@ -165,5 +195,18 @@ if __name__ == "__main__":
             sequence = simulator.rates(random=do_random)
             print(heading)
             for (delta, dividend, interest) in sequence:
-                print(f"\t{delta:12.8f}\t{dividend:8.4f}\t{interest:8.4f}")
+                print(t_dump(delta, dividend, interest))
             print("")
+
+        print(("Monthly " if by_month else "Annual ") +
+              ("chosen sequence return") +
+              f" starting with {START+1}-01-01" +
+              " based on " + infile)
+
+        # choose a known sequence for easy testing
+        first_sample = 12 if by_month else 1
+        sequence = simulator.chosen(first_sample, length=20)
+        print(heading)
+        for (delta, dividend, interest) in sequence:
+            print(t_dump(delta, dividend, interest))
+        print("")
