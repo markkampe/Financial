@@ -40,8 +40,8 @@ to moderate my instincts with data.
 <H3>Caveats</H3>
 <UL>
 <P>
-The distributions are wide and the standard deviations are, in most interesting cases, 
-similar to (or even greater than) the mean values.  There are clearly no guarantees,
+The distributions are wide and the standard deviations are, in many interesting cases, 
+approach the mean values.  There are clearly no guarantees,
 and results are much more dependent on the market than strategy.  
 </P>
 <P>
@@ -50,7 +50,7 @@ This likely under-estimates the performance of both <em>Bottom</em> and <em>Dip<
 buying, as the actual bottoms are unlikely to have ocurred on the first of a month.
 </P>
 <P>
-I chose to base my simulations on 1950-2018 data.
+I chose to base my simulations on 1950-2020 data (wanting to skip the depression and WW II)
 It could be argued that the next twenty years will be fundamentally unlike the last seventy.
 </P>
 </UL>
@@ -93,8 +93,8 @@ and statistics are below.  My attempted summary of these results and their lesso
 	<p>
 	It should be noted that the <em>Bottom-Buying</em> implementation is
 	not a real strategy, as it inspected the entire 20 years before deciding
-	when to buy.  It was only included as a stadard against which other
-	(possible) strategies could be evaluated.
+	when to buy.  Like the Sterling Engine, it is only included as a bench 
+	mark against which other (possible) strategies could be evaluated.
 	</p>
 	</li>
    <li>	<em>Buying the Dips</em> seemed to suffer similar <em>greed
@@ -115,7 +115,7 @@ and statistics are below.  My attempted summary of these results and their lesso
 	the buying strategies.  Sadly, the number of randomly chosen 
 	sequences is much smaller than the number of randomly chosen
 	combinations, so the training data is much thinner when used
-	in this more realistic way.
+	in this more realistic way (hence vertically sparse graphs).
 	</li>
 </ol>
 </P>
@@ -130,7 +130,7 @@ or, if you want to place a bet on worse times to come:
 <ul>
    buy 30-50% on a 10% dip and the rest on a 15% dip (mean=18.5)
 </ul>
-Holding out for (in my dreams) a 20% dip is probably not a winning strategy (mean=12.5-14)
+Holding out for (in my dreams) a 20% dip is probably not a winning strategy (mean=5-11)
 </P>
 
 <H3>Results</H3>
@@ -139,18 +139,18 @@ Holding out for (in my dreams) a 20% dip is probably not a winning strategy (mea
     <div style="width:50%; height:600px; float:left">
 	<img src="All.png", alt="all in/out">
 	<pre>
-	All-In/Out CDs, 20 years: mean=3.10, sigma=1.41
-	All-In/Out market, 20 years: mean=12.92, sigma=15.96
+	All-In/Out CDs, 20 years: mean=3.00, sigma=1.22
+	All-In/Out market, 20 years: mean=9.72, sigma=6.11
 	</pre>
     </div>
     <div style="width:50%; height:600px; float:right">
 	<img src="Continuous.png", alt="steady purchases">
 	<pre>
-	Continuous Purchases over 1 years, 20 years: mean=6.86, sigma=4.59
-	Continuous Purchases over 2 years, 20 years: mean=8.18, sigma=4.58
-	Continuous Purchases over 3 years, 20 years: mean=8.34, sigma=6.16
-	Continuous Purchases over 4 years, 20 years: mean=7.10, sigma=5.10
-	Continuous Purchases over 5 years, 20 years: mean=7.49, sigma=4.60
+	Continuous Purchases over 1 years, 20 years: mean=4.89, sigma=2.09
+	Continuous Purchases over 2 years, 20 years: mean=4.86, sigma=1.84
+	Continuous Purchases over 3 years, 20 years: mean=4.84, sigma=2.04
+	Continuous Purchases over 4 years, 20 years: mean=5.49, sigma=1.76
+	Continuous Purchases over 5 years, 20 years: mean=4.66, sigma=1.64
 	</pre>
     </div>
 </div>
@@ -159,30 +159,30 @@ Holding out for (in my dreams) a 20% dip is probably not a winning strategy (mea
     <div style="width:50%; height:480px; float:left">
 	<img src="Bottom.png", alt="buying at the bottom">
 	<pre>
-	Bottom-Buying over 20 years in 1 pieces: mean=23.58, sigma=24.29
-	Bottom-Buying over 20 years in 2 pieces: mean=19.10, sigma=20.27
-	Bottom-Buying over 20 years in 3 pieces: mean=20.95, sigma=20.71
-	Bottom-Buying over 20 years in 4 pieces: mean=19.61, sigma=19.24
+	Bottom-Buying over 20 years in 1 pieces: mean=12.56, sigma=6.76
+	Bottom-Buying over 20 years in 2 pieces: mean=11.46, sigma=5.75
+	Bottom-Buying over 20 years in 3 pieces: mean=9.95, sigma=5.58
+	Bottom-Buying over 20 years in 4 pieces: mean=10.00, sigma=5.32
 	</pre>
     </div>
     <div style="width:50%; height:480px; float:right">
 	<img src="Dips.png", alt="buying the dips">
 	<pre>
-	Buy the Dips(10%/1) over 20 years: mean=13.77, sigma=15.73
-	Buy the Dips(10%/2) over 20 years: mean=21.09, sigma=20.62
-	Buy the Dips(10%/3) over 20 years: mean=18.39, sigma=19.22
+	Buy the Dips(10%/1) over 20 years: mean=9.07, sigma=5.48
+	Buy the Dips(10%/2) over 20 years: mean=9.16, sigma=5.38
+	Buy the Dips(10%/3) over 20 years: mean=9.55, sigma=6.13
 
-	Buy the Dips(15%/1) over 20 years: mean=10.48, sigma=11.95
-	Buy the Dips(15%/2) over 20 years: mean=18.50, sigma=19.95
-	Buy the Dips(15%/3) over 20 years: mean=17.61, sigma=18.86
+	Buy the Dips(15%/1) over 20 years: mean=7.82, sigma=4.20
+	Buy the Dips(15%/2) over 20 years: mean=9.31, sigma=5.73
+	Buy the Dips(15%/3) over 20 years: mean=7.51, sigma=5.06
 
-	Buy the Dips(20%/1) over 20 years: mean=10.05, sigma=13.70
-	Buy the Dips(20%/2) over 20 years: mean=12.46, sigma=13.43
-	Buy the Dips(20%/3) over 20 years: mean=14.47, sigma=14.10
+	Buy the Dips(20%/1) over 20 years: mean=4.99, sigma=2.72
+	Buy the Dips(20%/2) over 20 years: mean=8.69, sigma=5.16
+	Buy the Dips(20%/3) over 20 years: mean=10.67, sigma=6.90
 
-	Buy the Dips(25%/1) over 20 years: mean=9.66, sigma=13.31
-	Buy the Dips(25%/2) over 20 years: mean=13.16, sigma=14.05
-	Buy the Dips(25%/3) over 20 years: mean=13.88, sigma=13.24
+	Buy the Dips(25%/1) over 20 years: mean=4.08, sigma=3.10
+	Buy the Dips(25%/2) over 20 years: mean=8.82, sigma=5.32
+	Buy the Dips(25%/3) over 20 years: mean=7.07, sigma=4.97
 	</pre>
     </div>
 </div>
