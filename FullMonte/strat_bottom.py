@@ -5,7 +5,7 @@ import statistics
 import sys
 import matplotlib.pyplot as plt
 from market import Market
-from buckets import bucketwidth, bucketize, distribution
+from buckets import bucketwidth, bucketize, distribution, value_offset
 
 
 def strat_bottom(sequence, fractions, monthly=True):
@@ -108,7 +108,8 @@ def main(random):
         # bucketize and display the results
         granularity = bucketwidth(results)
         buckets = bucketize(results, granularity)
-        (x_values, y_values) = distribution(buckets, granularity)
+        offset = value_offset(results)
+        (x_values, y_values) = distribution(buckets, granularity, offset)
 
         plt.plot(x_values, y_values, formats[fractions])
         legends.append("fractions=" + str(fractions))

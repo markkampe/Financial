@@ -5,7 +5,7 @@ import sys
 import statistics
 import matplotlib.pyplot as plt
 from market import Market
-from buckets import bucketwidth, bucketize, distribution
+from buckets import bucketwidth, bucketize, distribution, value_offset
 
 
 def strat_all(sequence, play_it_safe, monthly=False):
@@ -74,14 +74,15 @@ def main(random):
         # bucketize and display the results
         granularity = bucketwidth(results)
         buckets = bucketize(results, granularity)
-        (x_values, y_values) = distribution(buckets, granularity)
+        offset = value_offset(results)
+        (x_values, y_values) = distribution(buckets, granularity, offset)
 
         plt.plot(x_values, y_values, "go" if in_cds else "b*")
         legends.append("CDs" if in_cds else "market")
 
     # put up the title, axes, and data
     plt.title(title + MY_NAME)
-    plt.xlabel(str(NUM_YEARS) + "-year return")
+    plt.xlabel(str(NUM_YEARS) + "-year annualized return")
     plt.ylabel("probability")
     plt.legend(legends)
     if OUTPUT is None:
