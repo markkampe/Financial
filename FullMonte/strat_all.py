@@ -34,7 +34,7 @@ def strat_all(sequence, play_it_safe, monthly=False):
 
 
 # general simulation parameters
-NUM_RUNS = 50       # number of runs per model
+NUM_RUNS = 200      # number of runs per model
 NUM_YEARS = 20      # number of years to track results
 MY_NAME = "All-In/Out"
 OUTPUT = "All.png"
@@ -51,7 +51,7 @@ def main(random):
 
     # parameters specific to this continuous purchase model
     title = ("Random" if random else "Real sequence") + " simulations of "
-    monthly = False     # annual simulations
+    monthly = True     # annual simulations
 
     legends = []
     simulator = Market(monthly=monthly)
@@ -61,7 +61,7 @@ def main(random):
         results = []
         # a statistically interesting number of runs
         for _runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
-            sequence = simulator.rates(length=NUM_YEARS, random=random)
+            sequence = simulator.rates(length=NUM_YEARS*12, random=random)
             results.append(strat_all(sequence, in_cds, monthly))
 
         # summarize the results
