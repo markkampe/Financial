@@ -6,6 +6,7 @@ import sys
 import matplotlib.pyplot as plt
 from market import Market
 from buckets import bucketwidth, bucketize, distribution, value_offset
+from compound import compound_rate
 
 
 # graphical output parameters
@@ -19,18 +20,22 @@ MIN_YEARS = 1               # minimum holding period
 MAX_YEARS = 20              # masximum holding period
 
 
-def total_return(sequence, first, years):
+def total_return(sequence, first, years, monthly=False):
     """
         compute the net return for the specified period
         :param sequence: a list of (return, dividend, interest) tupples
         :param first:    the first tupple to be used
         :param years:    the number of tupples to be used
+        :param momthly:  is this a monthly sequence
         :returnn (float): value(end)/value(start)
     """
     # apply each year's growh and dividends
     balance = 1.0
-    for i in range(years):
+    points = years * 12 if monthly else years
+    for i in range(points):
         (growth, div, _int) = sequence[first + i]
+        if monthly:
+            div /= 12
         balance *= (1.0 + growth + div)
 
     return balance
@@ -49,6 +54,7 @@ def main(args):
     market_data = "sp500.csv"
     verbose = False
     period = 0
+    monthly = True
     for _i, arg in enumerate(args):
         if arg in ('-v', '--verbose'):
             verbose = True
@@ -59,7 +65,7 @@ def main(args):
 
     # get a standard market simulator
     simulator = Market(market_data,
-                       start=FIRST_YEAR, end=LAST_YEAR, monthly=False)
+                       start=FIRST_YEAR, end=LAST_YEAR, monthly=monthly)
     sequences = simulator.chosen()
 
     # find the best and worst return for each investment period
@@ -69,18 +75,20 @@ def main(args):
         count = 0
 
         # try all sequences for the current duration
-        final = len(sequences) - years
+        final = len(sequences) - (12 * years)
         for i in range(final):
-            ret = total_return(sequences, i, years) / years
-            if ret - 1.0 < worst:
-                worst = ret - 1.0
-            if ret - 1.0 > best:
-                best = ret - 1.0
+            ret = total_return(sequences, i, years)
+            if ret < worst:
+                worst = ret
+            if ret > best:
+                best = ret
             count += 1
 
         if verbose:
             print(f"{years:2d} years, {count} sequences:" +
-                  f"{worst*100:5.1f}% - {best*100:5.1f}%")
+                  f"{worst:5.1f} - {best:5.1f}" +
+                  f"\tannual: {100*compound_rate(worst, years):.2f}%" +
+                  f" - {100*compound_rate(best, years):.2f}%")
 
     # generate the distribution of returns for specified period
     if period > 0:
