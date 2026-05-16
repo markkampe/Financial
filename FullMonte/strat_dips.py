@@ -59,7 +59,7 @@ def strat_dips(sequence, max_dip, buy_points, monthly=True):
 
 # general simulation parameters
 NUM_RUNS = 200      # number of runs per model
-NUM_RUNS = 20      # number of years to track results
+NUM_YEARS = 20      # number of years to track results
 MY_NAME = "Buy the Dips"
 OUTPUT = "Dips.png"
 
@@ -90,7 +90,7 @@ def main(random):
             results = []
             # a statistically interesting number of runs
             for _runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
-                sequence = simulator.rates(length=NUM_RUNS*12, random=random)
+                sequence = simulator.rates(length=NUM_YEARS*12, random=random)
                 results.append(strat_dips(sequence, max_dip, buy_points,
                                monthly))
 
@@ -114,7 +114,7 @@ def main(random):
 
     # put up the title, axes, and data
     plt.title(title + MY_NAME)
-    plt.xlabel(str(NUM_RUNS) + "-year return")
+    plt.xlabel(str(NUM_YEARS) + "-year annualized return")
     plt.ylabel("probability")
     plt.legend(legends)
     if OUTPUT is None:
