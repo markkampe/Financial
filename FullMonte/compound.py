@@ -28,7 +28,7 @@ def compound_rate(value, years):
     :param years(int):      number of years of compounding
     return (float):         rate as a fraction (0.0-1.0)
     """
-    rate = 0.0
+    rate = -0.5
     for delta in (0.1, 0.01, 0.001, 0.0001):
         while compound_interest(rate+delta, years) <= value:
             rate += delta
