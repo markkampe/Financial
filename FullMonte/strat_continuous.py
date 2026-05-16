@@ -6,6 +6,7 @@ import sys
 import matplotlib.pyplot as plt
 from market import Market
 from buckets import bucketwidth, bucketize, distribution, value_offset
+from compound import compound_rate
 
 
 def strat_continuous(sequence, period, monthly=False):
@@ -74,8 +75,10 @@ def main(random):
         # summarize the results
         mean = sum(results) / len(results)
         sigma = statistics.stdev(results)
-        report = "{} over {} years, {} years: mean={:.2f}, sigma={:.2f}"
-        print(report.format(MY_NAME, years, NUM_YEARS, mean, sigma))
+        report = "{} over {} years, {} years: mean={:.2f}, sigma={:.2f}" + \
+                 ", {:.2f}%/y"
+        print(report.format(MY_NAME, years, NUM_YEARS, mean, sigma,
+              100*compound_rate(mean, NUM_YEARS)))
 
         # bucketize and display the results
         granularity = bucketwidth(results)
@@ -88,7 +91,7 @@ def main(random):
 
     # put up the title, axes, and data
     plt.title(title + MY_NAME)
-    plt.xlabel(str(NUM_YEARS) + "-year annualized return")
+    plt.xlabel(str(NUM_YEARS) + "-year return")
     plt.ylabel("probability")
     plt.legend(legends)
     if OUTPUT is None:
