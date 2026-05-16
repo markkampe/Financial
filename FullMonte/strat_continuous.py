@@ -88,7 +88,7 @@ def main(random):
 
     # put up the title, axes, and data
     plt.title(title + MY_NAME)
-    plt.xlabel(str(NUM_YEARS) + "-year return")
+    plt.xlabel(str(NUM_YEARS) + "-year annualized return")
     plt.ylabel("probability")
     plt.legend(legends)
     if OUTPUT is None:
