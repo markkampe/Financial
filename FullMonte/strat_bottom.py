@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Purchasing Strategy: all-in/all-out
+Purchasing Strategy: buy at the bottom
 """
 import statistics
 import matplotlib.pyplot as plt
