@@ -121,7 +121,7 @@ class Market:
         div_pct = 100 * div_sum / points
         rate_pct = 100 * rate_sum / points
         print(filename +
-              f"({start}-{end}): {points}/{expected} momthly data points" +
+              f"({start}-{end}): {points}/{expected} monthly data points" +
               f", growth={ret_pct:3.1f}%" +
               f", div={div_pct:2.1f}%" +
               f", int(10y)={rate_pct:2.1f}%")

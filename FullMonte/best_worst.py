@@ -26,7 +26,7 @@ def total_return(sequence, start, count, balance):
     # play through all the months in the count
     for i in range(count):
         (price, dividend, _interest) = sequence[start + i]
-        # we reinvest (momthly) dividends
+        # we reinvest (monthly) dividends
         shares += shares * dividend/price
 
     # figure out the final acount value
