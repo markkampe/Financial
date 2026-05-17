@@ -1,6 +1,7 @@
 """
 These methods turn lists of results into distributions for plotting
 """
+GOOD_BUCKETS = 25
 
 
 def bucketwidth(results):
@@ -10,7 +11,7 @@ def bucketwidth(results):
     :return (float): suggested bucket width
     """
     max_result = 0.0
-    min_result = 666.666
+    min_result = 6666666.0
     for result in results:
         if result > max_result:
             max_result = result
@@ -19,14 +20,7 @@ def bucketwidth(results):
 
     # try pick a size that results in reasonable number of buckets
     data_range = max_result - min_result
-    width = 1.0
-    while data_range/width < 10:
-        width /= 10
-
-    if data_range/width < 25:
-        return width/4
-    if data_range/width < 50:
-        return width/2
+    width = data_range / GOOD_BUCKETS
     return width
 
 
@@ -64,7 +58,7 @@ def value_offset(results):
     :param [(float)]: simulation results
     :return (float) lowest sample value
     """
-    min_result = 666.666
+    min_result = 6666666.0
     for result in results:
         if result < min_result:
             min_result = result
