@@ -46,7 +46,8 @@ def bucketize(results, granularity):
 
     # compute the count for each bucket
     for result in results:
-        bucket = int((result-min_result)/granularity)
+        bucket = min(int((result-min_result)/granularity), len(buckets)-1)
+
         buckets[bucket] += 1
 
     return buckets
@@ -76,14 +77,14 @@ def distribution(buckets, granularity, offset):
     :return ([x-values], [y-percentage-values])
     """
     # get total number of counts
-    total = 0
+    total = .00001
     for i, count in enumerate(buckets):
         total += count
 
     x_values = []
     y_values = []
     for i, count in enumerate(buckets):
-        pct = count * 100 // total
+        pct = count * 100 / total
         if pct > 0:
             x_values.append((i * granularity) + offset)
             y_values.append(pct)
