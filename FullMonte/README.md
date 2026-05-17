@@ -15,31 +15,24 @@ I started out with a model that could generate months/years of
 either randomly chosen performance or randomly chosen sequences
 of a specified length.  If I am going to choose months/years at
 random, each needs a growth rate rather than a price.  In retrospect:
-
    - randomly chosen samples make no sense, because the market
      swings between good and bad times, each of which is 
      likely to have a somewhat standard shape.  Any purchase
      strategy has to work well against those shapes.
-
   - having a growth rate associated with each month/year,
     even for a chosen sequence of samples, when compounded,
     seemed to result in unreasonable aggregate growth rates.
-
   - the main reason to use randomly chosen sequences (rather
     than simply enumerating all sequences) is to reduce the
     amount of computation to be performed, which never
     became a problem.
-
   - the main reason for using annual (vs monthly) samples
     is to reduce the amount of computation to be performed,
     which never became a problem.
 
 So I decided to throw that all away and build a new set of models:
-
  - based on monthly prices (rather than computed growth rates).
-
  - based only on real sequences of a specified length
-
  - that fully explored all sequences of the specified length.
 
 ## Infrastructural Modules
