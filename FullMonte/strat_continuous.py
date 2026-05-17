@@ -1,84 +1,94 @@
+#!/usr/bin/python3
 """
-Purchasing Strategy: continuous
+Purchasing Strategy: continuous over time
 """
 import statistics
-import sys
 import matplotlib.pyplot as plt
 from market import Market
 from buckets import bucketwidth, bucketize, distribution, value_offset
 from compound import compound_rate
 
 
-def strat_continuous(sequence, period, monthly=False):
+def strat_continuous(sequence, start, count, period, balance):
     """
-    Buy a position over N years (or months)
-    :param sequence: list of (growth, dividend, interest) tupples
-    :param period(int): number of periods for buy-in
-    :param monthly(bool): monthly (vs annual) sequence
+    Buy uniformly over the period
+    :param sequence: list of (price, dividend, interest) tupples
+    :param start(int): starting index to process
+    :param count(int): number of entries to process
+    :param period(int): months over which we make our purchases
+    :param balance(float): total investment amount
     :return (float): value of position at end of simulation
     """
+    # play through that purchase plan
+    shares = 0
+    purchase = balance/period
+    for i in range(count):
+        (price, dividend, interest) = sequence[start+i]
 
-    in_market = 0.0     # start out with nothing in market
-    on_side = 1.0       # start out with everything on the side
-    lot = 1.0/period    # purchase uniformly over period
+        if balance > 0:
+            purch = min(balance, purchase/price)
+            shares += purch/price
+            balance -= purch
 
-    for (growth, dividend, interest) in sequence:
-        # if we are monthly, scale the interest and dividends
-        if monthly:
-            dividend /= 12
-            interest /= 12
+        # every year reinvests dividends
+        if shares > 0:
+            shares += shares * dividend/price
 
-        # figure out how much everybody made this period
-        in_market += in_market * (growth + dividend)
-        on_side += on_side * interest
+        # every year earns interest
+        balance += balance * interest/12
 
-        # make our next purchase
-        purchase = lot if lot <= on_side else on_side
-        in_market += purchase
-        on_side -= purchase
-
-    return in_market + on_side
+    # figure out the final acount value
+    (price, _dividend, _interest) = sequence[start + count - 1]
+    return balance + (shares * price)
 
 
 # general simulation parameters
-NUM_RUNS = 50       # number of runs per model
+BALANCE = 1000.00   # initial balance
+START = 1970
+END = 2020
 NUM_YEARS = 20      # number of years to track results
+MAX_PERIOD = 5      # max years over which to purchase
 MY_NAME = "Continuous Purchases"
 OUTPUT = "Continuous.png"
 
 
 # pylint: disable=too-many-locals
-def main(random):
+def main():
     """
-    For purchases over 1-5 years,
-        run <num_runs> simulations
-        tracking output over 20 years
+    for a range of # lots
+        run simulations over all 20 year sequences
+            tracking total return
         plot a return distribution
     """
 
     # parameters specific to this continuous purchase model
-    title = ("Random" if random else "Real sequence") + " simulations of "
-    monthly = False     # annual simulations
-    max_period = 5
-    formats = ["w.", "r.", "y*", "go", "c+", "bx"]
+    title = "Real sequence simulations of "
 
     legends = []
-    simulator = Market(monthly=monthly)
-    # purchases spread out over 1-5 years
-    for years in range(1, max_period + 1):
+    formats = ["w.", "r.", "y*", "go", "c+", "bx"]
+
+    # test all possible sequences
+    simulator = Market(start=START, end=END)
+    count = NUM_YEARS * 12
+    last = len(simulator.data_points) - count
+    for period in range(1, MAX_PERIOD+1):
         results = []
-        # a statistically interesting number of runs
-        for _runs in range(NUM_RUNS * 2 if random else NUM_RUNS):
-            sequence = simulator.rates(length=NUM_YEARS, random=random)
-            results.append(strat_continuous(sequence, NUM_YEARS, monthly))
+        samples = 0
+        for i in range(0, last):
+            seq = simulator.data_points
+            results.append(strat_continuous(seq, i, count, period, BALANCE))
+            samples += 1
 
         # summarize the results
         mean = sum(results) / len(results)
         sigma = statistics.stdev(results)
-        report = "{} over {} years, {} years: mean={:.2f}, sigma={:.2f}" + \
-                 ", {:.2f}%/y"
-        print(report.format(MY_NAME, years, NUM_YEARS, mean, sigma,
-              100*compound_rate(mean, NUM_YEARS)))
+        rate = compound_rate(mean/BALANCE, NUM_YEARS)
+        msg = MY_NAME
+        msg += f" over {period} years:"
+        msg += f" ({samples} runs)"
+        msg += f": mean=${mean:,.0f}, sigma=${sigma:,.0f}"
+        msg += f", return={100*rate:.2f}%/y"
+        print(msg)
 
         # bucketize and display the results
         granularity = bucketwidth(results)
@@ -86,12 +96,12 @@ def main(random):
         offset = value_offset(results)
         (x_values, y_values) = distribution(buckets, granularity, offset)
 
-        plt.plot(x_values, y_values, formats[years])
-        legends.append("over " + str(years) + " years")
+        plt.plot(x_values, y_values, formats[period])
+        legends.append(f"over {period} years")
 
     # put up the title, axes, and data
     plt.title(title + MY_NAME)
-    plt.xlabel(str(NUM_YEARS) + "-year return")
+    plt.xlabel(f" {NUM_YEARS}-year return on ${BALANCE:,.0f}")
     plt.ylabel("probability")
     plt.legend(legends)
     if OUTPUT is None:
@@ -103,7 +113,4 @@ def main(random):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "random":
-        main(True)
-    else:
-        main(False)
+    main()
