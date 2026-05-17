@@ -1,122 +1,140 @@
 #!/usr/bin/python3
 """
-Find the best and worst returns for specified investment periods
+Market Returns: best and worst
 """
 import sys
+import statistics
 import matplotlib.pyplot as plt
 from market import Market
 from buckets import bucketwidth, bucketize, distribution, value_offset
 from compound import compound_rate
 
 
-# graphical output parameters
-OUTPUT = None
-TITLE = "Distribution of returns"
+def total_return(sequence, start, count, balance):
+    """
+    All in the market or all out of the market
+    :param sequence: list of (price, dividend, interest) tupples
+    :param start(int): starting index to process
+    :param count(int): number of entries to process
+    :return (float): value of position at end of simulation
+    """
+    # start with our initial allocation
+    (price, dividend, _interest) = sequence[start]
+    shares = balance/price
+    balance = 0.00
+
+    # play through all the months in the count
+    for i in range(count):
+        (price, dividend, _interest) = sequence[start + i]
+        # we reinvest (momthly) dividends
+        shares += shares * dividend/price
+
+    # figure out the final acount value
+    (price, _dividend, _interest) = sequence[start + count - 1]
+    return balance + (shares * price)
+
 
 # general simulation parameters
-FIRST_YEAR = 1950           # first year of market dta
-LAST_YEAR = 2020            # last year of market data
-MIN_YEARS = 1               # minimum holding period
-MAX_YEARS = 20              # masximum holding period
+BALANCE = 1000.00   # initial balance
+START = 1970
+END = 2020
+MY_NAME = "Duration"
+OUTPUT = "Duration.png"
 
 
-def total_return(sequence, first, years, monthly=False):
-    """
-        compute the net return for the specified period
-        :param sequence: a list of (return, dividend, interest) tupples
-        :param first:    the first tupple to be used
-        :param years:    the number of tupples to be used
-        :param momthly:  is this a monthly sequence
-        :returnn (float): value(end)/value(start)
-    """
-    # apply each year's growh and dividends
-    balance = 1.0
-    points = years * 12 if monthly else years
-    for i in range(points):
-        (growth, div, _int) = sequence[first + i]
-        if monthly:
-            div /= 12
-        balance *= (1.0 + growth + div)
-
-    return balance
+def date(index):
+    """ turn a sequence index into a month/year """
+    year = int(START + (index/12))
+    month = int(index % 12)
+    return f"{month}/{year:4}"
 
 
+# pylint: disable=too-many-locals, too-many-statements
 def main(args):
     """
-    for all possible sequences of specified number of years
-        compute the aggregate return (gains + dividends)
-        tracking the best and worst total returns
-    :param (string): name of market data CSV file
-    :param -v:   produce verbose output
-    :param (int) period: period to be bucketized
+    For all-in and all-out
+        run simulations over 20 year sequences
+            tracking total return
+        plot a return distribution
     """
-    # process the command line arguments
-    market_data = "sp500.csv"
     verbose = False
-    period = 0
-    monthly = True
     for _i, arg in enumerate(args):
         if arg in ('-v', '--verbose'):
             verbose = True
-        elif arg.isdigit():
-            period = int(arg)
-        else:
-            market_data = arg
 
-    # get a standard market simulator
-    simulator = Market(market_data,
-                       start=FIRST_YEAR, end=LAST_YEAR, monthly=monthly)
-    sequences = simulator.chosen()
+    # parameters specific to this continuous purchase model
+    simulator = Market(start=START, end=END)
 
-    # find the best and worst return for each investment period
-    for years in range(MIN_YEARS, MAX_YEARS+1):
-        worst = 666.0
-        best = -666.0
-        count = 0
-
-        # try all sequences for the current duration
-        final = len(sequences) - (12 * years)
-        for i in range(final):
-            ret = total_return(sequences, i, years)
-            if ret < worst:
-                worst = ret
-            if ret > best:
-                best = ret
-            count += 1
-
-        if verbose:
-            print(f"{years:2d} years, {count} sequences:" +
-                  f"{worst:5.1f} - {best:5.1f}" +
-                  f"\tannual: {100*compound_rate(worst, years):.2f}%" +
-                  f" - {100*compound_rate(best, years):.2f}%")
-
-    # generate the distribution of returns for specified period
-    if period > 0:
+    # purchases spread out over 1-5 years
+    for years in (1, 2, 3, 4, 5, 6, 8, 10, 15, 20):
         results = []
-        final = len(sequences) - period
-        for i in range(final):
-            results.append(total_return(sequences, i, period))
+        total = 0.0
+        best = -666.666
+        worst = 6666666.666
+        worstx = -1
 
-        # bucketize the results for display
+        # test all possible sequences
+        count = years * 12
+        last = len(simulator.data_points) - count
+        samples = 0
+        for i in range(0, last):
+            sequence = simulator.data_points
+            result = total_return(sequence, i, count, BALANCE)
+            total += result
+            if result > best:
+                best = result
+            if result < worst:
+                worst = result
+                worstx = i
+            samples += 1
+            results.append(result)
+
+        # summarize the results
+        mean = sum(results) / len(results)
+        sigma = statistics.stdev(results)
+        rate = compound_rate(mean/BALANCE, years)
+        msg = "  " + MY_NAME
+        msg += f": {years:2} years"
+        msg += f" ({samples} runs)"
+        msg += f"\t${worst:6,.0f} - ${best:6,.0f}"
+        msg += f",  mean=${mean:,.0f}, sigma={sigma:4.0f}"
+        msg += f", {100*rate:.2f}%/y"
+        if verbose and worst < 1000:
+            msg += f"\t(worst {date(worstx)} - {date(worstx+count-1)})"
+        print(msg)
+
+    # gnerate a distribution of 5-year results
+    legends = []
+    for years in (5, 10):
+        results = []
+        count = years * 12
+        last = len(simulator.data_points) - count
+        samples = 0
+        for i in range(0, last):
+            sequence = simulator.data_points
+            results.append(total_return(sequence, i, count, BALANCE))
+
+        # bucketize and display the results
         granularity = bucketwidth(results)
         buckets = bucketize(results, granularity)
         offset = value_offset(results)
         (x_values, y_values) = distribution(buckets, granularity, offset)
-        for i in range(len(x_values)):
-            x_values[i] *= 100
-            print(f"  {(x_values[i]):5.1f}    {y_values[i]}")
-        plt.plot(x_values, y_values, "go")
-        plt.title(TITLE + f" ({FIRST_YEAR}-{LAST_YEAR})")
-        plt.xlabel(f"Total {period}-year Return (%)")
-        plt.ylabel("probablity (%)")
-        if OUTPUT is None:
-            plt.show()
-        else:
-            print("Saving distribution plot as " + OUTPUT)
-            plt.savefig(OUTPUT)
-            plt.close()
+
+        plt.plot(x_values, y_values, "go" if years == 5 else "b*")
+        legends.append(f"{years} years")
+
+    # put up the title, axes, and data
+    plt.title(f"Return on investment of ${BALANCE:,.0f}")
+    plt.xlabel("value at end of period")
+    plt.ylabel("probability")
+    plt.legend(legends)
+    if OUTPUT is None:
+        plt.show()
+    else:
+        print("saving distribution plot as " + OUTPUT)
+        plt.savefig(OUTPUT)
+        plt.close()
 
 
-# pylint: disable=C0103
 if __name__ == "__main__":
     main(sys.argv[1:])
