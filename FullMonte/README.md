@@ -4,7 +4,7 @@
 
 I felt that my when-to-buy decisions were being driven by emotions,
 and I wanted to base them on data.  I found an archive of S&P 500
-data, and implemented a few models to play againat it:
+data, and implemented a few models to play against it:
 
    - *all-in* (CDs or market) on day 1
    - buy at the *bottom*
