@@ -37,7 +37,7 @@ def strat_all(sequence, start, count, play_it_safe, balance):
             balance += balance * interest/12
         else:
             # we reinvest (momthly) dividends
-            shares += dividend/price
+            shares += shares * dividend/price
 
     # figure out the final acount value
     (price, _dividend, _interest) = sequence[start + count - 1]
