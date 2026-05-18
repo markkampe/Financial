@@ -39,7 +39,8 @@ BALANCE = 1000.00   # initial balance
 START = 1970
 END = 2020
 MY_NAME = "Duration"
-OUTPUT = "Duration.png"
+OUTPUT1 = "Range.png"
+OUTPUT2 = "Distribution.png"
 
 
 def date(index):
@@ -65,8 +66,12 @@ def main(args):
     # parameters specific to this continuous purchase model
     simulator = Market(start=START, end=END)
 
-    # purchases spread out over 1-5 years
-    for years in (1, 2, 3, 4, 5, 6, 8, 10, 15, 20):
+    # purchases spread out over some number of years
+    bests = []
+    worsts = []
+    means = []
+    durations = [1, 2, 3, 4, 5, 6, 8, 10, 15, 20]
+    for years in durations:
         results = []
         total = 0.0
         best = -666.666
@@ -110,6 +115,28 @@ def main(args):
             msg += ")"
         print(msg)
 
+        # record the best and worst for each duration
+        bests.append(best)
+        means.append(mean)
+        worsts.append(worst)
+
+    # generate range vs duration curves
+    plt.yscale('log')
+    plt.plot(durations, bests, 'g')
+    plt.plot(durations, means, 'b')
+    plt.plot(durations, worsts, 'r')
+    legends = ["Best", "Mean", "Worst"]
+    plt.title(f"Range of Returns on ${BALANCE:.0f} investments")
+    plt.xlabel("holding period (years)")
+    plt.ylabel("value at end of period ($)")
+    plt.legend(legends)
+    if OUTPUT1 is None:
+        plt.show()
+    else:
+        print("saving range of returns plot as " + OUTPUT1)
+        plt.savefig(OUTPUT1)
+        plt.close()
+
     # gnerate a distribution of 5-year results
     legends = []
     for years in (5, 10):
@@ -135,11 +162,11 @@ def main(args):
     plt.xlabel("value at end of period")
     plt.ylabel("probability")
     plt.legend(legends)
-    if OUTPUT is None:
+    if OUTPUT2 is None:
         plt.show()
     else:
-        print("saving distribution plot as " + OUTPUT)
-        plt.savefig(OUTPUT)
+        print("saving distribution of returns plot as " + OUTPUT2)
+        plt.savefig(OUTPUT2)
         plt.close()
 
 
