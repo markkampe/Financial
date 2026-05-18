@@ -2,6 +2,7 @@
 """
 Purchasing Strategy: all-in/all-out
 """
+import sys
 import statistics
 import matplotlib.pyplot as plt
 from market import Market
@@ -54,13 +55,17 @@ OUTPUT = "All.png"
 
 
 # pylint: disable=too-many-locals
-def main():
+def main(args):
     """
     For all-in and all-out
         run simulations over 20 year sequences
             tracking total return
         plot a return distribution
     """
+    verbose = False
+    for _i, arg in enumerate(args):
+        if arg in ('-v', '--verbose'):
+            verbose = True
 
     # parameters specific to this continuous purchase model
     title = "Real sequence simulations of "
@@ -88,7 +93,8 @@ def main():
         msg = MY_NAME
         msg += " CDs,   " if in_cds else " market,"
         msg += f" {NUM_YEARS} years"
-        msg += f" ({samples} runs)"
+        if verbose:
+            msg += f" ({samples} runs)"
         msg += f": mean=${mean:,.0f}, sigma=${sigma:,.0f}"
         msg += f", return={100*rate:.2f}%/y"
         print(msg)
@@ -116,4 +122,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

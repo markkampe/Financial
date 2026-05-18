@@ -49,7 +49,7 @@ def date(index):
     return f"{month}/{year:4}"
 
 
-# pylint: disable=too-many-locals, too-many-statements
+# pylint: disable=too-many-locals, too-many-statements, too-many-branches
 def main(args):
     """
     For all-in and all-out
@@ -97,16 +97,17 @@ def main(args):
         sigma = statistics.stdev(results)
         rate = compound_rate(mean/BALANCE, years)
         msg = "  " + MY_NAME
-        msg += f": {years:2} years"
+        msg += f" {years:2} years"
         if verbose:
             msg += f" ({samples} runs)"
-        msg += f"\t${worst:6,.0f} - ${best:6,.0f}"
+        msg += f":\t${worst:6,.0f} - ${best:6,.0f}"
         msg += f",  mean=${mean:,.0f}, sigma={sigma:4.0f}"
         msg += f", {100*rate:.2f}%/y"
         if uw > 0:
-            msg += f" ({uw}/{samples} negative outcomes)"
-        if verbose and worst < 1000:
-            msg += f"\t(worst {date(worstx)} - {date(worstx+count-1)})"
+            msg += f" ({uw}/{samples} negative outcomes"
+            if verbose:
+                msg += f", worst {date(worstx)} - {date(worstx+count-1)}"
+            msg += ")"
         print(msg)
 
     # gnerate a distribution of 5-year results

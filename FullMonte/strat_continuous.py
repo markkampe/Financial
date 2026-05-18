@@ -2,6 +2,7 @@
 """
 Purchasing Strategy: continuous over time
 """
+import sys
 import statistics
 import matplotlib.pyplot as plt
 from market import Market
@@ -53,13 +54,17 @@ OUTPUT = "Continuous.png"
 
 
 # pylint: disable=too-many-locals
-def main():
+def main(args):
     """
     for a range of # lots
         run simulations over all 20 year sequences
             tracking total return
         plot a return distribution
     """
+    verbose = False
+    for _i, arg in enumerate(args):
+        if arg in ('-v', '--verbose'):
+            verbose = True
 
     # parameters specific to this continuous purchase model
     title = "Real sequence simulations of "
@@ -84,8 +89,9 @@ def main():
         sigma = statistics.stdev(results)
         rate = compound_rate(mean/BALANCE, NUM_YEARS)
         msg = MY_NAME
-        msg += f" over {period} years:"
-        msg += f" ({samples} runs)"
+        msg += f" over {period} years"
+        if verbose:
+            msg += f" ({samples} runs)"
         msg += f": mean=${mean:,.0f}, sigma=${sigma:,.0f}"
         msg += f", return={100*rate:.2f}%/y"
         print(msg)
@@ -113,4 +119,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
