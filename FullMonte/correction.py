@@ -13,7 +13,7 @@ from market import Market
 START = 1950            # first year of samples to use
 END = 2020              # last year of samples to use
 MAX_DROP = 1.0          # 100% is worst possible drop
-BUCKET_WIDTH = 0.04     # fractional spercentage  per bucket
+BUCKET_WIDTH = 0.05     # fractional spercentage  per bucket
 OPTIMISM = 0.07         # pessimism cut-off probability
 OUTPUT = "Corrections"
 
@@ -56,7 +56,7 @@ def drop_buckets(sequence, bucket_width=.01):
 
 
 # pylint: disable=too-many-locals, too-many-statements
-def analyze(buckets, width):
+def analyze(buckets, width, optimism=OPTIMISM):
     """
     1. Review the data to identify corrections/crashes.
     2. Assess the probability of various drop levels.
@@ -88,7 +88,7 @@ def analyze(buckets, width):
             exp = 100 * (drop * prob)
             expectancies.append(exp)
             opt_exp += exp
-            if prob >= OPTIMISM:
+            if prob >= optimism:
                 pess_exp += exp
 
     # first curve is probability of a drop
@@ -133,7 +133,7 @@ def analyze(buckets, width):
         if o_weight <= 1:
             continue
         tot_opt += o_weight
-        p_weight = 0 if prob < OPTIMISM * 100 else int(100 * exp / pess_exp)
+        p_weight = 0 if prob < optimism * 100 else int(100 * exp / pess_exp)
         tot_pess += p_weight
         print(f"     -{drop: >2}%  {prob: >3}%   {o_weight: >3}%" +
               f"   {p_weight: >3}%")
@@ -141,7 +141,7 @@ def analyze(buckets, width):
     print("           ----  -----  -----")
     print(f"           {tot_prob:>3}%   {tot_opt:>3}%   {tot_pess:>3}%")
     print()
-    print(f"  *The fear recommendations ignore drops with P < {OPTIMISM:.3f}")
+    print(f"  *The fear recommendations ignore drops with P < {optimism:.3f}")
 
 
 def main(args):
@@ -150,13 +150,18 @@ def main(args):
     :param args (string): name of market data file
     """
     infile = "sp500.csv"
+    optimism = OPTIMISM
+    width = BUCKET_WIDTH
 
     for _i, arg in enumerate(args):
-        infile = arg
+        if arg.isdigit():
+            width = int(arg)/100.0
+        else:
+            infile = arg
 
     simulator = Market(infile, start=START, end=END)
-    buckets = drop_buckets(simulator.data_points, bucket_width=BUCKET_WIDTH)
-    analyze(buckets, width=BUCKET_WIDTH)
+    buckets = drop_buckets(simulator.data_points, bucket_width=width)
+    analyze(buckets, width=width, optimism=optimism)
 
 
 # basic exerciser
