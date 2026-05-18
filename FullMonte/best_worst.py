@@ -72,6 +72,7 @@ def main(args):
         best = -666.666
         worst = 6666666.666
         worstx = -1
+        uw = 0
 
         # test all possible sequences
         count = years * 12
@@ -87,6 +88,8 @@ def main(args):
                 worst = result
                 worstx = i
             samples += 1
+            if result < BALANCE:
+                uw += 1
             results.append(result)
 
         # summarize the results
@@ -95,10 +98,13 @@ def main(args):
         rate = compound_rate(mean/BALANCE, years)
         msg = "  " + MY_NAME
         msg += f": {years:2} years"
-        msg += f" ({samples} runs)"
+        if verbose:
+            msg += f" ({samples} runs)"
         msg += f"\t${worst:6,.0f} - ${best:6,.0f}"
         msg += f",  mean=${mean:,.0f}, sigma={sigma:4.0f}"
         msg += f", {100*rate:.2f}%/y"
+        if uw > 0:
+            msg += f" ({uw}/{samples} negative outcomes)"
         if verbose and worst < 1000:
             msg += f"\t(worst {date(worstx)} - {date(worstx+count-1)})"
         print(msg)
