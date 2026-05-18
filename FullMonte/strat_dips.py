@@ -115,7 +115,7 @@ def main(args):
             if verbose:
                 msg += f" ({samples} runs)"
             msg += f": mean=${mean:6,.0f}, sigma=${sigma:6,.0f}"
-            msg += f", return={100*rate:.2f}%/y"
+            msg += f", {100*rate:.2f}%/y"
             print(msg)
 
             # bucketize and display the results
