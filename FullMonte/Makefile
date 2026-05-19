@@ -3,7 +3,7 @@ ALL = correction.py market.py buckets.py compound.py strat_all.py strat_bottom.p
 recommendation: correction.py
 	python3 $<
 
-results: All.png Bottom.png Continuous.png Dips.png Range.png Distribution.png
+results: All.png Bottom.png Continuous.png Dips.png Range.png Distribution.png Corrections.png
 
 All.png: strat_all.py
 	python3 $<
@@ -21,6 +21,9 @@ Distribution.png: best_worst.py
 	python3 $<
 
 Range.png: best_worst.py
+	python3 $<
+
+Corrections.png: correction.py
 	python3 $<
 
 lint:

@@ -108,7 +108,7 @@ def analyze(buckets, width, optimism):
     if OUTPUT is None:
         plt.show()
     else:
-        print("saving distribution plot as " + OUTPUT + ".png")
+        print("saving probability/expenctancy plot as " + OUTPUT + ".png")
         plt.savefig(OUTPUT)
         plt.close()
 
