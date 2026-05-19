@@ -6,15 +6,13 @@ they spend how bad) of corrections.  Then compute the expected return
 
 Author: Mark Kampe
 """
-import sys
+import argparse
 import matplotlib.pyplot as plt
 from market import Market
 
 START = 1950            # first year of samples to use
 END = 2020              # last year of samples to use
 MAX_DROP = 1.0          # 100% is worst possible drop
-BUCKET_WIDTH = 0.05     # fractional spercentage  per bucket
-OPTIMISM = 0.07         # pessimism cut-off probability
 OUTPUT = "Corrections"
 
 
@@ -56,12 +54,15 @@ def drop_buckets(sequence, bucket_width=.01):
 
 
 # pylint: disable=too-many-locals, too-many-statements
-def analyze(buckets, width, optimism=OPTIMISM):
+def analyze(buckets, width, optimism):
     """
     1. Review the data to identify corrections/crashes.
     2. Assess the probability of various drop levels.
     3. Compute the expected return (profit * probability) for each level.
     4. Assign fraction-to-purchase-at-that-discount proportional to expected
+    :param buckets ([int]): list of bucket counts
+    :param width (float): fractional bucket width
+    :param optimism (float): fractional optimism threhshold
     """
     total_count = 0
     min_drop = 0.08
@@ -144,20 +145,11 @@ def analyze(buckets, width, optimism=OPTIMISM):
     print(f"  *The fear recommendations ignore drops with P < {optimism:.3f}")
 
 
-def main(args):
+def main(infile, width, optimism):
     """
     exerciser
     :param args (string): name of market data file
     """
-    infile = "sp500.csv"
-    optimism = OPTIMISM
-    width = BUCKET_WIDTH
-
-    for _i, arg in enumerate(args):
-        if arg.isdigit():
-            width = int(arg)/100.0
-        else:
-            infile = arg
 
     simulator = Market(infile, start=START, end=END)
     buckets = drop_buckets(simulator.data_points, bucket_width=width)
@@ -166,4 +158,14 @@ def main(args):
 
 # basic exerciser
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    DESCR = 'Market dip probability/expectancy analysis'
+    parser = argparse.ArgumentParser(description=DESCR)
+    parser.add_argument("file", nargs="?", default="sp500.csv",
+                        help="market history CSV file")
+    parser.add_argument("-w", "--width", type=int, default=5,
+                        help="(integer percentage) bucket width")
+    parser.add_argument("-o", "--optimism", type=int, default=10,
+                        help="(integer percentage) optimisim cut-off")
+    args = parser.parse_args()
+
+    main(args.file, args.width/100, args.optimism/100)
