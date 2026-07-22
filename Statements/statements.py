@@ -71,6 +71,7 @@ class Statement:
         self.sort = False           # sort output by date
         self.interactive = False    # no interactive resolutions
         self.verbose = False        # no per-account summary at end
+        self.debug = False          # no processing trace
 
         self.tagged = 0             # lines that had acct tags
         self.matched = 0            # lines for which we found acct tags
@@ -308,6 +309,8 @@ class Statement:
                 self.matched += 1
                 entry.account = new_entry.account
                 entry.description = new_entry.description
+            if self.debug and entry.account is not None:
+                sys.stderr.write(f"{date}: {amount} -> {new_entry.account}\n")
 
         #  maybe we can throw up a GUI and ask the user
         if self.interactive and (confirm or entry.account is None):
@@ -320,6 +323,9 @@ class Statement:
 
         if entry.account is None:
             self.unmatched += 1
+            if self.debug:
+                sys.stderr.write(f" {date}: {amount} -> None\n")
+
         else:   # see if this result should be aggregated
             key = entry.account
             if entry.description != "":
@@ -508,6 +514,8 @@ if __name__ == '__main__':
                         help="output net per each account")
     parser.add_argument("-i", "--interactive", action='store_true',
                         help="interacive review/correction")
+    parser.add_argument("-D", "--DEBUG", action='store_true',
+                        help="log all processing")
     args = parser.parse_args()
 
     # digest the list of known accounts
@@ -515,6 +523,8 @@ if __name__ == '__main__':
 
     # digest the categorizing rules
     r = None if args.rules is None else Rules(args.rules, a)
+    if args.DEBUG:
+        r.debug = True
 
     # instantiate a statement object
     s = Statement(r)
@@ -531,6 +541,8 @@ if __name__ == '__main__':
         s.interactive = True
     if args.verbose:
         s.verbose = True
+    if args.DEBUG:
+        s.debug = True
 
     # write out a standard file header
     s.preamble()

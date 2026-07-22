@@ -45,6 +45,7 @@ class Rules:
 
         """
         self.rules = []
+        self.debug = False
 
         files = filename.split(',')
         for file in files:
