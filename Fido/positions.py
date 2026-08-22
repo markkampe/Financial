@@ -17,7 +17,7 @@ L_VALUE = 12     # enough for $9999999.99
 def find_col(row, title):
     """ find the row containing a desired heading """
     for i, string in enumerate(row):
-        if string == title:
+        if string.lower() == title.lower():
             return i
 
     sys.stderr.write("Unable to find column for " + title + "\n")
