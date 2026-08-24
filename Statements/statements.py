@@ -297,6 +297,8 @@ class Statement:
         if self.acct > 0 and cols[self.acct] != "":
             self.tagged += 1
             acct = cols[self.acct]
+            if self.debug:
+                sys.stderr.write(f"{date}: {amount} == {acct}\n")
         else:
             acct = None
         entry = Entry(date, amount, acct, desc)
