@@ -27,126 +27,104 @@
 "FOREIGN TRANSACTION FEE", Vacations, "foreign transaction fee", AGGREGATE
 
 "FID BKG SVC LLC*", "Transfer", "(FIDO)", REPLACE
-"LENDING CLUB*", "Transfer", "(Lending Club)", REPLACE
-"LENDINGCLUB*", "Transfer", "(Lending Club)", REPLACE
 
 "*CHASE*AUTOPAY *", CreditCard, "Chase Visa autopay", REPLACE
 "AUTOMATIC PAYMENT - THANK", CreditCard, "Amazon Visa autopay", REPLACE
 
 # paycheck deposits
-"POMONA COLLEGE*", Deposit, "MK Pomona pay", REPLACE
-"*HARVEY MUDD COLL *", Deposit, "MK HMC pay", REPLACE
-"THE CLAREMONT CO PAYMENT *", Deposit, "MK HMC pay", REPLACE
 "*SSA*SOC SEC*", Deposit, "Social Security", REPLACE
 
-# transfers to AH
-"Online Transfer * to AH Checking *", MomCare, "AH home assistant", REPLACE
 # tax and insurance payments
 "IRS*USATAXPYMT*", "Taxes", "IRS", REPLACE
 "FRANCHISE TAX BO PAYMENTS*", "Taxes", "CA", REPLACE
-
 "LA Co TTC *", Basic, "LA Prop Taxes", REPLACE
-"SAN*BER*TAX*",         Basic, "SBDO Prop Taxes", REPLACE
 "County of Rivers*", Basic, "RIV Prop Taxes", REPLACE
+
 "Online Payment * To State Farm*", Basic, "home insurance", REPLACE
-"California Fair *", Basic, "Tall Pines fire insurance", REPLACE
 "California FAIR *", Basic, "Tall Pines fire insurance", REPLACE
-"MCGRAW-800-303-5000", Basic, "Tall Pines liability insurance", REPLACE
-"*STATE FARM INSURANCE*", Basic, "LA fire insurance", REPLACE
+"*MCGRAW*", Basic, "Tall Pines liability insurance", REPLACE
 "*STATE FARM RO *", Basic, "LA fire insurance", REPLACE
 
 # auto-pay utility bills
-"*YOUR PROPANE COM *", Utilities, "propane", REPLACE
-"C T PROPANE", Utilities, "propane", REPLACE
-"AMERIGAS *", Utilities, "propane", REPLACE
-"*NAME:ATT*", Utilities, "phone", REPLACE
-"ATT*",             Utilities, "phone", REPLACE
-"LADWP*",         Utilities, "DWP", REPLACE
+# order matters for these two rules
+"ATT * PAYMENT*", Utilities, "ATT phones", REPLACE
+"ATT*PAYMENT", Utilities, "ATT Fiber", REPLACE
+"LADWP*", Utilities, "DWP", REPLACE
+"PROPANEWESTCOAST", Utilities, "Propane", REPLACE
+"SO CAL GAS*", Utilities, "socal gas", REPLACE
 "SoCalGas*", Utilities, "socal gas", REPLACE
-"SO CAL GAS *",     Utilities, "socal gas", REPLACE
-"*SoCalGas*", Utilities, "socal gas", REPLACE
+"SO CAL EDISON *", Utilities, "Tall Pines power", REPLACE
 "*SO CAL EDISON *", Utilities, "Tall Pines power", REPLACE
-"*SO CAL GAS*",     Utilities, "socal gas", REPLACE
-"*SPECTRUM*",  Utilities, "cable", REPLACE
-"*TIME WARNER*",  Utilities, "cable", REPLACE
-"*FRONTIER COMMUNI*", Utilities, "TP phone/net", REPLACE
 "*FRONTIER*", Utilities, "TP Internet", REPLACE
 "CULLIGAN OF ONTA*", Utilities, "Water Purification", REPLACE
+
 "RING *", Utilities, "Alarm Monitoring", REPLACE
 "LA POLICEALARM*", Utilities, "Alarm Permit", REPLACE
 
 # regular household purchases
+"*HOME DEPOT*", Household, "misc Home Depot", AGGREGATE
+"FOREST LUMBER", Household, "misc h/w Tall Pines", AGGREGATE
+"LOWES *", Household, "misc Lowes", AGGREGATE
+"VILLAGE HARDWARE", Household, "misc h/w Tall PInes", AGGREGATE
+
+# less common household purchases
 "ALLABOUTSPAS.COM", Household, "spa supplies", AGGREGATE
-"ARMSTRONG*",    Household, "plants", AGGREGATE
+"ARMSTRONG*", Household, "plants", AGGREGATE
 "BALLER HARDWARE", Household, "hardware", AGGREGATE
 "BELLEFONTAINE NURSERY", Household, "plants", AGGREGATE
 "*BRECKS", Household, "plants", AGGREGATE
 "BRECKS*LAWRENCEBURG*", Household, "plants", AGGREGATE
-"*HOME DEPOT*",     Household, "misc Home Depot", AGGREGATE
 "*FIG EARTH SUPPLY*", Household, "misc plants", AGGREGATE
-"FOREST LUMBER", Household, "misc Tall Pines", AGGREGATE
 "HM WHOLESALE PLANTS", Household, "plants", AGGREGATE
-"THE HOME DEPOT *",     Household, "misc HOME DEPOT", AGGREGATE
 "IDYLLWILD GARDENS NURSERY", Household, "TP plants", REPLACE
 "*LILY ROCK NATIVE*", Household, "plants", AGGREGATE
-"LOWES *",       Household, "misc Lowes", AGGREGATE
 "MIMOSA NURSERY", Household, "plants", AGGREGATE
-"*OTTER IN THE WATER*", Household, "spa repair", REPLACE
 "J&P*PARKSEED*", Household, "plants", AGGREGATE
 "TUESDAY MORNING*", Household, "misc", AGGREGATE
 "VIRGIL'S HARDWARE*", Household, "misc h/w", AGGREGATE
-"VILLAGE HARDWARE", Household, "misc h/w", AGGREGATE
 "WWW.RSABG.ORG*", Household, "plants", AGGREGATE
 "YAMAGUCHI BONSAI NURSERY", Household, "plants", AGGREGATE
 
-# soda ... must come before gas rules
-"76 - CF UNITED APRO LL", Food-and-Fun, "soda", AGGREGATE
-"-1.00@ARCO*", Food-and-Fun, "soda", AGGREGATE
-
 # gas stations
-"gas", Transportation, "gas", AGGREGATE
 "76 *", Transportation, "gas", AGGREGATE
-"ARCO *", Transportation, "gas", AGGREGATE
-"*USA GAS", Transportation, "gas", AGGREGATE
-"CLASSIC PETROLEUM", Transportation, "gas", AGGREGATE
 "CHEVRON *",   Transportation, "gas", AGGREGATE
 "COSTCO GAS*",   Transportation, "gas", AGGREGATE
+"ARCO *", Transportation, "gas", AGGREGATE
+"CLASSIC PETROLEUM", Transportation, "gas", AGGREGATE
 "EXXONMOBIL *", Transportation, "gas", AGGREGATE
+"EXXON *", Transportation, "gas", AGGREGATE
 "GARO GAS", Transportation, "gas", AGGREGATE
 "PINE COVE MARKET AND GAS", Transportation, "gas", AGGREGATE
 "SAVINGS OIL", Transportation, "gas", AGGREGATE
 "SHELL OIL*",    Transportation, "gas", AGGREGATE
 "SPEEDWAY *", Transportation, "gas", AGGREGATE
-"MORONGO TRAVEL CENTER", Transportation, "gas", AGGREGATE
+"MORONGO *", Transportation, "gas", AGGREGATE
 "PETROL X GAS STATION*", Transportation, "gas", AGGREGATE
-"USA *",Transportation, "gas", AGGREGATE
+"*USA GAS", Transportation, "gas", AGGREGATE
+"USA *", Transportation, "gas", AGGREGATE
 "* VALERO", Transportation, "gas", AGGREGATE
 "* PETROLEUM *", Transportation, "gas", AGGREGATE
 
-# metro
-"LA METRO*", Transportation, "metro", AGGREGATE
-"METROLINK *", Transportation, "metro", AGGREGATE
-"METRO EXPRESS*", Transportation, "fast pass", AGGREGATE
+# metro and taxis
+"LA METRO*", Transportation, "Metro-TAP", AGGREGATE
+"METRO EXPRESS*", Transportation, "FAST pass", AGGREGATE
+"LAXSHUTTLETIX.COM", Vacations, "shuttle", AGGREGATE
+"LYFT*", Vacations, "Lyft", REPLACE
 
-# inurance and DMV
+# car inurance and DMV
 "AAAUTO PAY-MBR*", Transportation, "AAA membership", REPLACE
 "*GEICO*", Transportation, "car insurance", REPLACE
-"ST OF CA DMV*", Transportation, "DMV", COMBINE
-"STATE OF CALIF DMV *", Transportation, "DMV", COMBINE
+"ST OF CA DMV*", Transportation, "DMV fees", COMBINE
 
 # regular maintenance
 "PEPE'S TIRE SHOP*", Transportation, "tires", REPLACE
-"AUTOZONE #*", Transportation, "parts", REPLACE
 "* LUBE MASTERS *", Transportation, "oil change", REPLACE
+"AUTOZONE #*", Transportation, "parts", REPLACE
 
 # parking
-"parking", Transportation, "parking", AGGREGATE
-"PARKING *", Transportation, "parking", AGGREGATE
-"* PARKING", Transportation, "parking", AGGREGATE
-"* PARKING *", Transportation, "parking", AGGREGATE
-"* PARKING*", Transportation, "parking", AGGREGATE
 "ABM ONSITE *", Transportation, "parking", AGGREGATE
 "BOB HOPE AIRPORT*", Transportation, "parking", AGGREGATE
+"CITY OF SANTA MONICA", Transportation, "parking", AGGREGATE
 "CITY PASADENA", Transportation, "parking", AGGREGATE
 "CITY OF LA REC AND PARK", Transportation, "parking", AGGREGATE
 "GLENDALE BRAND*", Transportation, "parking", AGGREGATE
@@ -154,30 +132,26 @@
 "REDONDO BEACH PIER P*", Transportation, "parking", AGGREGATE
 "UCLA SELFSERVE PARK", Transportation, "parking", AGGREGATE
 
-"LYFT*", Vacations, "Lyft", REPLACE
-"LAXSHUTTLETIX.COM", Vacations, "shuttle", AGGREGATE
+# common vacations
 "SCUBA COZUMEL *", Vacations, "Cozumel diving", REPLACE
 "INTERAGENCY VISITOR CENT", Vacations, "Park Admissions", REPLACE
 "NORTHERN QUEEN INN", Vacations, "NorCal lodging", REPLACE
 
-"concert", Food-and-Fun, "concert", AGGREGATE
-"movies", Food-and-Fun, "movies", AGGREGATE
+# common movies and events
 "AMC *", Food-and-Fun, "movies", AGGREGATE
 "CALTECH TICKET OFFICE", Food-and-Fun, "concert", AGGREGATE
-"EDWARDS *", Food-and-Fun, "movies", AGGREGATE
 "DESCANSO GARDENS *", Food-and-Fun, "garden tour", REPLACE
+"EDWARDS *", Food-and-Fun, "movies", AGGREGATE
+"*FANDANGOCOM*", Food-and-Fun, "movies", AGGREGATE
 "LAEMMLE THEATRES *", Food-and-Fun, "movies", AGGREGTE
 "PACIFIC THEATRES*", Food-and-Fun, "movies", AGGREGATE
 "RUSTIC THEATRE", Food-and-Fun, "movies", AGGREGATE
-"*FANDANGOCOM*", Food-and-Fun, "movies", AGGREGATE
 "EB WHISKY AMP POETRY", Food-and-Fun, "Whisky & Poetry", AGGREGATE
 "EB ARDENT SPIRITS*", Food-and-Fun, "Ardent Spirits", AGGREGATE
 
 # restaurants
-"dinner", Food-and-Fun, "dinner", AGGREGATE
 "ACAPULCO *", Food-and-Fun, "dinner", AGGREGATE
 "ALBERTO* MEXICAN FOOD", Food-and-Fun, "lunch", AGGREGATE
-"*DONUTS*", Food-and-Fun, "MK snacks", REPLACE
 "APPLEBEES *", Food-and-Fun, "dinner", AGGREGATE
 "ARBYS *", Food-and-Fun, "lunch", AGGREGATE
 "BARCELONA", Food-and-Fun, "dinner", AGGREGATE
@@ -193,6 +167,7 @@
 "CILANTRO FRESH *", Food-and-Fun, "lunch", AGREGATE
 "COMMONWEALTH*", Food-and-Fun, "dinner", AGGREGATE
 "CRAWFISH ON FIRE", Food-and-Fun, "dinner", AGGREGATE
+"*DONUTS*", Food-and-Fun, "MK snacks", REPLACE
 "EL ARCO *", Food-and-Fun, "dinner", AGGREGATE
 "EL TORITO *", Food-and-Fun, "dinner", AGGREGATE
 "ELEPHANT BAR *", Food-and-Fun, "dinner", AGGREGATE
@@ -276,7 +251,6 @@
 "*COUNTRY KITCHEN*", Food-and-Fun, "breakfast", AGGREGATE
 "LUMBERJACKS*", Food-and-Fun, "breakfast", AGGREGATE
 
-"lunch", Food-and-Fun, "lunch", AGGREGATE
 "7-ELEVEN *", Food-and-Fun, "beverages", AGGREGATE
 "ANTIGUA BREAD*", Food-and-Fun, "lunch", AGGREGATE
 "ATHENA GRILL*", Food-and-Fun, "lunch", AGGREGATE
@@ -395,11 +369,17 @@
 "BEVERAGES * MORE *", Food-and-Fun, "spirits", AGGREGATE
 "BEVMO *", Food-and-Fun, "alcohol", AGGREGATE
 "Mission Liquor *", Food-and-Fun, "alcohol", AGGREGATE
+"MISSION LIQUOR*", Food-and-Fun, "spirits", REPLACE
+"MISSION WINE*", Food-and-Fun, "spirits", REPLACE
 "TOTAL WINE *", Food-and-Fun, "alcohol", AGGREGATE
 "*TOTALWINE*", Food-and-Fun, "alcohol", AGGREGATE
 
 # groceries
-"groceries", Groceries, "", AGGREGATE
+"FOOD4LESS*", Groceries, "Food4Less", AGGREGATE
+"*SUPERIOR SUPER WHSE", Groceries, "Superior", AGGREGATE
+"TRADER JOE*", Groceries, "TJs", AGGREGATE
+"VONS *", Groceries, "Vons", AGGREGATE
+
 "99-CENTS-ONLY *", Groceries, "99-cents", AGGREGATE
 "* ALBERTSONS *", Groceries, "Albertson", AGGREGATE
 "ALBERTSONS *", Groceries, "Albertson", AGGREGATE
@@ -409,9 +389,7 @@
 "*CHEDRAUI*", Groceries, "", AGGREGATE
 "*CHEWY INC", Groceries, "dog food", REPLACE
 "COSTCO WHSE*", Groceries, "CostCo", AGGREGATE
-"COSTCO WHOLESALE*", Groceries, "CostCo", AGGREGATE
 "FAIRWAY FOODS*", Groceries, "Fairway", AGGREGATE
-"FOOD4LESS*", Groceries, "Food4Less", AGGREGATE
 "FRESH & EASY*", Groceries, "Fresh & Easy", AGGREGATE
 "GELSON'S MARKETS*", Groceries, "Gelsons", AGGREGATE
 "JONS MARKET*", Groceries, "Jons", AGGREGATE
@@ -424,8 +402,6 @@
 "LUCKYVITAMIN.COM", Groceries, "", AGGREGATE
 "MOUNTAIN TOP LIQUOR", Groceries, "Idyllwild liquor", REPLACE
 "MOUNTAIN PAWS", Groceries, "dog food", AGGREGATE
-"MISSION LIQUOR*", Groceries, "spirits", REPLACE
-"MISSION WINE*", Groceries, "spirits", REPLACE
 "PAVILIONS *", Groceries, "Pavilions", AGGREGATE
 "PAYPAL*PETCO", Groceries, "dog food", AGGREGATE
 "PETCO*", Groceries, "dog food", AGGREGATE
@@ -443,70 +419,53 @@
 "SQ *BIRDMAN PET *", Groceries, "bird food", AGGREGATE
 "*STATERBROS*", Groceries, "Stater Brothers", AGGREGATE
 "SUPER KING M*", Groceries, "SuperKing", AGGREGATE
-"*SUPERIOR*GROCE*", Groceries, "Superior", AGGREGATE
-"*SUPERIOR SUPER WHSE", Groceries, "Superior", AGGREGATE
-"TRADER JOE*", Groceries, "TJs", AGGREGATE
-"VONS *", Groceries, "Vons", AGGREGATE
 "WHOLEFDS *", Groceries, "Whole Foods", AGGREGATE
-
-# CK groceries
-"* WAKE COUNTY ABC BOARD", Groceries, "CK mistake", REPLACE
-
 
 # medical expenses
 "CMS MEDICARE *", Medical, "Medicare part B", REPLACE
 "*KAISERDUES *", Medical, "Kaiser Adv +", REPLACE
-
 "KP RX*", Medical, "Prescriptions", COMBINE
-
 "*GENESIS DENTAL*", Medical, "DD Baghdasarian", REPLACE
 "ROOTVISION ENDO", Medical, "DD - rootcanal", REPLACE
 "*OSTEOSTRONG *", Medical, "LK Osteostrong", REPLACE
 
-"KEYSTONE CHIROPRACTIC", Medical, "CK chiro", REPLACE
-"PACKARD DENTAL GROUP INC", Medical, "DD - CWK", REPLACE
-"NCSU STUDENT HEALTH", Medical, "CK ov", REPLACE
-"SQ *ASPIRE COUNSEL*", Medical, "CK ov", REPLACE
-"ASPIRE COUNSELING GRP", Medical, "CK ov", REPLACE
-"RALEIGH NEUROLOGY PHARMAC", Medical, "CK Px", REPLACE
-"RESULTS PHYSIOTHE", Medical, "CK phys therapy", REPLACE
-"*RITE AID STORE - 11388", Medical, "CK Px", REPLACE
-"OBERLIN ROAD PHARMACY", Medical, "CK Px", REPLACE
-"PERSON STREET PHARMACY", Medical, "CK Px", REPLACE
-"RALEIGH NEUROLOGY ASSOC", Medical, "CK ov", REPLACE
-"RADIANT IMAG*", Medical, "CK lab", REPLACE
-"UNITEDGASTRO*", Medical, "CK ov gastro", REPLACE
-"VISTA COMMUNITY CLINIC", Medical, "CK ov", REPLACE
-"RITE AID STORE - 5635", Medical, "CK Px", REPLACE
-"MSP*RALEIGH NEUROLOGY", Medical, "CK ov neruo", REPLACE
-"CORRECTIVE CHIROPRACTIC", Medical, "CK ov chiro", REPLACE
-"UNCH 3801 COMPUTER DR", Medical, "Ibn ov", REPLACE
+#"KEYSTONE CHIROPRACTIC", Medical, "CK chiro", REPLACE
+#"PACKARD DENTAL GROUP INC", Medical, "DD - CWK", REPLACE
+#"NCSU STUDENT HEALTH", Medical, "CK ov", REPLACE
+#"SQ *ASPIRE COUNSEL*", Medical, "CK ov", REPLACE
+#"ASPIRE COUNSELING GRP", Medical, "CK ov", REPLACE
+#"RALEIGH NEUROLOGY PHARMAC", Medical, "CK Px", REPLACE
+#"RESULTS PHYSIOTHE", Medical, "CK phys therapy", REPLACE
+#"*RITE AID STORE - 11388", Medical, "CK Px", REPLACE
+#"OBERLIN ROAD PHARMACY", Medical, "CK Px", REPLACE
+#"PERSON STREET PHARMACY", Medical, "CK Px", REPLACE
+#"RALEIGH NEUROLOGY ASSOC", Medical, "CK ov", REPLACE
+#"RADIANT IMAG*", Medical, "CK lab", REPLACE
+#"UNITEDGASTRO*", Medical, "CK ov gastro", REPLACE
+#"VISTA COMMUNITY CLINIC", Medical, "CK ov", REPLACE
+#"RITE AID STORE - 5635", Medical, "CK Px", REPLACE
+#"MSP*RALEIGH NEUROLOGY", Medical, "CK ov neruo", REPLACE
+#"CORRECTIVE CHIROPRACTIC", Medical, "CK ov chiro", REPLACE
+#"UNCH 3801 COMPUTER DR", Medical, "Ibn ov", REPLACE
 
-"WHOEFDS RAL*" JM_ins, "offset: Whole Foods", REPLACE
-"FOOD LION #1491*", JM_ins, "offset: Food Lion", REPLACE
-"HARRIS TEETER 0021", JM_ins, "offset: Harris Teeter", REPLACE
-
-"WALLGREENS #18986", Medical, "JK Px", REPLACE
-"CVS/PHARMACY *", Medical, "JK Px", REPLACE
-"ADVANCED URGENT CARE*", Medical, "JK ov", REPLACE
-"BLUE SHIELD CA*", Medical, "JK ins", REPLACE
-"BLUE SHIELD OF CA*", Medical, "JK ins", REPLACE
 "*BLUE CROSS NC", JK_ins, "JK Blue Cross", REPLACE
-"*ELEANOR LEUNG MD*", Medical, "JK ov Leung", REPLACE
-"FSI*HCSC PREMIUM PMT*", Medical, "JK ins", REPLACE
-"THE HILL MEDICAL CORP", Medical, "JK ov", REPLACE
-"HUNTINGTON DERMATOLOGY*", Medical, "JK ov Huntington", REPLACE
-"KLINGENSMITH*ASSOCIAT", Medical, "DD - JK", REPLACE
-"LENS.COM*", Medical, "JK contacts", REPLACE
-"*JACKLIN POLADIAN MD*", Medical, "JK ov Poladian", REPLACE
-"*KATRIN KOUTASSEVITCH", Medical, "JK counseling", REPLACE
-"MORSE K UPSHAW DPM*", Medical, "JK ov podiatrist", REPLACE
-"*LAURIE MCDONOUGH", Medical, "JK MFC", REPLACE
-"REGIONAL DERMATOLOGY OF D", Medical, "JK derm", REPLACE
-"USC CARE MEDICAL GROUP*", Medical, "JK ov USC", REPLACE
-"SOUTHERN CALIFORNIA GASTR", Medical, "JK ov gastro", REPLACE
-"HEATHER LANGAN MA*", Medical, "JK counseling", REPLACE
-"WALGREENS #17971", Medical, "JK Rx", REPLACE
+#"BLUE SHIELD CA*", Medical, "JK ins", REPLACE
+#"BLUE SHIELD OF CA*", Medical, "JK ins", REPLACE
+#"*ELEANOR LEUNG MD*", Medical, "JK ov Leung", REPLACE
+#"FSI*HCSC PREMIUM PMT*", Medical, "JK ins", REPLACE
+#"THE HILL MEDICAL CORP", Medical, "JK ov", REPLACE
+#"*Mindpath*", Medical, "JM counseling", REPLACE
+#"IVY* SESSION*", Medical, "JM counseling", REPLACE
+#"HUNTINGTON DERMATOLOGY*", Medical, "JK ov Huntington", REPLACE
+#"KLINGENSMITH*ASSOCIAT", Medical, "DD - JK", REPLACE
+#"LENS.COM*", Medical, "JK contacts", REPLACE
+#"*JACKLIN POLADIAN MD*", Medical, "JK ov Poladian", REPLACE
+#"*KATRIN KOUTASSEVITCH", Medical, "JK counseling", REPLACE
+#"MORSE K UPSHAW DPM*", Medical, "JK ov podiatrist", REPLACE
+#"*LAURIE MCDONOUGH", Medical, "JK MFC", REPLACE
+#"REGIONAL DERMATOLOGY OF D", Medical, "JK derm", REPLACE
+#"USC CARE MEDICAL GROUP*", Medical, "JK ov USC", REPLACE
+#"SOUTHERN CALIFORNIA GASTR", Medical, "JK ov gastro", REPLACE
 
 "*VILLAGEVET*", Medical, "Vet", REPLACE
 "* VILLAGE VET", Medical, "vet (village)", REPLACE
@@ -517,18 +476,18 @@
 "*CATALINA DIVERS SUPPL", Reimbursable, "cylinders/fills", REPLACE
 "CATALINA LANDING*", Reimbursable, "Cat Exp parking", REPLACE
 "DAN SERVICES*", Hobbies, "DAN mshp/ins", REPLACE
-"HANDICAPPED SCUBA AS*", Hobbies, "MK HSA mshp", REPLACE
 "HOLLYWOOD DIVERS*", Hobbies, "SCUBA equipment", REPLACE
 "PADI AMERICAS INC", SCUBA-mship, "PADI mshp/matls", REPLACE
-"VICENCIA AND BUCKLEY*", SCUBA-ins, "liability ins", REPLACE
-
-"SCUBA TRAVEL VENTURE*", Vacations, "", COMBINE
-"SCUBA CLUB COZUMEL", Vacations, "dive: lodging", AGGREGATE
+#"VICENCIA AND BUCKLEY*", SCUBA-ins, "liability ins", REPLACE
+#"HANDICAPPED SCUBA AS*", Hobbies, "MK HSA mshp", REPLACE
+#"SCUBA TRAVEL VENTURE*", Vacations, "", COMBINE
+#"SCUBA CLUB COZUMEL", Vacations, "dive: lodging", AGGREGATE
 
 # clothing and hair cuts
 "LK clothing", Clothing, "LK clothing", AGGREGATE
 "CALIFORNIA CUTE CUTS*", Clothing, "LK h/c", REPLACE
 "SUPERCUTS*", Clothing, "MK h/c", REPLACE
+"Supercuts", Clothing, "MK h/c", REPLACE
 "GOODWILL STORE *", Clothing, "LK clothing", AGGREGATE
 "SOCIETY OF ST VINCENT", Clothing, "LK clothing", AGGREGATE
 "*IDYLLWILD HELP CENTER", Clothing, "help center", REPLACE
@@ -537,7 +496,7 @@
 "THE HUNTINGTON *", Misc, "Huntington mship", REPLACE
 "INTL SOC ARBORICULTURE", Misc, "LK ISA dues", REPLACE
 "MSI*MORNINGSTAR", Misc, "MK Morningstar", REPLACE
-"NATURAL HISTORY MUSEUM*", Misc, "Nat Hist mship", REPLACE
+#"NATURAL HISTORY MUSEUM*", Misc, "Nat Hist mship", REPLACE
 "INTUIT *TURBOTAX", Misc, "Turbotax", REPLACE
 "LA REC AND PARKS PERMITS", Hobbies, "LK Yoga", REPLACE
 "*NETFLIX.COM", Food-and-Fun, "NetFlix", REPLACE
@@ -551,19 +510,24 @@
 "WILD BIRDS UNLIMITED", Toys, "Wild Birds Unlimited", REPLACE
 "Amazon Services-Kindle", Toys, "kindle book", REPLACE
 
-
-
-"HAWAII FLORAL EXPRESS", Gifts, "AH flowers", AGGREGATE
-
 "donation", Donations, "", PRESERVE
 "WIKIMEDIA*", Donations, "Wikipedia", REPLACE
 "PAYPAL*GIVING FUND", Donations, "PayPal Giving", REPLACE
 
 
 # These are catch-all heuristics, likely to work ... but check
+"gas", Transportation, "gas", AGGREGATE
 "* GAS STATION *", Transportation, "gas", COMBINE
 "* GAS STATION", Transportation, "gas", COMBINE
 
+
+"parking", Transportation, "parking", AGGREGATE
+"PARKING *", Transportation, "parking", AGGREGATE
+"* PARKING", Transportation, "parking", AGGREGATE
+"* PARKING *", Transportation, "parking", AGGREGATE
+"* PARKING*", Transportation, "parking", AGGREGATE
+
+"groceries", Groceries, "", AGGREGATE
 "* GROCERY *", Groceries, None, PRESERVE
 "* MARKET *", Groceries, None, PRESERVE
 "* MARKET", Groceries, None, PRESERVE
@@ -571,6 +535,8 @@
 "* SUPERMARKET *", Groceries, None, PRESERVE
 "* SUPERMARKET", Groceries, None, PRESERVE
 
+"lunch", Food-and-Fun, "lunch", AGGREGATE
+"dinner", Food-and-Fun, "dinner", AGGREGATE
 "* DONUTS*", Food-and-Fun, "snacks", COMBINE
 "* BAKERY*", Food-and-Fun, "lunch", COMBINE
 "* BURRITO *", Food-and-Fun, "lunch", COMBINE
@@ -617,6 +583,9 @@
 "* TAVERN", Food-and-Fun, "dinner", COMBINE
 "* THAI CUISINE *", Food-and-Fun, "dinner", COMBINE
 
+"concert", Food-and-Fun, "concert", AGGREGATE
+"movies", Food-and-Fun, "movies", AGGREGATE
+
 "* RESORT", Vacations, "resort:", COMBINE
 "* RESORT *", Vacations, "resort:", COMBINE
 "* VACATION RENTAL", Vacations, "rental:", COMBINE
@@ -639,6 +608,7 @@
 # "TARGET.COM*", Clothing, None, PRESERVE
 # "TARGET *", Clothing, None, PRESERVE
 "THEODORE PAYNE FOUNDAT*", Household, "nursery", REPLACE
+"*THEODOREPAYNE*", Household, "nursery", REPLACE
 
 # These are not really matching rules.  Just add accounts to menu
 "IT WILL NEVER HAPPEN", Large-Expenses, "", PRESERVE
